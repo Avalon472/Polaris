@@ -132,3 +132,16 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const authDebug = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    console.log(req.userId);
+    res.status(200).json(user);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error in authDebug controller", error.message);
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
