@@ -2,37 +2,20 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import { issueTokens } from "../utils/loginTokens";
+import RefreshToken from "../models/refreshToken.model";
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { fullName, username, email, password } = req.body;
+    const { username, email, password } = req.body;
 
     //Match a string that has some non-space, non-@ characters,
     // followed by exactly one @, followed by more non-space,
     // non-@ characters, a dot, and more non-space, non-@ characters.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: "Invalid email format" });
-    }
-
     const existingUser = await User.findOne({ username: username });
-    if (existingUser) {
-      return res.status(400).json({ error: "Username is already taken" });
-    }
 
     const existingEmail = await User.findOne({ email: email });
-    if (existingEmail) {
-      return res
-        .status(400)
-        .json({ error: "Email has already been used for an account" });
-    }
-
-    if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ error: "Password must be at least 6 characters long" });
-    }
 
     let errorMessage = null;
 
@@ -41,12 +24,12 @@ export const signup = async (req: Request, res: Response) => {
         errorMessage = "Invalid email format";
         break;
 
-      case existingUser:
-        errorMessage = "Username is already taken";
+      case !!existingEmail:
+        errorMessage = "Email is already in use";
         break;
 
-      case existingEmail:
-        errorMessage = "Email is already in use";
+      case !!existingUser:
+        errorMessage = "Username is already taken";
         break;
 
       case password.length < 8:
@@ -66,7 +49,6 @@ export const signup = async (req: Request, res: Response) => {
 
     //Create new user entry from validated information
     const newUser = new User({
-      fullName: fullName,
       username: username,
       email: email,
       password: hashedPassword,
@@ -75,23 +57,77 @@ export const signup = async (req: Request, res: Response) => {
     //Validate object existence before saving it
     if (newUser) {
       //Save user in MongoDB and provide them with refresh token
-      issueTokens(newUser.id, res);
+      const accessToken = await issueTokens(newUser._id, res);
       await newUser.save();
 
-      //   //Status 201 implies something has been created
-      //   res.status(201).json({
-      //     _id: newUser._id,
-      //     email: newUser.email,
-      //     username: newUser.username,
-      //   });
-
-      const { password, ...userInfo } = newUser;
-
-      res.status(201).json({ ...userInfo });
+      res.status(200).json({
+        _id: newUser._id,
+        email: newUser.email,
+        username: newUser.username,
+        token: accessToken,
+      });
     }
   } catch (error) {
     if (error instanceof Error) {
       console.log("Error in signup controller", error.message);
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await User.findOne({ username: username });
+    const correctPassword = await bcrypt.compare(
+      password,
+      user?.password || "",
+    );
+
+    if (!user || !correctPassword) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    //Return cookie and user information if credentials Match
+    const accessToken = await issueTokens(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+      token: accessToken,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error in login controller", error.message);
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    // Delete refresh token from DB
+    if (refreshToken) {
+      await RefreshToken.deleteOne({ token: refreshToken });
+    }
+
+    // Clear cookie
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.status(200).json({
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error in logout controller", error.message);
     }
     res.status(500).json({ error: "Internal Server Error" });
   }

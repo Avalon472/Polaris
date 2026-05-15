@@ -2,8 +2,9 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { Response } from "express";
 import RefreshToken from "../models/refreshToken.model";
+import mongoose from "mongoose";
 
-export const signAccessToken = (userId: string): string => {
+export const signAccessToken = (userId: mongoose.Types.ObjectId): string => {
   return jwt.sign({ sub: userId }, process.env.ACCESS_TOKEN_SECRET!, {
     expiresIn: "15m",
   });
@@ -14,7 +15,7 @@ const generateRefreshToken = (): string => {
 };
 
 export const issueTokens = async (
-  userId: string,
+  userId: mongoose.Types.ObjectId,
   res: Response,
 ): Promise<string> => {
   const rawRefreshToken = generateRefreshToken();
