@@ -4,7 +4,7 @@ import { createSlug } from "../utils/createSlug";
 
 export const getAllNotes = async (req: Request, res: Response) => {
   try {
-    const notes = await Note.find().sort({ updatedAt: -1 });
+    const notes = await Note.find({ archivedAt: null }).sort({ updatedAt: -1 });
 
     if (notes.length === 0) {
       return res.status(200).json([]);
@@ -130,6 +130,38 @@ export const deleteNote = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof Error) {
       console.log("Error in deleteNote controller", error.message);
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const archiveNote = async (req: Request, res: Response) => {
+  try {
+    await Note.findByIdAndUpdate(req.params.id, { archivedAt: new Date() });
+
+    return res.status(200).json({ message: "Note archived successfully" });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error in archiveNote controller", error.message);
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getArchivedNotes = async (req: Request, res: Response) => {
+  try {
+    const notes = await Note.find({ archivedAt: { $ne: null } }).sort({
+      updatedAt: -1,
+    });
+
+    if (notes.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    return res.status(200).json(notes);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error in getArchivedNotes controller", error.message);
     }
     res.status(500).json({ error: "Internal Server Error" });
   }

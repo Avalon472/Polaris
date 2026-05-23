@@ -1,9 +1,11 @@
 import express from "express";
 import {
+  archiveNote,
   createNote,
   deleteNote,
   editNote,
   getAllNotes,
+  getArchivedNotes,
   getNoteById,
   getNoteByTag,
 } from "../controllers/notes.controller";
@@ -23,4 +25,7 @@ noteRoutes.post("/edit", requireAuth, editNote);
 
 noteRoutes.delete("/:id", requireAuth, deleteNote);
 
+noteRoutes.delete("/archive/:id", requireAuth, archiveNote);
+
+noteRoutes.get("/getArchived", requireAuth, getArchivedNotes);
 export default noteRoutes;
