@@ -3,18 +3,21 @@ import {
   authDebug,
   login,
   logout,
+  refreshAccessToken,
   signup,
 } from "../controllers/auth.controller";
 import { requireAuth } from "../middleware/requireAuth";
 
-const router = express.Router();
+const authRoutes = express.Router();
 
-router.post("/signup", signup);
+authRoutes.post("/signup", signup);
 
-router.post("/login", login);
+authRoutes.post("/login", login);
 
-router.post("/logout", logout);
+authRoutes.post("/logout", logout);
 
-router.get("/", requireAuth, authDebug);
+authRoutes.get("/", requireAuth, authDebug);
 
-export default router;
+authRoutes.post("/refresh", refreshAccessToken);
+
+export default authRoutes;

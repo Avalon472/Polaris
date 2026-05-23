@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import User from "../models/user.model";
 import bcrypt from "bcrypt";
-import { issueTokens } from "../utils/loginTokens";
+import { Request, Response } from "express";
 import RefreshToken from "../models/refreshToken.model";
+import User from "../models/user.model";
+import { issueTokens, signAccessToken } from "../utils/loginTokens";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -144,4 +144,21 @@ export const authDebug = async (req: Request, res: Response) => {
     }
     res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+export const refreshAccessToken = async (req: Request, res: Response) => {
+  const token = req.cookies.refreshToken;
+
+  if (!token) {
+    return res.status(401).json({ error: "No refresh token" });
+  }
+
+  const stored = await RefreshToken.findOne({ token });
+
+  if (!stored || stored.expiresAt < new Date()) {
+    return res.status(401).json({ error: "Invalid or expired refresh token" });
+  }
+
+  const newAccessToken = signAccessToken(stored.userId);
+  return res.status(200).json({ accessToken: newAccessToken });
 };

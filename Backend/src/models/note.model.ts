@@ -34,7 +34,6 @@ const NoteSchema = new Schema(
 );
 
 // Indexes
-NoteSchema.index({ slug: 1 });
 NoteSchema.index({ tags: 1 });
 NoteSchema.index({ title: "text", bodyText: "text" }); // for full-text search
 

@@ -1,8 +1,9 @@
-import express from "express";
-import connectMongoDB from "./utils/connectDB";
-import dotenv from "dotenv";
-import authRoutes from "./routes/auth.routes";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import express from "express";
+import authRoutes from "./routes/auth.routes";
+import noteRoutes from "./routes/notes.routes";
+import connectMongoDB from "./utils/connectDB";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/notes", noteRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
