@@ -23,8 +23,8 @@ const NoteSchema = new Schema(
     tags: [{ type: String, lowercase: true }],
     type: {
       type: String,
-      enum: ["note", "framework", "tool", "project-spec"],
-      default: "note",
+      enum: ["general", "framework", "tool", "project-spec"],
+      default: "general",
     },
 
     // Soft delete
