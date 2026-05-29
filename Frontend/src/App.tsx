@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="flex w-screen h-screen bg-bg">
       <Navbar />
-      <div className="w-full mx-auto bg-bg2">
+      <div className="w-full mx-auto bg-bg">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/notes" element={<NotesOverview />} />

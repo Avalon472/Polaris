@@ -15,8 +15,8 @@ const NavbarItem = ({
 }: NavbarItemProps) => {
   return (
     <button
-      className={`flex gap-4 w-full rounded-md ${
-        isActive ? "bg-bg2 text-accent" : "text-muted hover:bg-bg2"
+      className={`flex gap-4 w-full rounded-md p-2 ${
+        isActive ? "bg-bg3 text-accent" : "text-subtle hover:bg-bg3"
       }`}
       onClick={onClick}
     >

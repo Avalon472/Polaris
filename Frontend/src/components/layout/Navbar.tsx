@@ -27,7 +27,7 @@ const Navbar = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   return (
     <div
-      className={`flex flex-col bg-bg3 h-screen border-r-2 border-border items-center ${collapsed ? "w-12" : "w-64"}`}
+      className={`flex flex-col shrink-0 bg-bg2 h-screen border-r-2 border-border items-center ${collapsed ? "w-12" : "w-56"}`}
     >
       {/* Top of navbar */}
       <div className="flex flex-col items-center justify-center text-text p-3 border-b-2 gap-1">
