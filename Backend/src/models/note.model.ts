@@ -6,6 +6,7 @@ const NoteSchema = new Schema(
     slug: { type: String, required: true, unique: true, lowercase: true },
     body: { type: String, required: true }, // raw markdown/HTML from editor
     bodyText: { type: String }, // plain text strip for search
+    description: { type: String }, // brief Github-style summary
 
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
 

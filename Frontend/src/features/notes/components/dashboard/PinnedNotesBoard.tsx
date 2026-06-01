@@ -6,7 +6,18 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import type { NoteListItem } from "@/types/notes";
 import Notecard from "../Notecard";
+
+export const noteData: NoteListItem = {
+  _id: "12312",
+  title: "React",
+  slug: "react-6-1",
+  tags: ["javascript, state"],
+  type: "framework",
+  updatedAt: "6-1-25",
+  description: "React is a javascript framework based on composeable content",
+};
 
 const PinnedNotesBoard = () => {
   return (
@@ -17,14 +28,12 @@ const PinnedNotesBoard = () => {
       >
         {/* flex flex-wrap */}
 
-        <Notecard />
-        <Notecard />
-        <Notecard />
-        <Notecard />
-        <Notecard />
-        <Notecard />
-        <Notecard />
-        <Notecard />
+        <Notecard noteContent={noteData} isFavorite />
+        <Notecard noteContent={noteData} isFavorite />
+        <Notecard noteContent={noteData} isFavorite />
+        <Notecard noteContent={noteData} isFavorite />
+        <Notecard noteContent={noteData} isFavorite />
+        <Notecard noteContent={noteData} isFavorite />
       </div>
       <div className="mt-auto w-full bg-bg3 border-2 border-border rounded-b-2xl">
         <Pagination>
