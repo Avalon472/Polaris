@@ -131,6 +131,10 @@
     scrollbar-color: var(--border-hover) transparent;
   }
 
+  .scrollbar-invisible {
+    scrollbar-width: none;
+  }
+
   /* horizontal scrollbar */
   .scrollbar-thin::-webkit-scrollbar {
     width: 4px;

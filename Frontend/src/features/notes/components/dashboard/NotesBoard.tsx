@@ -9,31 +9,22 @@ import {
 import type { NoteListItem } from "@/types/notes";
 import Notecard from "../Notecard";
 
-export const noteData: NoteListItem = {
-  _id: "12312",
-  title: "React",
-  slug: "react-6-1",
-  tags: ["javascript, state"],
-  type: "framework",
-  updatedAt: "6-1-25",
-  description: "React is a javascript framework based on composeable content",
-};
+interface NoteboardProps {
+  notes: NoteListItem[];
+  boardTitle: string;
+}
 
-const PinnedNotesBoard = () => {
+const NotesBoard = ({ notes: noteContents, boardTitle }: NoteboardProps) => {
   return (
-    <div className="relative w-full h-1/2 flex flex-col">
+    <div className="w-1/2 h-full flex flex-col shrink-0">
+      <p className="pl-2 text-subtle">{boardTitle}</p>
       <div
-        className="size-full bg-bg3 p-4 gap-4 overflow-y-scroll scrollbar-thin rounded-t-2xl grid"
+        className="size-full bg-bg3 p-4 gap-4 overflow-y-scroll scrollbar-thin rounded-t-2xl grid justify-center"
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
       >
-        {/* flex flex-wrap */}
-
-        <Notecard noteContent={noteData} isFavorite />
-        <Notecard noteContent={noteData} isFavorite />
-        <Notecard noteContent={noteData} isFavorite />
-        <Notecard noteContent={noteData} isFavorite />
-        <Notecard noteContent={noteData} isFavorite />
-        <Notecard noteContent={noteData} isFavorite />
+        {noteContents.map((note) => {
+          return <Notecard noteContent={note} />;
+        })}
       </div>
       <div className="mt-auto w-full bg-bg3 border-2 border-border rounded-b-2xl">
         <Pagination>
@@ -59,4 +50,4 @@ const PinnedNotesBoard = () => {
   );
 };
 
-export default PinnedNotesBoard;
+export default NotesBoard;

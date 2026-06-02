@@ -17,6 +17,7 @@ export interface NoteListItem {
   type: NoteType;
   notecard?: NoteCard;
   updatedAt: string;
+  pinned: boolean;
 }
 
 // Full shape
