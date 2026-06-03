@@ -7,16 +7,15 @@ const NotesOverview = () => {
     <div className="flex w-full h-full">
       <NotesSidebar />
       <div className="h-full w-full flex flex-col gap-4 p-4">
-        <div className="flex gap-4 h-1/2">
+        <div className="flex gap-4 h-1/2 justify-between">
           <NotesBoard notes={noteDataLong} boardTitle="Pinned" />
           <NotesBoard notes={noteDataShort} boardTitle="Recent" />
         </div>
+        {/* Newspanel */}
         <div className="h-1/2 bg-accent w-full" />
       </div>
     </div>
   );
-  //Pinned section at top
-  //Searchbar plus category options below
 };
 
 export default NotesOverview;

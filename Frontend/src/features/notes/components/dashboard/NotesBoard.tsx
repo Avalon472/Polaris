@@ -16,7 +16,7 @@ interface NoteboardProps {
 
 const NotesBoard = ({ notes: noteContents, boardTitle }: NoteboardProps) => {
   return (
-    <div className="w-1/2 h-full flex flex-col shrink-0">
+    <div className="w-1/2 h-full flex flex-col">
       <p className="pl-2 text-subtle">{boardTitle}</p>
       <div
         className="size-full bg-bg3 p-4 gap-4 overflow-y-scroll scrollbar-thin rounded-t-2xl grid justify-center"

@@ -21,7 +21,9 @@ const NavbarItem = ({
       onClick={onClick}
     >
       {icon}
-      {isCollapsed ? null : <p>{label}</p>}
+      {isCollapsed ? null : (
+        <p className="whitespace-nowrap overflow-hidden">{label}</p>
+      )}
     </button>
   );
 };
