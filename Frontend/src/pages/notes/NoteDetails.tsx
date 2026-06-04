@@ -1,3 +1,4 @@
+import Editor from "@/components/layout/TextEditor";
 import type { Note } from "@/types/notes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -13,9 +14,10 @@ const NoteDetails = () => {
   }, [noteId]);
 
   return (
-    <div className="w-full h-full bg-accent">
+    <div className="w-full h-full bg-bg3">
       {noteId}
       {note?.body}
+      <Editor />
     </div>
   );
 };
