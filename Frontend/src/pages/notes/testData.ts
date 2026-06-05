@@ -49,7 +49,7 @@ export const noteDataShort: NoteListItem[] = [
   {
     _id: "64f1a2b3c4d5e6f7a8b9c0d1",
     title: "React",
-    slug: "react",
+    slug: "react-6-1",
     description:
       "Component model, hooks, and state management patterns for building the Akashic frontend.",
     tags: ["frontend", "framework"],
@@ -66,7 +66,7 @@ export const noteDataShort: NoteListItem[] = [
   {
     _id: "64f1a2b3c4d5e6f7a8b9c0d2",
     title: "Docker Compose",
-    slug: "docker-compose",
+    slug: "docker-6-1",
     description:
       "Multi-service orchestration for running the full Akashic stack locally and in the homelab.",
     tags: ["devops", "homelab"],
@@ -86,7 +86,7 @@ export const fullNoteData: Note[] = [
   {
     _id: "64f1a2b3c4d5e6f7a8b9c0d1",
     title: "React",
-    slug: "react",
+    slug: "react-6-1",
     description:
       "Component model, hooks, and state management patterns for building the Akashic frontend.",
     tags: ["frontend", "framework"],
@@ -132,7 +132,7 @@ export const fullNoteData: Note[] = [
   {
     _id: "64f1a2b3c4d5e6f7a8b9c0d2",
     title: "Docker Compose",
-    slug: "docker-compose",
+    slug: "docker-6-1",
     description:
       "Multi-service orchestration for running the full Akashic stack locally and in the homelab.",
     tags: ["devops", "homelab"],
@@ -200,7 +200,7 @@ export const fullNoteData: Note[] = [
       {
         _id: "64f1a2b3c4d5e6f7a8b9c0d1",
         title: "React",
-        slug: "react",
+        slug: "react-6-1",
         notecard: {
           summary:
             "Declarative UI library. Everything is a function that maps state to UI.",

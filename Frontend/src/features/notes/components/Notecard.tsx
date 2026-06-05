@@ -9,7 +9,7 @@ interface NotecardProps {
 
 const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
   return (
-    <Link to={`/notes/${noteContent._id}`}>
+    <Link to={`/notes/${noteContent.slug}`}>
       <div
         className={`bg-bg2 border border-border rounded-2xl flex flex-col text-text min-h-0 overflow-hidden ${
           isOnSidebar
