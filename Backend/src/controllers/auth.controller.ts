@@ -133,10 +133,9 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const authDebug = async (req: Request, res: Response) => {
+export const getAuthUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.userId).select("-password");
-    console.log(req.userId);
     res.status(200).json(user);
   } catch (error) {
     if (error instanceof Error) {

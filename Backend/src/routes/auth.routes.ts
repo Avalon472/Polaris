@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  authDebug,
+  getAuthUser,
   login,
   logout,
   refreshAccessToken,
@@ -16,7 +16,7 @@ authRoutes.post("/login", login);
 
 authRoutes.post("/logout", logout);
 
-authRoutes.get("/", requireAuth, authDebug);
+authRoutes.get("/", requireAuth, getAuthUser);
 
 authRoutes.post("/refresh", refreshAccessToken);
 
