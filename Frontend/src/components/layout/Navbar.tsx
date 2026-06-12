@@ -1,6 +1,8 @@
+import { useLogout } from "@/features/auth/mutations/AuthMutations";
 import {
   FileText,
   LayoutDashboard,
+  LogOut,
   PanelLeftCloseIcon,
   PanelRightCloseIcon,
   Search,
@@ -34,7 +36,11 @@ const Navbar = () => {
     // { label: "Calendar", icon: <Calendar size={16} />, path: "/calendar" },
     // { label: "AI Assistant", icon: <Bot size={16} />, path: "/ai" },
   ];
+
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const { mutate: logoutUser } = useLogout();
+
   return (
     <div
       className={`flex flex-col shrink-0 bg-bg2 h-screen border-r-2 border-border items-center transition-all duration-200 ${collapsed ? "w-16" : "w-56"}`}
@@ -70,7 +76,7 @@ const Navbar = () => {
       <div
         className={`flex flex-col w-full text-text ${collapsed ? "p-1" : "p-3"}`}
       >
-        <div className="flex flex-col items-start gap-2">
+        <div className="flex flex-col items-start gap-2 h-full">
           <p className={`text-muted ${collapsed ? "invisible" : ""}`}>
             Workspace
           </p>
@@ -86,6 +92,14 @@ const Navbar = () => {
               isCollapsed={collapsed}
             />
           ))}
+        </div>
+        <div className="mt-auto">
+          <LogOut
+            className="text-destructive"
+            onClick={() => {
+              logoutUser();
+            }}
+          />
         </div>
       </div>
     </div>

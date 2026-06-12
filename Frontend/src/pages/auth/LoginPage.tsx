@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 import { useLogin } from "@/features/auth/mutations/AuthMutations";
-import { LogInIcon } from "lucide-react";
-import { MdOutlineMail, MdPassword } from "react-icons/md";
+
+import { LockIcon, UserIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    usernameOrEmail: "",
     password: "",
   });
 
@@ -23,53 +23,64 @@ const LoginPage = () => {
   };
 
   return (
-    //PLACEHOLDER ELEMENTS
-    //TODO: Replace login page with new design
-    <div className="max-w-7xl mx-auto flex h-screen">
-      <div className="flex-1 hidden lg:flex items-center  justify-center">
-        <LogInIcon className="lg:w-2/3 fill-white" />
-      </div>
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <form className="flex gap-4 flex-col" onSubmit={handleSubmit}>
-          <LogInIcon className="w-24 lg:hidden fill-white" />
-          <h1 className="text-4xl font-extrabold text-white">{"Let's"} go.</h1>
-          <label className="input input-bordered rounded flex items-center gap-2">
-            <MdOutlineMail />
-            <input
-              type="text"
-              className="grow"
-              placeholder="username"
-              name="username"
-              onChange={handleInputChange}
-              value={formData.username}
-            />
-          </label>
+    <div className="h-full w-full flex flex-col items-center justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="w-xl flex flex-col gap-4 items-center justify-center bg-bg3 rounded-2xl p-8 [box-shadow:0_0_40px_8px_var(--success-border)]"
+      >
+        <h1 className="text-text text-2xl tracking-tight mb-2">Polaris</h1>
 
-          <label className="input input-bordered rounded flex items-center gap-2">
-            <MdPassword />
-            <input
-              type="password"
-              className="grow"
-              placeholder="Password"
-              name="password"
-              onChange={handleInputChange}
-              value={formData.password}
-            />
-          </label>
-          <button className="btn rounded-full btn-primary text-white">
-            {isPending ? "Loading..." : "Login"}
-          </button>
-          {isError && <p className="text-red-500">{error.message}</p>}
-        </form>
-        <div className="flex flex-col gap-2 mt-4">
-          <p className="text-white text-lg">{"Don't"} have an account?</p>
-          <Link to="/signup">
-            <button className="btn rounded-full btn-primary text-white btn-outline w-full">
-              Sign up
-            </button>
-          </Link>
-        </div>
-      </div>
+        <label className="flex gap-2 w-full border border-border hover:border-border-hover focus-within:border-ring text-text p-2 rounded-xl transition-colors">
+          <UserIcon className="text-subtle shrink-0" />
+          <input
+            className="bg-transparent outline-none w-full text-sm placeholder:text-subtle"
+            placeholder="Username or Email"
+            name="usernameOrEmail"
+            type="text"
+            onChange={handleInputChange}
+            value={formData.usernameOrEmail}
+          />
+        </label>
+
+        <label className="flex gap-2 w-full border border-border hover:border-border-hover focus-within:border-ring text-text p-2 rounded-xl transition-colors">
+          <LockIcon className="text-subtle shrink-0" />
+          <input
+            className="bg-transparent outline-none w-full text-sm placeholder:text-subtle"
+            placeholder="Password"
+            name="password"
+            type="password"
+            onChange={handleInputChange}
+            value={formData.password}
+          />
+        </label>
+
+        <button
+          type="submit"
+          disabled={isPending}
+          className="w-full bg-accent-purple hover:bg-accent-purple-hover text-text text-sm py-2 rounded-xl transition-colors disabled:opacity-50"
+        >
+          {isPending ? "Logging in..." : "Login"}
+        </button>
+
+        <p
+          className={`text-destructive text-sm text-center transition-opacity ${isError ? "opacity-100" : "opacity-0"}`}
+        >
+          {error?.message ?? "\u00A0"}
+        </p>
+        <p className="text-subtle text-sm">Don't have an account?</p>
+        <Link
+          to="/signup"
+          className="text-accent-purple hover:text-accent-purple-hover transition-colors"
+        >
+          Sign up
+        </Link>
+      </form>
+      <a
+        href="https://unsplash.com/@jeremybishop"
+        className="absolute right-0 bottom-0 text-subtle text-md p-2"
+      >
+        Photo by Jeremy Bishop
+      </a>
     </div>
   );
 };
