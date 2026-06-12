@@ -74,9 +74,9 @@ const Navbar = () => {
 
       {/* Body of navbar */}
       <div
-        className={`flex flex-col w-full text-text ${collapsed ? "p-1" : "p-3"}`}
+        className={`flex flex-col size-full text-text ${collapsed ? "p-1" : "p-3"}`}
       >
-        <div className="flex flex-col items-start gap-2 h-full">
+        <div className="flex flex-col items-start gap-2">
           <p className={`text-muted ${collapsed ? "invisible" : ""}`}>
             Workspace
           </p>
