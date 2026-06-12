@@ -35,6 +35,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    if (error.response?.data?.error) {
+      error.message = error.response.data.error;
+    }
+
     //Allow auth requests to fail to prevent infinite retry loop
     if (originalRequest.url?.includes("/auth/")) {
       return Promise.reject(error);

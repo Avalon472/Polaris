@@ -48,6 +48,7 @@
   --color-bg: var(--bg);
   --color-bg2: var(--bg2);
   --color-bg3: var(--bg3);
+  --color-bgTransparent: var(--bgTransparent);
   --color-surface: var(--surface);
   --color-border-hover: var(--border-hover);
   --color-text: var(--text);
@@ -96,9 +97,10 @@
   --sidebar-ring: rgba(124, 92, 255, 0.4);
 
   /* Custom tokens */
-  --bg: #0a0f1c;
-  --bg2: #151b2e;
-  --bg3: #1d2540;
+  --bg: #0a0f1c99;
+  --bg2: #151b2e99;
+  --bg3: #1d254099;
+  --bgTransparent: #0a0f1c3e;
   --surface: rgba(255, 255, 255, 0.04);
   --border-hover: rgba(255, 255, 255, 0.13);
   --text: #dce3f0;

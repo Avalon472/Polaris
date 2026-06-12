@@ -4,14 +4,14 @@ import RefreshToken from "../models/refreshToken.model";
 import User from "../models/user.model";
 import { issueTokens, signAccessToken } from "../utils/loginTokens";
 
+//Match a string that has some non-space, non-@ characters,
+// followed by exactly one @, followed by more non-space,
+// non-@ characters, a dot, and more non-space, non-@ characters.
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const signup = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
-
-    //Match a string that has some non-space, non-@ characters,
-    // followed by exactly one @, followed by more non-space,
-    // non-@ characters, a dot, and more non-space, non-@ characters.
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const existingUser = await User.findOne({ username: username });
 
@@ -57,14 +57,14 @@ export const signup = async (req: Request, res: Response) => {
     //Validate object existence before saving it
     if (newUser) {
       //Save user in MongoDB and provide them with refresh token
-      const accessToken = await issueTokens(newUser._id, res);
       await newUser.save();
+      const accessToken = await issueTokens(newUser._id, res);
 
       res.status(200).json({
         _id: newUser._id,
         email: newUser.email,
         username: newUser.username,
-        token: accessToken,
+        accessToken: accessToken,
       });
     }
   } catch (error) {
@@ -77,9 +77,11 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body;
+    const { usernameOrEmail, password } = req.body;
 
-    const user = await User.findOne({ username: username });
+    const user = emailRegex.test(usernameOrEmail)
+      ? await User.findOne({ email: usernameOrEmail })
+      : await User.findOne({ username: usernameOrEmail });
     const correctPassword = await bcrypt.compare(
       password,
       user?.password || "",
@@ -96,7 +98,7 @@ export const login = async (req: Request, res: Response) => {
       _id: user._id,
       email: user.email,
       username: user.username,
-      token: accessToken,
+      accessToken: accessToken,
     });
   } catch (error) {
     if (error instanceof Error) {
