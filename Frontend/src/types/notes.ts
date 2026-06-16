@@ -37,3 +37,5 @@ export interface NoteReference {
   slug: string;
   notecard?: NoteCard;
 }
+
+export type NoteQueryType = "id" | "tag" | "slug";

@@ -1,15 +1,30 @@
 import NotesBoard from "@/features/notes/components/dashboard/NotesBoard";
 import NotesSidebar from "@/features/notes/components/NotesSidebar";
-import { noteDataLong, noteDataShort } from "./testData";
+import { useGetAllNotes } from "@/features/notes/mutations/NotesMutations";
+import { LoaderIcon } from "lucide-react";
 
 const NotesOverview = () => {
-  return (
+  const { data: noteData, isLoading, refetch, isRefetching } = useGetAllNotes();
+
+  return isLoading ? (
+    <LoaderIcon className="animate-spin" />
+  ) : (
     <div className="flex w-full h-full">
-      <NotesSidebar />
+      <NotesSidebar notes={noteData} />
       <div className="h-full w-full flex flex-col gap-4 p-4">
         <div className="flex gap-4 h-1/2 justify-between">
-          <NotesBoard notes={noteDataLong} boardTitle="Pinned" />
-          <NotesBoard notes={noteDataShort} boardTitle="Recent" />
+          <NotesBoard
+            notes={noteData?.filter((note) => note.pinned)}
+            boardTitle="Pinned"
+          />
+          <NotesBoard
+            notes={noteData?.sort(
+              (a, b) =>
+                new Date(b.updatedAt).getTime() -
+                new Date(a.updatedAt).getTime(),
+            )}
+            boardTitle="Recent"
+          />
         </div>
         {/* Newspanel */}
         <div className="h-1/2 bg-accent w-full" />

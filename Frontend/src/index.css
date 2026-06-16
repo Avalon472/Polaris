@@ -163,8 +163,9 @@
 .ProseMirror {
   outline: none;
   color: var(--muted-foreground);
-  font-size: 13.5px;
+  font-size: 16px;
   line-height: 1.7;
+  min-height: 100%;
 }
 
 .ProseMirror h1 {

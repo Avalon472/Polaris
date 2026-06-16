@@ -4,7 +4,10 @@ import { createSlug } from "../utils/createSlug";
 
 export const getAllNotes = async (req: Request, res: Response) => {
   try {
-    const notes = await Note.find({ archivedAt: null }).sort({ updatedAt: -1 });
+    const notes = await Note.find({
+      archivedAt: null,
+      author: req.userId,
+    }).sort({ updatedAt: -1 });
 
     if (notes.length === 0) {
       return res.status(200).json([]);
@@ -23,7 +26,7 @@ export const getNoteById = async (req: Request, res: Response) => {
   try {
     const noteID = req.params.id;
 
-    const note = await Note.find({ _id: noteID });
+    const note = await Note.find({ _id: noteID, author: req.userId });
 
     if (!note) {
       return res
@@ -42,8 +45,8 @@ export const getNoteById = async (req: Request, res: Response) => {
 
 export const getNoteByTag = async (req: Request, res: Response) => {
   try {
-    const tag = req.params.tag;
-    const notes = await Note.find({ tags: tag });
+    const tags = req.params.tags;
+    const notes = await Note.find({ tags: tags, author: req.userId });
 
     if (!notes.length) {
       return res.status(404).json({ message: "No notes found with this tag." });
@@ -53,6 +56,26 @@ export const getNoteByTag = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof Error) {
       console.log("Error in getNotesByTag controller", error.message);
+    }
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getNoteBySlug = async (req: Request, res: Response) => {
+  try {
+    const slug = req.params.slug;
+    const notes = await Note.find({ slug: slug, author: req.userId });
+
+    if (!notes.length) {
+      return res
+        .status(404)
+        .json({ message: "No notes found with this slug." });
+    }
+
+    return res.status(200).json(notes);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error in getNotesBySlug controller", error.message);
     }
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -85,9 +108,9 @@ export const createNote = async (req: Request, res: Response) => {
 
 export const editNote = async (req: Request, res: Response) => {
   try {
-    const { id, title, body, tags, type } = req.body;
+    const { id, title, body, tags, type, pinned } = req.body;
 
-    const note = await Note.findOne({ _id: id });
+    const note = await Note.findOne({ _id: id, author: req.userId });
 
     if (!note) {
       return res.status(404).json({ message: "No note was found." });
@@ -104,6 +127,8 @@ export const editNote = async (req: Request, res: Response) => {
         note.tags = tags;
       case type !== undefined:
         note.type = type;
+      case pinned !== undefined:
+        note.pinned = pinned;
       default:
         await note.save();
     }
@@ -123,6 +148,11 @@ export const deleteNote = async (req: Request, res: Response) => {
     if (!note) {
       return res.status(404).json({ message: "No note was found." });
     }
+    if (note.author !== req.userId) {
+      return res
+        .status(401)
+        .json({ message: "You do not have permission to delete this note" });
+    }
 
     await Note.findByIdAndDelete(req.params.id);
 
@@ -137,6 +167,16 @@ export const deleteNote = async (req: Request, res: Response) => {
 
 export const archiveNote = async (req: Request, res: Response) => {
   try {
+    const note = await Note.findById(req.params.id);
+    if (!note) {
+      return res.status(404).json({ message: "No note was found." });
+    }
+    if (note.author !== req.userId) {
+      return res
+        .status(401)
+        .json({ message: "You do not have permission to archive this note" });
+    }
+
     await Note.findByIdAndUpdate(req.params.id, { archivedAt: new Date() });
 
     return res.status(200).json({ message: "Note archived successfully" });
@@ -150,7 +190,10 @@ export const archiveNote = async (req: Request, res: Response) => {
 
 export const getArchivedNotes = async (req: Request, res: Response) => {
   try {
-    const notes = await Note.find({ archivedAt: { $ne: null } }).sort({
+    const notes = await Note.find({
+      archivedAt: { $ne: null },
+      author: req.userId,
+    }).sort({
       updatedAt: -1,
     });
 

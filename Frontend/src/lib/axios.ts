@@ -3,6 +3,7 @@ import axios from "axios";
 //Axios instance for base backend url
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  withCredentials: true,
 });
 
 //Attach Access Token to every request automatically

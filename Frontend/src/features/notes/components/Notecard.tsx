@@ -21,9 +21,14 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
           <span className="text-xs font-medium text-success">
             {noteContent.type}
           </span>
-          {noteContent.pinned && (
-            <PinIcon className="w-4 h-4 text-subtle hover:text-destructive transition-color duration-250 ease-in-out" />
-          )}
+
+          <PinIcon
+            className={`w-4 h-4 ${noteContent.pinned ? "text-success hover:text-destructive" : "text-subtle hover:text-accent"} transition-color duration-250 ease-in-out`}
+            onClick={(e) => {
+              e.preventDefault();
+              console.log("Pinned ", noteContent.title);
+            }}
+          />
         </div>
 
         {isOnSidebar ? (

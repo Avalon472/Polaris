@@ -7,6 +7,7 @@ import {
   getAllNotes,
   getArchivedNotes,
   getNoteById,
+  getNoteBySlug,
   getNoteByTag,
 } from "../controllers/notes.controller";
 import { requireAuth } from "../middleware/requireAuth";
@@ -18,6 +19,8 @@ noteRoutes.get("/getAll", requireAuth, getAllNotes);
 noteRoutes.get("/id/:id", requireAuth, getNoteById);
 
 noteRoutes.get("/tag/:tag", requireAuth, getNoteByTag);
+
+noteRoutes.get("/slug/:slug", requireAuth, getNoteBySlug);
 
 noteRoutes.post("/create", requireAuth, createNote);
 
