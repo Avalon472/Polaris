@@ -32,16 +32,12 @@ const processQueue = (error: unknown, token: string | null = null) => {
 //Intercept responses to check for expired token error
 api.interceptors.response.use(
   (response) => response,
-  //Every response with status class !== 200
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.data?.error) {
-      error.message = error.response.data.error;
-    }
-
-    //Allow auth requests to fail to prevent infinite retry loop
-    if (originalRequest.url?.includes("/auth/")) {
+    //Allow specified auth requests to fail to prevent infinite retry loop
+    const skipRefresh = ["/auth/login", "/auth/signup", "/auth/refresh"];
+    if (skipRefresh.some((url) => originalRequest.url === url)) {
       return Promise.reject(error);
     }
 
@@ -66,7 +62,7 @@ api.interceptors.response.use(
       //Need to use full url and not instance to avoid
       //attaching an access token from the interceptor
       const { data } = await axios.post(
-        "/api/auth/refresh",
+        `${import.meta.env.VITE_API_URL}/auth/refresh`,
         {},
         {
           //Refresh token lives in httpOnly cookie
