@@ -53,7 +53,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
           </div>
         )}
 
-        {isOnSidebar ? (
+        {isOnSidebar && noteContent.tags ? (
           <div className="flex mt-auto border-t border-border gap-1 pt-1 overflow-x-scroll scrollbar-invisible">
             {noteContent.tags.map((tag) => (
               <p

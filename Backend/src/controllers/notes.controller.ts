@@ -108,7 +108,8 @@ export const createNote = async (req: Request, res: Response) => {
 
 export const editNote = async (req: Request, res: Response) => {
   try {
-    const { id, title, body, tags, type, pinned } = req.body;
+    const id = req.params.id;
+    const { title, body, tags, type, pinned } = req.body;
 
     const note = await Note.findOne({ _id: id, author: req.userId });
 

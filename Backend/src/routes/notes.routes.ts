@@ -24,7 +24,7 @@ noteRoutes.get("/slug/:slug", requireAuth, getNoteBySlug);
 
 noteRoutes.post("/create", requireAuth, createNote);
 
-noteRoutes.post("/edit", requireAuth, editNote);
+noteRoutes.post("/edit/:id", requireAuth, editNote);
 
 noteRoutes.delete("/:id", requireAuth, deleteNote);
 

@@ -22,7 +22,7 @@ const NoteSchema = new Schema(
     },
 
     tags: [{ type: String, lowercase: true }],
-    pinned: { type: Boolean },
+    pinned: { type: Boolean, default: false },
     type: {
       type: String,
       enum: ["general", "framework", "tool", "project-spec"],

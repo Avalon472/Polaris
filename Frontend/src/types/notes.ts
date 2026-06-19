@@ -13,8 +13,8 @@ export interface NoteListItem {
   title: string;
   slug: string;
   description?: string;
-  tags: string[];
-  type: NoteType;
+  tags?: string[];
+  type?: NoteType;
   notecard?: NoteCard;
   updatedAt: string;
   pinned: boolean;
@@ -24,9 +24,9 @@ export interface NoteListItem {
 export interface Note extends NoteListItem {
   body: string;
   author: string; // User ID
-  references: NoteReference[];
-  referencedBy: NoteReference[];
-  archivedAt: string | null;
+  references?: NoteReference[];
+  referencedBy?: NoteReference[];
+  archivedAt?: string;
   createdAt: string;
 }
 
@@ -36,6 +36,16 @@ export interface NoteReference {
   title: string;
   slug: string;
   notecard?: NoteCard;
+}
+
+// Shape of Fields for Create and Update
+export interface NotePayload {
+  title: string;
+  body: string;
+}
+
+export interface UpdateNotePayload extends NotePayload {
+  _id: string;
 }
 
 export type NoteQueryType = "id" | "tag" | "slug";
