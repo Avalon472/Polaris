@@ -8,6 +8,7 @@ import type {
 } from "@/types/notes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const useGetAllNotes = () => {
   return useQuery({
@@ -49,6 +50,7 @@ export const useCreateNote = () => {
 
 export const useDeleteNote = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (noteId: string) => {
@@ -58,6 +60,7 @@ export const useDeleteNote = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success(`Note deleted successfully!`);
+      navigate("/notes/");
     },
   });
 };

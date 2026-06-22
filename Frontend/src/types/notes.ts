@@ -12,6 +12,7 @@ export interface NoteListItem {
   _id: string;
   title: string;
   slug: string;
+  body: string;
   description?: string;
   tags?: string[];
   type?: NoteType;
@@ -22,7 +23,6 @@ export interface NoteListItem {
 
 // Full shape
 export interface Note extends NoteListItem {
-  body: string;
   author: string; // User ID
   references?: NoteReference[];
   referencedBy?: NoteReference[];
@@ -46,6 +46,7 @@ export interface NotePayload {
 
 export interface UpdateNotePayload extends NotePayload {
   _id: string;
+  pinned?: boolean;
 }
 
 export type NoteQueryType = "id" | "tag" | "slug";

@@ -1,6 +1,7 @@
-import type { NoteListItem } from "@/types/notes";
+import type { NoteListItem, UpdateNotePayload } from "@/types/notes";
 import { PinIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useUpdateNote } from "../mutations/NotesMutations";
 
 interface NotecardProps {
   noteContent: NoteListItem;
@@ -8,6 +9,8 @@ interface NotecardProps {
 }
 
 const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
+  const updateNote = useUpdateNote();
+
   return (
     <Link to={`/notes/${noteContent.slug}`}>
       <div
@@ -26,7 +29,10 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
             className={`w-4 h-4 ${noteContent.pinned ? "text-success hover:text-destructive" : "text-subtle hover:text-accent"} transition-color duration-250 ease-in-out`}
             onClick={(e) => {
               e.preventDefault();
-              console.log("Pinned ", noteContent.title);
+              updateNote.mutate({
+                ...(noteContent as UpdateNotePayload),
+                pinned: !noteContent.pinned,
+              });
             }}
           />
         </div>

@@ -38,6 +38,7 @@ const NoteDetails = () => {
         title: "New Note",
         body: "Let's get started",
       });
+      setEditing(true);
     }
   }, [note, isNew]);
 
@@ -110,15 +111,29 @@ const NoteDetails = () => {
       <div className="w-full flex justify-between">
         <LucideArrowBigLeftDash onClick={() => navigate(-1)} />
         <div className="flex gap-4">
-          {isChanged && editing && (
-            <button
-              onClick={handleSave}
-              className="border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16
-                text-center text-text hover:text-accent border-border hover:border-accent whitespace-nowrap"
-            >
-              Save Changes
-            </button>
-          )}
+          {editing ? (
+            <>
+              {isNew ? null : (
+                <button
+                  onClick={() => deleteNote.mutate(noteData!._id)}
+                  className="border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16
+                text-center text-destructive hover:text-destructive border-subtle hover:border-destructive hover:bg-surface whitespace-nowrap"
+                >
+                  Delete Note
+                </button>
+              )}
+
+              {isChanged ? (
+                <button
+                  onClick={handleSave}
+                  className="border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16
+                text-center text-success hover:text-success border-subtle hover:border-success hover:bg-surface whitespace-nowrap"
+                >
+                  Save Changes
+                </button>
+              ) : null}
+            </>
+          ) : null}
           <button
             onClick={editing ? handleCancel : () => setEditing(true)}
             className={`border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16 text-center text-text hover:border-accent border-border
@@ -130,7 +145,8 @@ const NoteDetails = () => {
       </div>
 
       <input
-        className="w-full text-4xl placeholder:text-subtle bg-transparent outline-none py-4"
+        className={`text-4xl placeholder:text-subtle outline-none my-4 px-8 py-2 rounded-2xl border 
+          ${editing ? "bg-bg2 border-border w-1/2" : "bg-transparent w-min"}`}
         placeholder="Give Your Note a Title"
         name="title"
         type="text"

@@ -1,4 +1,7 @@
-import { useLogout } from "@/features/auth/mutations/AuthMutations";
+import {
+  useAuthUser,
+  useLogout,
+} from "@/features/auth/mutations/AuthMutations";
 import {
   FileText,
   LayoutDashboard,
@@ -40,6 +43,8 @@ const Navbar = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const { mutate: logoutUser } = useLogout();
+
+  const { data: authUser } = useAuthUser();
 
   return (
     <div
@@ -93,13 +98,14 @@ const Navbar = () => {
             />
           ))}
         </div>
-        <div className="mt-auto">
+        <div className="mt-auto justify-between flex py-2 border-t-2 border-border">
           <LogOut
             className="text-destructive"
             onClick={() => {
               logoutUser();
             }}
           />
+          <div className="text-subtle">{authUser!.username}</div>
         </div>
       </div>
     </div>
