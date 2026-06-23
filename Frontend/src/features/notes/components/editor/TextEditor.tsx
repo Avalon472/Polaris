@@ -1,7 +1,9 @@
+import DragHandle from "@tiptap/extension-drag-handle-react";
 import { Placeholder } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { GripVertical } from "lucide-react";
 import { useEffect } from "react";
 import Toolbar from "./EditorToolbar";
 
@@ -46,11 +48,16 @@ function Editor({ initialContent, onChange, isEditing }: EditorProps) {
       >
         <Toolbar editor={editor} />
       </div>
+      {isEditing && (
+        <DragHandle editor={editor}>
+          <GripVertical className="w-5 h-5 bg-surface rounded-sm m-1 text-subtle hover:text-text cursor-grab active:cursor-grabbing" />
+        </DragHandle>
+      )}
       <EditorContent
         editor={editor}
         spellCheck={false}
         onClick={() => isEditing && editor?.commands.focus()}
-        className={`overflow-y-auto px-9 flex-1 ${isEditing ? "cursor-text py-2" : "cursor-default py-6"} transition-all duration-200`}
+        className={`overflow-y-auto ${isEditing ? "cursor-text py-2" : "cursor-default py-6"} transition-all duration-200`}
       />
     </div>
   );

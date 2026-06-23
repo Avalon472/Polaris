@@ -166,6 +166,7 @@
   font-size: 16px;
   line-height: 1.7;
   min-height: 100%;
+  padding: 2rem;
 }
 
 .ProseMirror h1 {
