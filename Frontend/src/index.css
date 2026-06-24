@@ -166,7 +166,8 @@
   font-size: 16px;
   line-height: 1.7;
   min-height: 100%;
-  padding: 2rem;
+  padding: 0.5rem 2rem;
+  cursor: text;
 }
 
 .ProseMirror h1 {
@@ -252,4 +253,8 @@
   pointer-events: none;
   float: left;
   height: 0;
+}
+
+.buttonCore {
+  @apply border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16 text-center hover:bg-surface;
 }

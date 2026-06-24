@@ -20,7 +20,7 @@ function App() {
         className="h-screen w-screen absolute left-0 top-0 opacity-50 -z-10"
       />
       {authUser ? <Navbar /> : null}
-      <div className="w-full mx-auto">
+      <div className="w-[calc(100%-14rem)] mx-auto">
         <Routes>
           <Route
             path="/login"

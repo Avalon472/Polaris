@@ -57,7 +57,7 @@ function Editor({ initialContent, onChange, isEditing }: EditorProps) {
         editor={editor}
         spellCheck={false}
         onClick={() => isEditing && editor?.commands.focus()}
-        className={`overflow-y-auto ${isEditing ? "cursor-text py-2" : "cursor-default py-6"} transition-all duration-200`}
+        className={`overflow-y-auto ${isEditing ? " py-2" : "py-4"} transition-all duration-200`}
       />
     </div>
   );
