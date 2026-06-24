@@ -35,6 +35,7 @@ export const useGetNotesByParam = (param: NoteQueryType, value: string) => {
 
 export const useCreateNote = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (payload: NotePayload) => {
@@ -44,6 +45,7 @@ export const useCreateNote = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success(`Your note: ${data.title} was created successfully!`);
+      navigate(`/notes/${data.slug}`);
     },
   });
 };
@@ -67,6 +69,7 @@ export const useDeleteNote = () => {
 
 export const useUpdateNote = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async ({ _id, ...payload }: UpdateNotePayload) => {
@@ -76,6 +79,7 @@ export const useUpdateNote = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success(`Your note: ${data.title} was updated successfully!`);
+      navigate(`/notes/${data.slug}`);
     },
   });
 };

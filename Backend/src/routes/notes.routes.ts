@@ -9,6 +9,7 @@ import {
   getNoteById,
   getNoteBySlug,
   getNoteByTag,
+  getNoteTags,
 } from "../controllers/notes.controller";
 import { requireAuth } from "../middleware/requireAuth";
 
@@ -31,4 +32,7 @@ noteRoutes.delete("/:id", requireAuth, deleteNote);
 noteRoutes.delete("/archive/:id", requireAuth, archiveNote);
 
 noteRoutes.get("/getArchived", requireAuth, getArchivedNotes);
+
+noteRoutes.get("/tags", requireAuth, getNoteTags);
+
 export default noteRoutes;

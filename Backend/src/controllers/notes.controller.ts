@@ -149,7 +149,8 @@ export const deleteNote = async (req: Request, res: Response) => {
     if (!note) {
       return res.status(404).json({ message: "No note was found." });
     }
-    if (note.author !== req.userId) {
+
+    if (note.author.toString() !== req.userId.toString()) {
       return res
         .status(401)
         .json({ message: "You do not have permission to delete this note" });
@@ -209,4 +210,8 @@ export const getArchivedNotes = async (req: Request, res: Response) => {
     }
     res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+export const getNoteTags = async (req: Request, res: Response) => {
+  return Note.distinct("tags", { author: req.userId });
 };

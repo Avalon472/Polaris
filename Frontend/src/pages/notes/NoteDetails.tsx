@@ -1,3 +1,4 @@
+import DeleteModal from "@/features/notes/components/DeleteModal";
 import Editor from "@/features/notes/components/editor/TextEditor";
 import {
   useCreateNote,
@@ -16,6 +17,7 @@ const NoteDetails = () => {
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const isNew = slug === "new";
 
@@ -71,10 +73,9 @@ const NoteDetails = () => {
           title: draftData.title,
         },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             setIsChanged(false);
             setEditing(false);
-            navigate(`/notes/${data.slug}`);
           },
           onError: (error) => toast.error(error.message),
         },
@@ -86,10 +87,9 @@ const NoteDetails = () => {
           ...draftData,
         },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             setIsChanged(false);
             setEditing(false);
-            navigate(`/notes/${data.slug}`);
           },
           onError: (error) => toast.error(error.message),
         },
@@ -106,6 +106,8 @@ const NoteDetails = () => {
     setDraftData({ ...draftData, [e.target.name]: e.target.value });
   };
 
+  const titleClass =
+    "text-4xl leading-normal w-full my-4 px-8 py-2 rounded-2xl truncate min-h-18";
   return (
     <div className="w-full h-full bg-bg3 p-4 overflow-y-scroll scrollbar-thin flex flex-col">
       <div className="w-full flex justify-between">
@@ -115,9 +117,10 @@ const NoteDetails = () => {
             <>
               {isNew ? null : (
                 <button
-                  onClick={() => deleteNote.mutate(noteData!._id)}
-                  className="border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16
-                text-center text-destructive hover:text-destructive border-subtle hover:border-destructive hover:bg-surface whitespace-nowrap"
+                  onClick={() => {
+                    setDeleteOpen(true);
+                  }}
+                  className="buttonCore text-destructive hover:text-destructive border-subtle hover:border-destructive"
                 >
                   Delete Note
                 </button>
@@ -126,8 +129,7 @@ const NoteDetails = () => {
               {isChanged ? (
                 <button
                   onClick={handleSave}
-                  className="border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16
-                text-center text-success hover:text-success border-subtle hover:border-success hover:bg-surface whitespace-nowrap"
+                  className="buttonCore text-success hover:text-success border-subtle hover:border-success"
                 >
                   Save Changes
                 </button>
@@ -136,27 +138,48 @@ const NoteDetails = () => {
           ) : null}
           <button
             onClick={editing ? handleCancel : () => setEditing(true)}
-            className={`border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16 text-center text-text hover:border-accent border-border
-              ${editing ? "hover:text-text bg-accent hover:bg-transparent" : "hover:text-accent"}`}
+            className={`buttonCore text-text hover:border-accent border-border
+              ${editing ? "hover:text-text bg-accent" : "hover:text-accent"}`}
           >
             {editing ? "Cancel" : "Edit"}
           </button>
         </div>
       </div>
 
-      <input
-        className={`text-4xl placeholder:text-subtle outline-none my-4 px-8 py-2 rounded-2xl border 
-          ${editing ? "bg-bg2 border-border w-1/2" : "bg-transparent w-min"}`}
-        placeholder="Give Your Note a Title"
-        name="title"
-        type="text"
-        disabled={!editing}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          handleInputChange(event);
+      {editing ? (
+        <input
+          className={`${titleClass} bg-bg3 border border-border outline-none placeholder:text-subtle`}
+          placeholder="Give Your Note a Title"
+          name="title"
+          type="text"
+          disabled={!editing}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            handleInputChange(event);
+            setIsChanged(true);
+          }}
+          value={draftData.title}
+        />
+      ) : (
+        <div className={`${titleClass} bg-surface border border-transparent`}>
+          {draftData.title}
+        </div>
+      )}
+
+      {/* Using editable div instead of input for better scroll behavior
+      <div
+        ref={titleRef}
+        contentEditable={editing}
+        suppressContentEditableWarning
+        data-placeholder="Give Your Note a Title"
+        onInput={(e) => {
+          const title = e.currentTarget.textContent ?? "";
+          setDraftData(() => ({ ...draftData, title }));
           setIsChanged(true);
         }}
-        value={draftData.title}
-      />
+        className={`text-4xl outline-none w-full my-4 px-8 py-2 rounded-2xl overflow-x-auto whitespace-nowrap hover:scrollbar-thin 
+    flex content-center text-left border border-border empty:before:content-[attr(data-placeholder)] empty:before:text-subtle
+    empty:before:pointer-events-none ${editing ? "bg-bg3" : "bg-surface"}`}
+      /> */}
 
       <Editor
         key={draftData.title}
@@ -167,6 +190,18 @@ const NoteDetails = () => {
           setIsChanged(true);
         }}
       />
+
+      {!isNew && (
+        <DeleteModal
+          isOpen={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          title={`Delete "${noteData!.title}"?`}
+          description="This note will be permanently deleted. This action cannot be undone."
+          onConfirm={() => {
+            deleteNote.mutate(noteData!._id);
+          }}
+        />
+      )}
     </div>
   );
 };
