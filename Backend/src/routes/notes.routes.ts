@@ -33,6 +33,6 @@ noteRoutes.delete("/archive/:id", requireAuth, archiveNote);
 
 noteRoutes.get("/getArchived", requireAuth, getArchivedNotes);
 
-noteRoutes.get("/tags", requireAuth, getNoteTags);
+noteRoutes.get("/getTags", requireAuth, getNoteTags);
 
 export default noteRoutes;

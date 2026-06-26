@@ -26,10 +26,11 @@ export const useGetNotesByParam = (param: NoteQueryType, value: string) => {
 };
 
 export const useGetTags = () => {
+  console.log("getting tags");
   return useQuery({
     queryKey: ["tags"],
     queryFn: async () => {
-      const { data } = await api.get("/notes/tags");
+      const { data } = await api.get("/notes/getTags");
       return data as string[];
     },
   });

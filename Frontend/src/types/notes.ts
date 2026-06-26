@@ -42,6 +42,7 @@ export interface NoteReference {
 export interface NotePayload {
   title: string;
   body: string;
+  tags?: string[];
 }
 
 export interface UpdateNotePayload extends NotePayload {

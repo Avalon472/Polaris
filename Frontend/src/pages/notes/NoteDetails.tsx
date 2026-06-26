@@ -1,15 +1,15 @@
-import DeleteModal from "@/features/notes/components/DeleteModal";
-import Editor from "@/features/notes/components/editor/TextEditor";
 import {
   useCreateNote,
   useDeleteNote,
-  useGetNotesByParam,
   useUpdateNote,
-} from "@/features/notes/mutations/NotesMutations";
+} from "@/features/notes/api/NotesMutations";
+import { useGetNotesByParam } from "@/features/notes/api/NotesQueries";
+import DeleteModal from "@/features/notes/components/DeleteModal";
+import TagEditor from "@/features/notes/components/editor/TagsEditor";
+import Editor from "@/features/notes/components/editor/TextEditor";
 import type { NotePayload } from "@/types/notes";
 import { LoaderIcon, LucideArrowBigLeftDash } from "lucide-react";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
 const NoteDetails = () => {
@@ -69,15 +69,13 @@ const NoteDetails = () => {
     if (isNew) {
       createNote.mutate(
         {
-          body: draftData.body,
-          title: draftData.title,
+          ...draftData,
         },
         {
           onSuccess: () => {
             setIsChanged(false);
             setEditing(false);
           },
-          onError: (error) => toast.error(error.message),
         },
       );
     } else {
@@ -87,11 +85,11 @@ const NoteDetails = () => {
           ...draftData,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
             setIsChanged(false);
             setEditing(false);
+            navigate(`/notes/${data.slug}`);
           },
-          onError: (error) => toast.error(error.message),
         },
       );
     }
@@ -146,6 +144,18 @@ const NoteDetails = () => {
         </div>
       </div>
 
+      <div>
+        <TagEditor
+          selectedTags={draftData.tags ?? []}
+          onSelect={(tags) => {
+            setDraftData({
+              ...draftData,
+              tags,
+            });
+          }}
+        />
+      </div>
+
       {editing ? (
         <input
           className={`${titleClass} bg-bg3 border border-border outline-none placeholder:text-subtle`}
@@ -164,22 +174,6 @@ const NoteDetails = () => {
           {draftData.title}
         </div>
       )}
-
-      {/* Using editable div instead of input for better scroll behavior
-      <div
-        ref={titleRef}
-        contentEditable={editing}
-        suppressContentEditableWarning
-        data-placeholder="Give Your Note a Title"
-        onInput={(e) => {
-          const title = e.currentTarget.textContent ?? "";
-          setDraftData(() => ({ ...draftData, title }));
-          setIsChanged(true);
-        }}
-        className={`text-4xl outline-none w-full my-4 px-8 py-2 rounded-2xl overflow-x-auto whitespace-nowrap hover:scrollbar-thin 
-    flex content-center text-left border border-border empty:before:content-[attr(data-placeholder)] empty:before:text-subtle
-    empty:before:pointer-events-none ${editing ? "bg-bg3" : "bg-surface"}`}
-      /> */}
 
       <Editor
         key={draftData.title}

@@ -213,5 +213,9 @@ export const getArchivedNotes = async (req: Request, res: Response) => {
 };
 
 export const getNoteTags = async (req: Request, res: Response) => {
-  return Note.distinct("tags", { author: req.userId });
+  const tagList = await Note.distinct("tags", { author: req.userId });
+  if (tagList.length === 0) {
+    return res.status(200).json([]);
+  }
+  return res.status(200).json(tagList);
 };

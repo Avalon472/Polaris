@@ -8,7 +8,7 @@ import type { NoteListItem, UpdateNotePayload } from "@/types/notes";
 import { EllipsisVertical, PinIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDeleteNote, useUpdateNote } from "../mutations/NotesMutations";
+import { useDeleteNote, useUpdateNote } from "../api/NotesMutations";
 import DeleteModal from "./DeleteModal";
 
 interface NotecardProps {
@@ -40,7 +40,9 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
             <div className="flex">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <EllipsisVertical className="size-4 text-text hover:text-accent" />
+                  <button className="-m-2 p-2 group cursor-pointer">
+                    <EllipsisVertical className="size-4 text-text group-hover:text-accent" />
+                  </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
@@ -83,7 +85,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
               <span className="font-bold text-base text-text">
                 {noteContent.title}
               </span>
-              - {noteContent.description}
+              {noteContent.description}
             </p>
           ) : (
             <div className="flex flex-col min-h-0">
