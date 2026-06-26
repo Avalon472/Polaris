@@ -1,10 +1,10 @@
+import { useGetAllNotes } from "@/features/notes/api/NotesQueries";
 import NotesBoard from "@/features/notes/components/dashboard/NotesBoard";
 import NotesSidebar from "@/features/notes/components/NotesSidebar";
-import { useGetAllNotes } from "@/features/notes/mutations/NotesMutations";
 import { LoaderIcon } from "lucide-react";
 
 const NotesOverview = () => {
-  const { data: noteData, isLoading, refetch, isRefetching } = useGetAllNotes();
+  const { data: noteData, isLoading } = useGetAllNotes();
 
   return isLoading ? (
     <LoaderIcon className="animate-spin" />

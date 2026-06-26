@@ -1,7 +1,7 @@
 import { LoaderIcon } from "lucide-react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
-import { useAuthUser } from "./features/auth/mutations/AuthMutations";
+import { useAuthUser } from "./features/auth/api/AuthQueries";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 import HomePage from "./pages/home/HomePage";

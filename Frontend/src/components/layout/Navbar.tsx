@@ -1,7 +1,5 @@
-import {
-  useAuthUser,
-  useLogout,
-} from "@/features/auth/mutations/AuthMutations";
+import { useLogout } from "@/features/auth/api/AuthMutations";
+import { useAuthUser } from "@/features/auth/api/AuthQueries";
 import {
   FileText,
   LayoutDashboard,

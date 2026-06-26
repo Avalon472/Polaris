@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useLogin } from "@/features/auth/mutations/AuthMutations";
+import { useLogin } from "@/features/auth/api/AuthMutations";
 
 import { LockIcon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";

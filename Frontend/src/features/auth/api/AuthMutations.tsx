@@ -1,21 +1,7 @@
 import api from "@/lib/axios";
-import type { AuthUser } from "@/types/auth";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
-//Auth query to grab logged in user
-export const useAuthUser = () =>
-  useQuery({
-    queryKey: ["authUser"],
-    queryFn: async () => {
-      const { data } = await api.get("/auth/");
-      return data as AuthUser;
-    },
-    //Don't retry, don't refetch, user needs to log in again
-    retry: false,
-    staleTime: Infinity,
-  });
 
 //Login mutation
 export const useLogin = () => {

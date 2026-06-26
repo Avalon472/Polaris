@@ -1,37 +1,8 @@
 import api from "@/lib/axios";
-import type {
-  Note,
-  NoteListItem,
-  NotePayload,
-  NoteQueryType,
-  UpdateNotePayload,
-} from "@/types/notes";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { NotePayload, UpdateNotePayload } from "@/types/notes";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
-export const useGetAllNotes = () => {
-  return useQuery({
-    queryKey: ["notes"],
-    queryFn: async () => {
-      const { data } = await api.get("/notes/getAll");
-      return data as NoteListItem[];
-    },
-  });
-};
-
-//Works for ID, tags, slugs
-export const useGetNotesByParam = (param: NoteQueryType, value: string) => {
-  return useQuery({
-    queryKey: ["notes", value],
-    queryFn: async () => {
-      const { data } = await api.get(`/notes/${param}/${value}`);
-      return data as Note[];
-    },
-    //Ensures param exists before firing query
-    enabled: Boolean(value),
-  });
-};
 
 export const useCreateNote = () => {
   const queryClient = useQueryClient();
@@ -45,8 +16,9 @@ export const useCreateNote = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success(`Your note: ${data.title} was created successfully!`);
-      navigate(`/notes/${data.slug}`);
+      navigate(`/notes/${data.slug}`, { replace: true });
     },
+    onError: (error) => toast.error(error.message),
   });
 };
 
@@ -64,6 +36,7 @@ export const useDeleteNote = () => {
       toast.success(`Note deleted successfully!`);
       navigate("/notes/");
     },
+    onError: (error) => toast.error(error.message),
   });
 };
 
@@ -79,7 +52,8 @@ export const useUpdateNote = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success(`Your note: ${data.title} was updated successfully!`);
-      navigate(`/notes/${data.slug}`);
+      navigate("/notes/");
     },
+    onError: (error) => toast.error(error.message),
   });
 };
