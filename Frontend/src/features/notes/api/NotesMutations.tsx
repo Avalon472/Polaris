@@ -15,6 +15,7 @@ export const useCreateNote = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
+      queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Your note: ${data.title} was created successfully!`);
       navigate(`/notes/${data.slug}`, { replace: true });
     },
@@ -33,6 +34,7 @@ export const useDeleteNote = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
+      queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Note deleted successfully!`);
       navigate("/notes/");
     },
@@ -51,6 +53,7 @@ export const useUpdateNote = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
+      queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Your note: ${data.title} was updated successfully!`);
       navigate("/notes/");
     },

@@ -26,7 +26,6 @@ export const useGetNotesByParam = (param: NoteQueryType, value: string) => {
 };
 
 export const useGetTags = () => {
-  console.log("getting tags");
   return useQuery({
     queryKey: ["tags"],
     queryFn: async () => {

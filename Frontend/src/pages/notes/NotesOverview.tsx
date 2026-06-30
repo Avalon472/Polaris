@@ -1,13 +1,13 @@
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import { useGetAllNotes } from "@/features/notes/api/NotesQueries";
 import NotesBoard from "@/features/notes/components/dashboard/NotesBoard";
 import NotesSidebar from "@/features/notes/components/NotesSidebar";
-import { LoaderIcon } from "lucide-react";
 
 const NotesOverview = () => {
   const { data: noteData, isLoading } = useGetAllNotes();
 
   return isLoading ? (
-    <LoaderIcon className="animate-spin" />
+    <LoadingSpinner />
   ) : (
     <div className="flex w-full h-full">
       <NotesSidebar notes={noteData} />

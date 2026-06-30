@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import {
   useCreateNote,
   useDeleteNote,
@@ -8,7 +9,7 @@ import DeleteModal from "@/features/notes/components/DeleteModal";
 import TagEditor from "@/features/notes/components/editor/TagsEditor";
 import Editor from "@/features/notes/components/editor/TextEditor";
 import type { NotePayload } from "@/types/notes";
-import { LoaderIcon, LucideArrowBigLeftDash } from "lucide-react";
+import { LucideArrowBigLeftDash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -55,11 +56,7 @@ const NoteDetails = () => {
 
   if (!slug) return <div>404, no route param provided</div>;
   if (isPending || !draftData) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <LoaderIcon className="animate-spin" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
   if (!note?.[0] && !isNew) return <div>Note not found</div>;
 
@@ -153,6 +150,7 @@ const NoteDetails = () => {
               tags,
             });
           }}
+          editing={editing}
         />
       </div>
 

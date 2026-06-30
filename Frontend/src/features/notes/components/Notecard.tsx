@@ -108,7 +108,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
                     key={tag}
                     className="hover:text-accent text-subtle text-xs border border-subtle hover:border-accent hover: px-1.5 py-0.5
                rounded-xl transition-color duration-250 ease-in-out whitespace-nowrap shrink-0
-               scrollbar-invisible hover:scrollbar-thin overflow-x-scroll"
+               scrollbar-invisible overflow-x-scroll"
                   >
                     {tag}
                   </p>
