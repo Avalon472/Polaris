@@ -136,7 +136,7 @@ const NoteDetails = () => {
             className={`buttonCore text-text hover:border-accent border-border
               ${editing ? "hover:text-text bg-accent" : "hover:text-accent"}`}
           >
-            {editing ? "Cancel" : "Edit"}
+            {editing ? "Close" : "Edit"}
           </button>
         </div>
       </div>

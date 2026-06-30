@@ -40,6 +40,9 @@ const TagEditor = ({
       }
       setInputValue("");
       e.preventDefault();
+    } else if (e.key == "Enter") {
+      setInputValue("");
+      e.preventDefault();
     }
   };
 
@@ -52,12 +55,22 @@ const TagEditor = ({
       onValueChange={onSelect}
       disabled={!editing}
     >
-      <ComboboxChips ref={anchor} className="w-full max-w-xs">
+      <ComboboxChips
+        ref={anchor}
+        className={`w-full max-w-xs  ${editing ? "bg-bg3 border border-border outline-none" : "bg-surface border border-transparent"}`}
+      >
         <ComboboxValue>
           {(values) => (
             <React.Fragment>
               {values.map((value: string) => (
-                <ComboboxChip key={value}>{value}</ComboboxChip>
+                <ComboboxChip
+                  key={value}
+                  showRemove={editing}
+                  className={`buttonCore text-accent border-accent bg-transparent
+              ${editing ? "text-text bg-accent" : ""}`}
+                >
+                  {value}
+                </ComboboxChip>
               ))}
               <ComboboxChipsInput
                 value={inputValue}
