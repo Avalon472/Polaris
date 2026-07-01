@@ -6,10 +6,12 @@ import {
 } from "@/features/notes/api/NotesMutations";
 import { useGetNotesByParam } from "@/features/notes/api/NotesQueries";
 import DeleteModal from "@/features/notes/components/DeleteModal";
+import FieldLabel from "@/features/notes/components/editor/FieldLabel";
 import TagEditor from "@/features/notes/components/editor/TagsEditor";
 import Editor from "@/features/notes/components/editor/TextEditor";
+import TypeDropdown from "@/features/notes/components/editor/TypeDropdown";
 import type { NotePayload } from "@/types/notes";
-import { LucideArrowBigLeftDash } from "lucide-react";
+import { BookText, LucideArrowBigLeftDash, TagIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -102,11 +104,15 @@ const NoteDetails = () => {
   };
 
   const titleClass =
-    "text-4xl leading-normal w-full my-4 px-8 py-2 rounded-2xl truncate min-h-18";
+    "text-4xl leading-normal w-full px-8 py-2 rounded-2xl truncate min-h-18";
   return (
-    <div className="w-full h-full bg-bg3 p-4 overflow-y-scroll scrollbar-thin flex flex-col">
-      <div className="w-full flex justify-between">
-        <LucideArrowBigLeftDash onClick={() => navigate(-1)} />
+    <div className="w-full h-full bg-bg3 p-4 overflow-y-scroll scrollbar-thin flex flex-col gap-2">
+      <div className="w-full flex justify-between items-center border-b border-border pb-1.5">
+        <LucideArrowBigLeftDash
+          size={30}
+          onClick={() => navigate(-1)}
+          className="text-text hover:text-accent transition-colors duration-200"
+        />
         <div className="flex gap-4">
           {editing ? (
             <>
@@ -141,37 +147,60 @@ const NoteDetails = () => {
         </div>
       </div>
 
-      <div>
-        <TagEditor
-          selectedTags={draftData.tags ?? []}
-          onSelect={(tags) => {
-            setDraftData({
-              ...draftData,
-              tags,
-            });
-          }}
-          editing={editing}
-        />
+      <div className="flex justify-between gap-4">
+        <FieldLabel
+          icon={TagIcon}
+          label="Tags"
+          id="noteTags"
+          vertical
+          width={67}
+        >
+          <TagEditor
+            selectedTags={draftData.tags ?? []}
+            onSelect={(tags) => {
+              setDraftData({ ...draftData, tags });
+              setIsChanged(true);
+            }}
+            editing={editing}
+          />
+        </FieldLabel>
+        <FieldLabel
+          icon={TagIcon}
+          label="Type"
+          id="noteTags"
+          vertical
+          width={33}
+        >
+          <TypeDropdown editing={editing} />
+        </FieldLabel>
       </div>
 
-      {editing ? (
-        <input
-          className={`${titleClass} bg-bg3 border border-border outline-none placeholder:text-subtle`}
-          placeholder="Give Your Note a Title"
-          name="title"
-          type="text"
-          disabled={!editing}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            handleInputChange(event);
-            setIsChanged(true);
-          }}
-          value={draftData.title}
-        />
-      ) : (
-        <div className={`${titleClass} bg-surface border border-transparent`}>
-          {draftData.title}
-        </div>
-      )}
+      <FieldLabel
+        icon={BookText}
+        label="Title"
+        id="noteTitle"
+        vertical
+        width={100}
+      >
+        {editing ? (
+          <input
+            className={`${titleClass} bg-bg3 border border-border outline-none placeholder:text-subtle`}
+            placeholder="Give Your Note a Title"
+            name="title"
+            type="text"
+            disabled={!editing}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              handleInputChange(event);
+              setIsChanged(true);
+            }}
+            value={draftData.title}
+          />
+        ) : (
+          <div className={`${titleClass} bg-surface border border-transparent`}>
+            {draftData.title}
+          </div>
+        )}
+      </FieldLabel>
 
       <Editor
         key={draftData.title}

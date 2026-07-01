@@ -100,7 +100,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
             </div>
           )}
 
-          <div className="flex mt-auto border-t border-border pt-2">
+          <div className="flex mt-auto border-t border-border pt-2 items-center">
             {isOnSidebar && noteContent.tags ? (
               <>
                 {noteContent.tags.map((tag) => (

@@ -1,4 +1,10 @@
 export type NoteType = "general" | "framework" | "tool" | "project-spec";
+export const NoteType = {
+  GENERAL: "general",
+  FRAMEWORK: "framework",
+  TOOL: "tool",
+  PROJECT_SPEC: "project-spec",
+};
 
 // Hover/Preview
 export interface NoteCard {

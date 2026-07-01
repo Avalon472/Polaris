@@ -57,7 +57,7 @@ const TagEditor = ({
     >
       <ComboboxChips
         ref={anchor}
-        className={`w-full max-w-xs  ${editing ? "bg-bg3 border border-border outline-none" : "bg-surface border border-transparent"}`}
+        className={`w-full  ${editing ? "bg-bg3 border border-border outline-none" : "bg-surface border border-transparent"}`}
       >
         <ComboboxValue>
           {(values) => (
