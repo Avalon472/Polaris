@@ -17,7 +17,7 @@ export const useCreateNote = () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Your note: ${data.title} was created successfully!`);
-      navigate(`/notes/${data.slug}`, { replace: true });
+      navigate(`/notes/`, { replace: true });
     },
     onError: (error) => toast.error(error.message),
   });

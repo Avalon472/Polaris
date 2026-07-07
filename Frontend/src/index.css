@@ -62,6 +62,12 @@
   --color-success-border: var(--success-border);
   --color-code: var(--code);
   --color-code-bg: var(--code-bg);
+
+  --color-general: var(--type-general);
+  --color-framework: var(--type-framework);
+  --color-tool: var(--type-tool);
+  --color-project-spec: var(--type-project-spec);
+  --color-article: var(--type-article);
 }
 
 /* Dark only, light mode will have to be added later */
@@ -109,11 +115,21 @@
   --accent-purple-hover: #9b7bff;
   --accent-purple-bg: rgba(124, 92, 255, 0.1);
   --accent-purple-border: rgba(124, 92, 255, 0.25);
-  --success: #67f0c1;
+  --success: #36d79e;
   --success-bg: rgba(103, 240, 193, 0.1);
   --success-border: rgba(103, 240, 193, 0.2);
   --code: #8be9fd;
   --code-bg: rgba(139, 233, 253, 0.07);
+
+  --type-general: #f0c674;
+
+  --type-framework: #52a4fd;
+
+  --type-tool: #f07070;
+
+  --type-project-spec: #c084fc;
+
+  --type-article: #67f0c1;
 }
 
 @layer base {

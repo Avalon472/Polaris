@@ -22,6 +22,22 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
+  // Using an IIFE to immediately decide color using the type
+  const noteTypeColor = (() => {
+    switch (noteContent.type) {
+      case "framework":
+        return "text-framework";
+      case "project-spec":
+        return "text-project-spec";
+      case "tool":
+        return "text-tool";
+      case "article":
+        return "text-article";
+      case "general":
+      default:
+        return "text-general";
+    }
+  })();
   return (
     <div>
       <Link to={`/notes/${noteContent.slug}`}>
@@ -33,7 +49,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-success">
+            <span className={`text-xs font-medium ${noteTypeColor}`}>
               {noteContent.type}
             </span>
 
