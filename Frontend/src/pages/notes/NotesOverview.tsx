@@ -1,10 +1,16 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
-import { useGetAllNotes } from "@/features/notes/api/NotesQueries";
+import {
+  useGetAllNotes,
+  usePinnedNotes,
+  useRecentNotes,
+} from "@/features/notes/api/NotesQueries";
 import NotesBoard from "@/features/notes/components/dashboard/NotesBoard";
 import NotesSidebar from "@/features/notes/components/NotesSidebar";
 
 const NotesOverview = () => {
   const { data: noteData, isLoading } = useGetAllNotes();
+  const { data: pinnedNotes } = usePinnedNotes();
+  const { data: recentNotes } = useRecentNotes();
 
   return isLoading ? (
     <LoadingSpinner />
@@ -13,18 +19,8 @@ const NotesOverview = () => {
       <NotesSidebar notes={noteData} />
       <div className="h-full w-full flex flex-col gap-4 p-4">
         <div className="flex gap-4 h-1/2 justify-between">
-          <NotesBoard
-            notes={noteData?.filter((note) => note.pinned)}
-            boardTitle="Pinned"
-          />
-          <NotesBoard
-            notes={noteData?.sort(
-              (a, b) =>
-                new Date(b.updatedAt).getTime() -
-                new Date(a.updatedAt).getTime(),
-            )}
-            boardTitle="Recent"
-          />
+          <NotesBoard notes={pinnedNotes} boardTitle="Pinned" />
+          <NotesBoard notes={recentNotes} boardTitle="Recent" />
         </div>
         {/* Newspanel */}
         <div className="h-1/2 bg-accent w-full" />

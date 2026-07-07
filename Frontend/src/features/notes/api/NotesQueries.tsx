@@ -1,5 +1,10 @@
 import api from "@/lib/axios";
-import type { Note, NoteListItem, NoteQueryType } from "@/types/notes";
+import type {
+  Note,
+  NoteListItem,
+  NoteQueryType,
+  NoteType,
+} from "@/types/notes";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetAllNotes = () => {
@@ -33,4 +38,35 @@ export const useGetTags = () => {
       return data as string[];
     },
   });
+};
+
+// Filters the cached primary note request
+export const useNotesByType = (type: NoteType) => {
+  const { data: notes, ...rest } = useGetAllNotes();
+  return {
+    ...rest,
+    data: notes?.filter((note) => note.type === type) ?? [],
+  };
+};
+
+export const usePinnedNotes = () => {
+  const { data: notes, ...rest } = useGetAllNotes();
+  return {
+    ...rest,
+    data: notes?.filter((note) => note.pinned) ?? [],
+  };
+};
+
+export const useRecentNotes = (limit = 10) => {
+  const { data: notes, ...rest } = useGetAllNotes();
+  return {
+    ...rest,
+    data:
+      notes
+        ?.sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+        )
+        .slice(0, limit) ?? [],
+  };
 };
