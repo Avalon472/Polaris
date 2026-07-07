@@ -171,7 +171,14 @@ const NoteDetails = () => {
           vertical
           width={33}
         >
-          <TypeDropdown editing={editing} />
+          <TypeDropdown
+            selectedType={draftData.type ?? "general"}
+            onSelect={(type) => {
+              setDraftData({ ...draftData, type: type! });
+              setIsChanged(true);
+            }}
+            editing={editing}
+          />
         </FieldLabel>
       </div>
 

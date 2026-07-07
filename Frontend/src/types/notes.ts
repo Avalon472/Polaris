@@ -1,9 +1,15 @@
-export type NoteType = "general" | "framework" | "tool" | "project-spec";
+export type NoteType =
+  | "general"
+  | "framework"
+  | "tool"
+  | "project-spec"
+  | "article";
 export const NoteType = {
   GENERAL: "general",
   FRAMEWORK: "framework",
   TOOL: "tool",
   PROJECT_SPEC: "project-spec",
+  ARTICLE: "article",
 };
 
 // Hover/Preview
@@ -49,6 +55,7 @@ export interface NotePayload {
   title: string;
   body: string;
   tags?: string[];
+  type?: NoteType;
 }
 
 export interface UpdateNotePayload extends NotePayload {
