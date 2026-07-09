@@ -22,13 +22,13 @@ const NoteDetails = () => {
   const [isChanged, setIsChanged] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const isNew = slug === "new";
+  const isNew = slug === "new" || !slug;
 
   const {
     data: note,
     isLoading,
     isRefetching,
-  } = useGetNotesByParam("slug", isNew ? "" : (slug ?? ""));
+  } = useGetNotesByParam("slug", isNew ? "" : slug);
 
   const [draftData, setDraftData] = useState<NotePayload | undefined>(
     undefined,

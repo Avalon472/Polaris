@@ -85,6 +85,13 @@ export const createNote = async (req: Request, res: Response) => {
   try {
     const { title, body, tags, type } = req.body;
 
+    const existingTitle = await Note.findOne({ title: title });
+    if (existingTitle) {
+      return res
+        .status(400)
+        .json({ error: "This title is already in use by another note" });
+    }
+
     const slug = await createSlug(title);
 
     const note = await Note.create({
@@ -119,6 +126,15 @@ export const editNote = async (req: Request, res: Response) => {
 
     switch (true) {
       case title !== undefined:
+        const existingNotes = await Note.findOne({
+          _id: { $ne: id },
+          title: title,
+        });
+        if (existingNotes) {
+          return res
+            .status(400)
+            .json({ error: "This title is already in use by another note" });
+        }
         note.title = title;
         note.slug = await createSlug(title);
       case body !== undefined:
