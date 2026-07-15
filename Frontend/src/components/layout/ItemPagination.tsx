@@ -27,9 +27,11 @@ const ItemPagination = ({
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious onClick={() => handleChange(currentPage - 1)} />
-        </PaginationItem>
+        {maxPages > 1 && (
+          <PaginationItem>
+            <PaginationPrevious onClick={() => handleChange(currentPage - 1)} />
+          </PaginationItem>
+        )}
         {currentPage > 1 && (
           <PaginationItem>
             <PaginationLink onClick={() => handleChange(1)}>1</PaginationLink>
@@ -51,9 +53,11 @@ const ItemPagination = ({
           </PaginationItem>
         )}
 
-        <PaginationItem>
-          <PaginationNext onClick={() => handleChange(currentPage + 1)} />
-        </PaginationItem>
+        {maxPages > 1 && (
+          <PaginationItem>
+            <PaginationNext onClick={() => handleChange(currentPage + 1)} />
+          </PaginationItem>
+        )}
       </PaginationContent>
     </Pagination>
   );

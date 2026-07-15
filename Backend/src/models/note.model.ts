@@ -14,13 +14,6 @@ const NoteSchema = new Schema(
     references: [{ type: Schema.Types.ObjectId, ref: "Note" }],
     referencedBy: [{ type: Schema.Types.ObjectId, ref: "Note" }],
 
-    // Wikipedia-style hover card
-    notecard: {
-      summary: { type: String, maxlength: 280 },
-      coverIcon: { type: String },
-      tags: [String],
-    },
-
     tags: [{ type: String, lowercase: true }],
     pinned: { type: Boolean, default: false },
     type: {

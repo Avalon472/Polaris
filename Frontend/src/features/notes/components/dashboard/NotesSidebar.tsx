@@ -71,7 +71,7 @@ const NotesSidebar = ({ notes: noteContents }: SidebarProps) => {
       <div className="w-full h-8 flex justify-between items-center p-2 mb-2 border-b-2 border-border">
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger
-            className={`w-24 outline-0 flex gap-2 items-center duration-200 transition-colors
+            className={`w-32 outline-0 flex gap-2 items-center duration-200 transition-colors
             ${isOpen ? "text-accent hover:text-text" : "text-text hover:text-accent"}`}
           >
             {filterType[0].toUpperCase() + filterType.slice(1)}

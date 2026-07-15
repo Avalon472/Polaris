@@ -96,14 +96,20 @@ const Navbar = () => {
             />
           ))}
         </div>
-        <div className="mt-auto justify-between flex py-2 border-t-2 border-border">
+
+        {/* Bottom of navbar */}
+        <div className="mt-auto justify-center items-center p-2 flex border-t-2 border-border">
           <LogOut
-            className="text-destructive"
+            className={`-m-2 p-2 text-destructive border border-transparent hover:bg-bg3 hover:border-destructive rounded-md size-10`}
             onClick={() => {
               logoutUser();
             }}
           />
-          <div className="text-subtle">{authUser!.username}</div>
+          {!collapsed && (
+            <div className="text-subtle ml-auto h-full">
+              {authUser!.username}
+            </div>
+          )}
         </div>
       </div>
     </div>

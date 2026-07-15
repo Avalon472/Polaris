@@ -5,7 +5,7 @@ import {
   useRecentNotes,
 } from "@/features/notes/api/NotesQueries";
 import NotesBoard from "@/features/notes/components/dashboard/NotesBoard";
-import NotesSidebar from "@/features/notes/components/NotesSidebar";
+import NotesSidebar from "@/features/notes/components/dashboard/NotesSidebar";
 
 const NotesOverview = () => {
   const { data: noteData, isLoading } = useGetAllNotes();

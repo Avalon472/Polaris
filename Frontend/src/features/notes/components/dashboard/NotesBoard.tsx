@@ -1,7 +1,7 @@
 import ItemPagination from "@/components/layout/ItemPagination";
 import type { NoteListItem } from "@/types/notes";
 import { useMemo, useState } from "react";
-import Notecard from "../Notecard";
+import Notecard from "./Notecard";
 
 interface NoteboardProps {
   notes?: NoteListItem[];

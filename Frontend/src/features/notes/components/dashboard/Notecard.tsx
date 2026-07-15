@@ -8,8 +8,9 @@ import type { NoteListItem, UpdateNotePayload } from "@/types/notes";
 import { EllipsisVertical, PinIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDeleteNote, useUpdateNote } from "../api/NotesMutations";
-import DeleteModal from "./DeleteModal";
+import { useDeleteNote, useUpdateNote } from "../../api/NotesMutations";
+import DeleteModal from "../DeleteModal";
+import TagList from "./TagList";
 
 interface NotecardProps {
   noteContent: NoteListItem;
@@ -101,7 +102,6 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
               <span className="font-bold text-base text-text">
                 {noteContent.title}
               </span>
-              {noteContent.description}
             </p>
           ) : (
             <div className="flex flex-col min-h-0">
@@ -111,32 +111,24 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
               <p
                 className={`text-sm text-muted leading-relaxed overflow-hidden line-clamp-3`}
               >
-                {noteContent.description ?? ""}
+                {noteContent.description ?? noteContent.body.slice(0, 100)}
               </p>
             </div>
           )}
 
           <div className="flex mt-auto border-t border-border pt-2 items-center">
             {isOnSidebar && noteContent.tags ? (
-              <>
-                {noteContent.tags.map((tag) => (
-                  <p
-                    key={tag}
-                    className="hover:text-accent text-subtle text-xs border border-subtle hover:border-accent hover: px-1.5 py-0.5
-               rounded-xl transition-color duration-250 ease-in-out whitespace-nowrap shrink-0
-               scrollbar-invisible overflow-x-scroll"
-                  >
-                    {tag}
-                  </p>
-                ))}
-              </>
+              <div className="flex w-[95%]">
+                <TagList tags={noteContent.tags} />
+              </div>
             ) : (
               <p className="text-xs text-subtle shrink-0">
                 Last Edited {noteContent.updatedAt}
               </p>
             )}
             <PinIcon
-              className={`ml-auto w-4 h-4 ${noteContent.pinned ? "text-success hover:text-destructive" : "text-subtle hover:text-success"} transition-color duration-250 ease-in-out`}
+              className={`ml-auto w-4 h-4 transition-color duration-250 ease-in-out
+                ${noteContent.pinned ? "text-success hover:text-destructive" : "text-subtle hover:text-success"}`}
               onClick={(e) => {
                 e.preventDefault();
                 updateNote.mutate({
