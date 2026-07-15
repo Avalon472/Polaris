@@ -26,7 +26,7 @@ function App() {
         <>
           {authUser && <Navbar />}
 
-          <div className="w-[calc(100%-14rem)] mx-auto">
+          <div className="w-full mx-auto">
             <Routes>
               <Route
                 path="/login"

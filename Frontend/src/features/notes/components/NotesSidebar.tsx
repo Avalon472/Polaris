@@ -71,17 +71,18 @@ const NotesSidebar = ({ notes: noteContents }: SidebarProps) => {
       <div className="w-full h-8 flex justify-between items-center p-2 mb-2 border-b-2 border-border">
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger
-            className={`w-full outline-0 flex gap-2 items-center duration-200 transition-colors
+            className={`w-24 outline-0 flex gap-2 items-center duration-200 transition-colors
             ${isOpen ? "text-accent hover:text-text" : "text-text hover:text-accent"}`}
           >
-            {filterType}
+            {filterType[0].toUpperCase() + filterType.slice(1)}
             <ChevronDown className="size-6" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="-ml-1.5">
             {filterOptions.map((type) => (
               <DropdownMenuItem onClick={() => setFilterType(type)}>
                 <div className="flex w-full justify-between">
-                  <p>{type}</p> <p>{filterCounts[type]}</p>
+                  <p>{type[0].toUpperCase() + type.slice(1)}</p>{" "}
+                  <p className="text-accent">{filterCounts[type]}</p>
                 </div>
               </DropdownMenuItem>
             ))}
@@ -89,7 +90,7 @@ const NotesSidebar = ({ notes: noteContents }: SidebarProps) => {
         </DropdownMenu>
         <button>
           <PlusSquare
-            className="text-subtle hover:text-accent"
+            className="text-text hover:text-accent duration-200 transition-colors"
             onClick={() => {
               navigate("/notes/new");
             }}
@@ -98,7 +99,7 @@ const NotesSidebar = ({ notes: noteContents }: SidebarProps) => {
       </div>
 
       {filteredNotes ? (
-        <div className="gap-4 flex flex-col">
+        <div className="gap-4 flex flex-col overflow-y-auto scrollbar-thin">
           {filteredNotes.map((note) => {
             return <Notecard key={note._id} noteContent={note} isOnSidebar />;
           })}
