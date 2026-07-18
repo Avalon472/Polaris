@@ -1,4 +1,5 @@
 import { useEditorState, type Editor } from "@tiptap/react";
+import { Link } from "lucide-react";
 
 interface ToolbarBtnProps {
   onClick: () => void;
@@ -52,7 +53,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
   });
 
   return (
-    <div className="flex items-center gap-0.5 px-3 py-2 border-b border-border bg-bg2">
+    <div className="flex items-center gap-1 px-3 py-2 border-b border-border bg-bg2">
       <ToolbarBtn
         title="Bold"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -120,6 +121,18 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
         isActive={editorState.isBlockquote}
       >
         "
+      </ToolbarBtn>
+      <ToolbarBtn
+        title="Hyperlink"
+        onClick={() => {
+          const previousUrl = editor.getAttributes("link").href;
+          const url = window.prompt("URL", previousUrl);
+          if (!url || url === "") return;
+          editor.chain().focus().setLink({ href: url }).run();
+        }}
+        isActive={editorState.isBold}
+      >
+        <Link className="text-xs" size={16} />
       </ToolbarBtn>
     </div>
   );

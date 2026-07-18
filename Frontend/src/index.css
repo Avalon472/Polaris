@@ -271,6 +271,17 @@
   height: 0;
 }
 
+.ProseMirror a {
+  color: var(--accent);
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.ProseMirror a:hover {
+  color: var(--accent-purple-hover);
+}
+
 .buttonCore {
   @apply border px-2 py-1 rounded-2xl transition-colors duration-200 hover:cursor-pointer min-w-16 text-center hover:bg-surface;
 }

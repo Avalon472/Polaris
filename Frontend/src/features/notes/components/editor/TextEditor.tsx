@@ -1,18 +1,14 @@
 import DragHandle from "@tiptap/extension-drag-handle-react";
+import { Link } from "@tiptap/extension-link";
 import { Placeholder } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { GripVertical } from "lucide-react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Toolbar from "./EditorToolbar";
 
-interface EditorProps {
-  initialContent?: string;
-  onChange?: (markdown: string) => void;
-}
-
-// Editor.tsx
 interface EditorProps {
   initialContent?: string;
   onChange?: (markdown: string) => void;
@@ -20,11 +16,15 @@ interface EditorProps {
 }
 
 function Editor({ initialContent, onChange, isEditing }: EditorProps) {
+  const navigate = useNavigate();
   const editor = useEditor({
     extensions: [
       StarterKit,
       Markdown,
       Placeholder.configure({ placeholder: "Start writing…" }),
+      Link.configure({
+        openOnClick: false,
+      }),
     ],
     content: initialContent,
     editable: isEditing,
@@ -56,8 +56,25 @@ function Editor({ initialContent, onChange, isEditing }: EditorProps) {
       <EditorContent
         editor={editor}
         spellCheck={false}
-        onClick={() => isEditing && editor?.commands.focus()}
-        className={`overflow-y-auto ${isEditing ? " py-2" : "py-4"} transition-all duration-200`}
+        onClick={(e) => {
+          // Custom anchor tag handling to both disable links
+          // when editing and account for custom internal links
+          const target = e.target as HTMLElement;
+          const link = target.closest("a");
+          if (isEditing) {
+            editor?.commands.focus();
+            return;
+          }
+          if (!link) return;
+          e.preventDefault();
+          const href = link.getAttribute("href") ?? "";
+          if (href.startsWith("/notes/")) {
+            navigate(href);
+          } else {
+            window.open(href, "_blank", "noopener,noreferrer");
+          }
+        }}
+        className={`overflow-y-auto ${isEditing ? "[&_a]:pointer-events-none [&_a]:pointer-text py-2" : "py-4"} transition-all duration-200`}
       />
     </div>
   );
