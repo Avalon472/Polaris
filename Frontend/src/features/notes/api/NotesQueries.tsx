@@ -20,7 +20,7 @@ export const useGetAllNotes = () => {
 //Works for ID, tags, slugs
 export const useGetNotesByParam = (param: NoteQueryType, value: string) => {
   return useQuery({
-    queryKey: ["notes", value],
+    queryKey: ["notes", param, value],
     queryFn: async () => {
       const { data } = await api.get(`/notes/${param}/${value}`);
       return data as Note[];

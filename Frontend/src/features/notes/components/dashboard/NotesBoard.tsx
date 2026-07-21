@@ -16,7 +16,7 @@ const NotesBoard = ({ notes: noteContents, boardTitle }: NoteboardProps) => {
   const displayedNotes = useMemo(() => {
     const startIndex = (currentPage - 1) * notesPerPage;
     return noteContents?.slice(startIndex, startIndex + notesPerPage) ?? [];
-  }, [currentPage]);
+  }, [currentPage, noteContents]);
 
   return (
     <div className="w-1/2 h-full flex flex-col">
