@@ -1,5 +1,4 @@
 import DragHandle from "@tiptap/extension-drag-handle-react";
-import { Link } from "@tiptap/extension-link";
 import { Placeholder } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -8,6 +7,7 @@ import { GripVertical } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Toolbar from "./EditorToolbar";
+import { CustomLink, WikiLink } from "./TiptapExtensions";
 
 interface EditorProps {
   initialContent?: string;
@@ -22,9 +22,10 @@ function Editor({ initialContent, onChange, isEditing }: EditorProps) {
       StarterKit,
       Markdown,
       Placeholder.configure({ placeholder: "Start writing…" }),
-      Link.configure({
+      CustomLink.configure({
         openOnClick: false,
       }),
+      WikiLink,
     ],
     content: initialContent,
     editable: isEditing,
