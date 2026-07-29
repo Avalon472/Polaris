@@ -15,6 +15,7 @@ export const WikiLink = Node.create({
     return {
       slug: { default: null },
       title: { default: null },
+      id: { default: null },
     };
   },
 
@@ -33,6 +34,46 @@ export const WikiLink = Node.create({
     return ReactNodeViewRenderer(WikiLinkView);
   },
 
+  // Tell TipTap how to serialize the node
+  renderMarkdown(node) {
+    const title = node.attrs?.title || "";
+    const slug = node.attrs?.slug || "";
+    const id = node.attrs?.id || null;
+
+    return `[[${title}|${slug}|${id}]]`;
+  },
+
+  // Tells TipTap how to deserialize/render the node
+  parseMarkdown(token) {
+    const content = token.text ?? "";
+    const [title, slug, id] = content.split("|");
+    console.log(content);
+    console.log(title, "title");
+    return {
+      type: "wikilink",
+      attrs: { title, slug, id: id ?? null },
+    };
+  },
+
+  markdownTokenizer: {
+    name: "wikilink",
+    level: "inline",
+    start(src: string) {
+      return src.indexOf("[[");
+    },
+    tokenize(src: string) {
+      const rule = /^\[\[([^\]]+)\]\]/;
+      const match = rule.exec(src);
+      if (!match) return undefined;
+
+      return {
+        type: "wikilink",
+        raw: match[0],
+        text: match[1], // everything between [[ and ]]
+      };
+    },
+  },
+
   addInputRules() {
     return [
       new InputRule({
@@ -45,7 +86,11 @@ export const WikiLink = Node.create({
           const slug = title.toLowerCase().replace(/\s+/g, "-");
 
           // Grabs component described from node details above
-          tr.replaceWith(start, end, this.type.create({ title, slug }));
+          tr.replaceWith(
+            start,
+            end,
+            this.type.create({ title, slug, id: null }),
+          );
         },
       }),
     ];

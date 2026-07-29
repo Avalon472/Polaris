@@ -49,12 +49,12 @@ const Navbar = () => {
       className={`flex flex-col shrink-0 bg-bg2 h-screen border-r-2 border-border items-center transition-all duration-200 ${collapsed ? "w-16" : "w-56"}`}
     >
       {/* Top of navbar */}
-      <div className="flex flex-col items-center justify-center text-text p-3 border-b-2 gap-1 w-full">
+      <div className="flex flex-col items-center justify-center text-text p-3 border-b-2 gap-2 w-full">
         <div className="flex justify-center w-full">
           <h1
             className={`text-left overflow-hidden whitespace-nowrap transition-all duration-200 ${collapsed ? "invisible w-0" : "w-full"}`}
           >
-            Project Name
+            Polaris
           </h1>
           <div className="relative w-6 h-6 shrink-0">
             <PanelLeftCloseIcon
