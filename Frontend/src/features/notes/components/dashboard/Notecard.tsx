@@ -39,6 +39,14 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
         return "text-general";
     }
   })();
+
+  const createDescription = () => {
+    if (noteContent.body.length < 100) {
+      return noteContent.body;
+    } else {
+      return noteContent.body.slice(0, 100).trimEnd() + "...";
+    }
+  };
   return (
     <div>
       <Link to={`/notes/${noteContent.slug}`}>
@@ -111,7 +119,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
               <p
                 className={`text-sm text-muted leading-relaxed overflow-hidden line-clamp-3`}
               >
-                {noteContent.description ?? noteContent.body.slice(0, 100)}
+                {noteContent.description ?? createDescription()}
               </p>
             </div>
           )}

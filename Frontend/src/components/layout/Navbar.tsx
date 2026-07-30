@@ -59,11 +59,11 @@ const Navbar = () => {
           <div className="relative w-6 h-6 shrink-0">
             <PanelLeftCloseIcon
               onClick={() => setCollapsed(!collapsed)}
-              className={`absolute transition-opacity duration-300 ${collapsed ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+              className={`absolute transition-all duration-300 ${collapsed ? "opacity-0 pointer-events-none" : "opacity-100"} hover:text-accent`}
             />
             <PanelRightCloseIcon
               onClick={() => setCollapsed(!collapsed)}
-              className={`absolute transition-opacity duration-300 ${collapsed ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+              className={`absolute transition-all duration-300 ${collapsed ? "opacity-100" : "opacity-0 pointer-events-none"} hover:text-accent`}
             />
           </div>
         </div>
@@ -100,7 +100,7 @@ const Navbar = () => {
         {/* Bottom of navbar */}
         <div className="mt-auto justify-center items-center p-2 flex border-t-2 border-border">
           <LogOut
-            className={`-m-2 p-2 text-destructive border border-transparent hover:bg-bg3 hover:border-destructive rounded-md size-10`}
+            className={`-m-2 p-2 transition-all duration-300 text-destructive border border-transparent hover:border-destructive rounded-md size-10`}
             onClick={() => {
               logoutUser();
             }}
