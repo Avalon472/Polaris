@@ -1,4 +1,5 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import ViewPlaceholder from "@/components/layout/ViewPlaceholder";
 import {
   useGetAllNotes,
   usePinnedNotes,
@@ -23,7 +24,7 @@ const NotesOverview = () => {
           <NotesBoard notes={recentNotes} boardTitle="Recent" />
         </div>
         {/* Newspanel */}
-        <div className="h-1/2 bg-accent w-full" />
+        <ViewPlaceholder text="Notes Explorer Panel" />
       </div>
     </div>
   );

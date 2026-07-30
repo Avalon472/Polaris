@@ -47,8 +47,6 @@ export const WikiLink = Node.create({
   parseMarkdown(token) {
     const content = token.text ?? "";
     const [title, slug, id] = content.split("|");
-    console.log(content);
-    console.log(title, "title");
     return {
       type: "wikilink",
       attrs: { title, slug, id: id ?? null },
@@ -68,8 +66,8 @@ export const WikiLink = Node.create({
 
       return {
         type: "wikilink",
-        raw: match[0],
-        text: match[1], // everything between [[ and ]]
+        raw: match[0], // Full matched string
+        text: match[1], // Capture group, everything between brackets
       };
     },
   },

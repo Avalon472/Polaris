@@ -24,7 +24,7 @@ const NotesBoard = ({ notes: noteContents, boardTitle }: NoteboardProps) => {
       {noteContents ? (
         <>
           <div
-            className="size-full bg-bg3 p-4 gap-4 overflow-y-scroll scrollbar-thin rounded-t-2xl grid justify-center"
+            className="size-full bg-bg3 p-4 gap-4 overflow-y-scroll scrollbar-thin rounded-t-2xl grid justify-center border border-border border-b-0"
             style={{
               gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             }}
