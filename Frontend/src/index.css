@@ -48,6 +48,9 @@
   --color-bg: var(--bg);
   --color-bg2: var(--bg2);
   --color-bg3: var(--bg3);
+  --color-bg-solid: var(--bg-solid);
+  --color-bg2-solid: var(--bg2-solid);
+  --color-bg3-solid: var(--bg3-solid);
   --color-bgTransparent: var(--bgTransparent);
   --color-surface: var(--surface);
   --color-border-hover: var(--border-hover);
@@ -106,6 +109,9 @@
   --bg: #0a0f1c99;
   --bg2: #151b2e99;
   --bg3: #1d254099;
+  --bg-solid: #0a0f1cf1;
+  --bg2-solid: #151b2ef1;
+  --bg3-solid: #1d2540f1;
   --bgTransparent: #0a0f1c3e;
   --surface: rgba(255, 255, 255, 0.04);
   --border-hover: rgba(255, 255, 255, 0.13);

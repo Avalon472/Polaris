@@ -65,9 +65,9 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
             <div className="flex">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <button className="-m-2 p-2 group cursor-pointer">
+                  <div className="-m-2 p-2 group cursor-pointer">
                     <EllipsisVertical className="size-4 text-text group-hover:text-accent" />
-                  </button>
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem

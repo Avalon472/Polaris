@@ -27,7 +27,7 @@ const FieldLabel = ({
         id={id}
         className="flex items-center gap-1 text-sm uppercase text-subtle shrink-0 ml-2"
       >
-        {Icon && <Icon size={12} />}
+        {Icon && <Icon size={18} />}
         {label}
       </div>
       <div aria-labelledby={id}>{children}</div>
