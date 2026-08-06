@@ -30,7 +30,9 @@ const FieldLabel = ({
         {Icon && <Icon size={18} />}
         {label}
       </div>
-      <div aria-labelledby={id}>{children}</div>
+      <div aria-labelledby={id} className="flex">
+        {children}
+      </div>
     </div>
   );
 };

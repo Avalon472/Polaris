@@ -7,11 +7,17 @@ import {
 import { useGetNotesByParam } from "@/features/notes/api/NotesQueries";
 import DeleteModal from "@/features/notes/components/DeleteModal";
 import FieldLabel from "@/features/notes/components/editor/FieldLabel";
+import PreviewEditor from "@/features/notes/components/editor/PreviewEditor";
 import TagEditor from "@/features/notes/components/editor/TagsEditor";
 import Editor from "@/features/notes/components/editor/TextEditor";
 import TypeDropdown from "@/features/notes/components/editor/TypeDropdown";
 import type { NotePayload } from "@/types/notes";
-import { BookText, LucideArrowBigLeftDash, TagIcon } from "lucide-react";
+import {
+  BookText,
+  LayoutPanelLeft,
+  LucideArrowBigLeftDash,
+  TagIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -106,7 +112,7 @@ const NoteDetails = () => {
   const titleClass =
     "text-4xl leading-normal w-full px-8 py-2 rounded-2xl truncate min-h-18";
   return (
-    <div className="w-full h-full bg-bg3 p-4 overflow-y-scroll scrollbar-thin flex flex-col gap-2">
+    <div className="w-full h-full bg-bg3 p-4 overflow-y-scroll overflow-x-clip scrollbar-thin flex flex-col gap-2 relative">
       <div className="w-full flex justify-between items-center border-b border-border pb-1.5">
         <LucideArrowBigLeftDash
           size={30}
@@ -165,7 +171,7 @@ const NoteDetails = () => {
           />
         </FieldLabel>
         <FieldLabel
-          icon={TagIcon}
+          icon={LayoutPanelLeft}
           label="Type"
           id="noteTags"
           vertical
@@ -230,6 +236,13 @@ const NoteDetails = () => {
           }}
         />
       )}
+      <PreviewEditor
+        noteDescription={noteData?.description ?? ""}
+        editing={editing}
+        references={[]}
+        referencedBy={[]}
+        onChange={() => {}}
+      />
     </div>
   );
 };
