@@ -7,15 +7,21 @@ import { GripVertical } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Toolbar from "./EditorToolbar";
-import { CustomLink, WikiLink } from "./TiptapExtensions";
+import { CustomLink, WikiLinkExtension } from "./TiptapExtensions";
 
 interface EditorProps {
-  initialContent?: string;
-  onChange?: (markdown: string) => void;
+  initialContent: string;
+  onChange: (markdown: string) => void;
+  onReferencesChange: (ids: string[]) => void;
   isEditing: boolean;
 }
 
-function Editor({ initialContent, onChange, isEditing }: EditorProps) {
+function Editor({
+  initialContent,
+  onChange,
+  onReferencesChange,
+  isEditing,
+}: EditorProps) {
   const navigate = useNavigate();
   const editor = useEditor({
     extensions: [
@@ -25,7 +31,7 @@ function Editor({ initialContent, onChange, isEditing }: EditorProps) {
       CustomLink.configure({
         openOnClick: false,
       }),
-      WikiLink,
+      WikiLinkExtension,
     ],
     content: initialContent,
     editable: isEditing,
@@ -74,6 +80,18 @@ function Editor({ initialContent, onChange, isEditing }: EditorProps) {
           } else {
             window.open(href, "_blank", "noopener,noreferrer");
           }
+        }}
+        onBlur={() => {
+          const ids: string[] = [];
+          // Find all note references by the presence of wikilinks
+          // Grab the ids embedded in the notes for the reference list
+          editor.state.doc.descendants((node) => {
+            if (node.type.name === "wikilink" && node.attrs.id !== "null") {
+              ids.push(node.attrs.id);
+            }
+          });
+          // Cast to set to deduplicate
+          onReferencesChange([...new Set(ids)]);
         }}
         className={`overflow-y-auto ${isEditing ? "[&_a]:pointer-events-none [&_a]:pointer-text py-2" : "py-4"} transition-all duration-200`}
       />

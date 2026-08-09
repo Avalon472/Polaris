@@ -42,7 +42,11 @@ const NoteDetails = () => {
 
   useEffect(() => {
     if (note?.[0]) {
-      setDraftData(note[0]);
+      // Only the ids are needed from the references
+      setDraftData({
+        ...note[0],
+        references: note[0].references?.map((reference) => reference._id),
+      });
     }
     if (isNew) {
       setDraftData({
@@ -223,6 +227,9 @@ const NoteDetails = () => {
           setDraftData(() => ({ ...draftData, body: content }));
           setIsChanged(true);
         }}
+        onReferencesChange={(newRefs) =>
+          setDraftData(() => ({ ...draftData, references: newRefs }))
+        }
       />
 
       {!isNew && (
@@ -239,8 +246,8 @@ const NoteDetails = () => {
       <PreviewEditor
         noteDescription={noteData?.description ?? ""}
         editing={editing}
-        references={[]}
-        referencedBy={[]}
+        references={noteData?.references ?? []}
+        referencedBy={noteData?.referencedBy ?? []}
         onChange={() => {}}
       />
     </div>

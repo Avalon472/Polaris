@@ -1,3 +1,4 @@
+import type { NoteReference } from "@/types/notes";
 import {
   ChevronDown,
   ChevronUp,
@@ -10,8 +11,8 @@ import FieldLabel from "./FieldLabel";
 
 interface PreviewEditorProps {
   noteDescription: string;
-  references: string[];
-  referencedBy: string[];
+  references: NoteReference[];
+  referencedBy: NoteReference[];
   onChange: (description: string) => void;
   editing: boolean;
 }
@@ -40,9 +41,9 @@ const PreviewEditor = ({
           <textarea
             className={`${editing ? "bg-bg3 border border-border outline-none" : "bg-surface border border-transparent"} 
             p-2 rounded-lg max-h-70 min-h-40 size-full`}
-            onBlur={(e) => onChange(e.target.value)}
             disabled={!editing}
             value={noteDescription}
+            onChange={(e) => onChange(e.target.value)}
           />
         </FieldLabel>
 
@@ -55,7 +56,9 @@ const PreviewEditor = ({
         >
           <div className="flex gap-4 p-4 bg-surface rounded-md shrink-0 w-full">
             {references.map((item) => (
-              <div>{item}</div>
+              // TODO: swap out with wikilink, need to edit wikilink component
+              // to have a non-nodewrapper version
+              <div key={item._id}>{item.title}</div>
             ))}
           </div>
         </FieldLabel>
@@ -68,7 +71,7 @@ const PreviewEditor = ({
         >
           <div className="flex gap-4 p-4 bg-surface rounded-md shrink-0 w-full">
             {referencedBy.map((item) => (
-              <div>{item}</div>
+              <div key={item._id}>{item.title}</div>
             ))}
           </div>
         </FieldLabel>

@@ -10,7 +10,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
       author: req.userId,
     })
       .sort({ updatedAt: -1 })
-      .populate({ path: "references", select: "title slug" });
+      .populate({ path: "references referencedBy", select: "title slug" });
 
     if (notes.length === 0) {
       return res.status(200).json([]);
@@ -30,7 +30,7 @@ export const getNoteById = async (req: Request, res: Response) => {
     const noteID = req.params.id;
 
     const note = await Note.find({ _id: noteID, author: req.userId }).populate({
-      path: "references",
+      path: "references referencedBy",
       select: "title slug",
     });
 
@@ -53,7 +53,7 @@ export const getNoteByTag = async (req: Request, res: Response) => {
   try {
     const tags = req.params.tags;
     const notes = await Note.find({ tags: tags, author: req.userId }).populate({
-      path: "references",
+      path: "references referencedBy",
       select: "title slug",
     });
 
@@ -73,7 +73,10 @@ export const getNoteByTag = async (req: Request, res: Response) => {
 export const getNoteBySlug = async (req: Request, res: Response) => {
   try {
     const slug = req.params.slug;
-    const notes = await Note.find({ slug: slug, author: req.userId });
+    const notes = await Note.find({ slug: slug, author: req.userId }).populate({
+      path: "references referencedBy",
+      select: "title slug",
+    });
 
     if (!notes.length) {
       return res
@@ -193,10 +196,9 @@ export const editNote = async (req: Request, res: Response) => {
 
     // Populate after saving to provide expected response shape
     await note.populate({
-      path: "references",
+      path: "references referencedBy",
       select: "title slug",
     });
-    console.log("Final data", note.title, note._id, note.slug);
 
     return res.status(200).json(note);
   } catch (error) {
