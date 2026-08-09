@@ -2,9 +2,9 @@ import { InputRule, Node, mergeAttributes } from "@tiptap/core";
 import Link from "@tiptap/extension-link";
 import { TextSelection } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
-import WikiLinkView from "./Wikilink";
+import WikiLinkNode from "./Wikilink";
 
-export const WikiLink = Node.create({
+export const WikiLinkExtension = Node.create({
   name: "wikilink",
   group: "inline",
   inline: true,
@@ -31,7 +31,7 @@ export const WikiLink = Node.create({
 
   // Overrides renderHTML to display a react component instead
   addNodeView() {
-    return ReactNodeViewRenderer(WikiLinkView);
+    return ReactNodeViewRenderer(WikiLinkNode);
   },
 
   // Tell TipTap how to serialize the node

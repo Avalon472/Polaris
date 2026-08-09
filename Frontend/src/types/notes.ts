@@ -12,13 +12,6 @@ export const NoteType = {
   ARTICLE: "article",
 };
 
-// Hover/Preview
-export interface NoteCard {
-  summary: string;
-  coverIcon?: string;
-  tags: string[];
-}
-
 // Minimal shape
 export interface NoteListItem {
   _id: string;
@@ -28,7 +21,6 @@ export interface NoteListItem {
   description?: string;
   tags?: string[];
   type?: NoteType;
-  notecard?: NoteCard;
   updatedAt: string;
   pinned: boolean;
 }
@@ -47,7 +39,6 @@ export interface NoteReference {
   _id: string;
   title: string;
   slug: string;
-  notecard?: NoteCard;
 }
 
 // Shape of Fields for Create and Update
@@ -56,6 +47,7 @@ export interface NotePayload {
   body: string;
   tags?: string[];
   type?: NoteType;
+  references?: string[];
 }
 
 export interface UpdateNotePayload extends NotePayload {

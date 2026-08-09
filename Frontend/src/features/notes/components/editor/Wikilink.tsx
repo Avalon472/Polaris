@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetNotesByParam } from "../../api/NotesQueries";
 
-const WikiLinkView = ({ node, updateAttributes }: NodeViewProps) => {
+const WikiLinkNode = ({ node, updateAttributes }: NodeViewProps) => {
   const navigate = useNavigate();
   const { id, slug, title } = node.attrs;
 
@@ -53,4 +53,4 @@ const WikiLinkView = ({ node, updateAttributes }: NodeViewProps) => {
   );
 };
 
-export default WikiLinkView;
+export default WikiLinkNode;
