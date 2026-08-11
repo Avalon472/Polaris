@@ -39,9 +39,10 @@ const PreviewEditor = ({
           width={100}
         >
           <textarea
-            className={`${editing ? "bg-bg3 border border-border outline-none" : "bg-surface border border-transparent"} 
-            p-2 rounded-lg max-h-70 min-h-40 size-full`}
-            disabled={!editing}
+            name="noteDescriptionInput"
+            className={`${editing ? "bg-bg3 border border-border" : "bg-surface border border-transparent"} 
+            p-2 rounded-lg max-h-70 min-h-40 size-full text-muted-foreground outline-none`}
+            readOnly={!editing}
             value={noteDescription}
             onChange={(e) => onChange(e.target.value)}
           />

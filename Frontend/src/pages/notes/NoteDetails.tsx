@@ -11,11 +11,13 @@ import PreviewEditor from "@/features/notes/components/editor/PreviewEditor";
 import TagEditor from "@/features/notes/components/editor/TagsEditor";
 import Editor from "@/features/notes/components/editor/TextEditor";
 import TypeDropdown from "@/features/notes/components/editor/TypeDropdown";
+import { createDescription } from "@/lib/utils";
 import type { NotePayload } from "@/types/notes";
 import {
+  ArrowBigLeftDash,
   BookText,
+  HomeIcon,
   LayoutPanelLeft,
-  LucideArrowBigLeftDash,
   TagIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -75,6 +77,12 @@ const NoteDetails = () => {
   const noteData = isNew ? null : note![0];
 
   const handleSave = () => {
+    if (!draftData.description) {
+      setDraftData(() => ({
+        ...draftData,
+        description: createDescription(draftData.body),
+      }));
+    }
     if (isNew) {
       createNote.mutate(
         {
@@ -116,13 +124,22 @@ const NoteDetails = () => {
   const titleClass =
     "text-4xl leading-normal w-full px-8 py-2 rounded-2xl truncate min-h-18";
   return (
-    <div className="w-full h-full bg-bg3 p-4 overflow-y-scroll overflow-x-clip scrollbar-thin flex flex-col gap-2 relative">
+    <div className="w-full h-full bg-bg3 p-4 overflow-clip flex flex-col gap-2 relative">
       <div className="w-full flex justify-between items-center border-b border-border pb-1.5">
-        <LucideArrowBigLeftDash
-          size={30}
-          onClick={() => navigate(-1)}
-          className="text-text hover:text-accent transition-colors duration-200"
-        />
+        <div className="flex gap-4 items-center">
+          <ArrowBigLeftDash
+            strokeWidth={1}
+            size={30}
+            onClick={() => navigate(-1)}
+            className="text-text hover:text-accent transition-colors duration-200"
+          />
+          <HomeIcon
+            strokeWidth={1}
+            size={25}
+            onClick={() => navigate("/notes")}
+            className="text-text hover:text-accent transition-colors duration-200"
+          />
+        </div>
         <div className="flex gap-4">
           {editing ? (
             <>
@@ -244,11 +261,13 @@ const NoteDetails = () => {
         />
       )}
       <PreviewEditor
-        noteDescription={noteData?.description ?? ""}
+        noteDescription={draftData?.description ?? ""}
         editing={editing}
         references={noteData?.references ?? []}
         referencedBy={noteData?.referencedBy ?? []}
-        onChange={() => {}}
+        onChange={(desc) => {
+          setDraftData(() => ({ ...draftData, description: desc }));
+        }}
       />
     </div>
   );

@@ -48,6 +48,7 @@ export interface NotePayload {
   tags?: string[];
   type?: NoteType;
   references?: string[];
+  description?: string;
 }
 
 export interface UpdateNotePayload extends NotePayload {

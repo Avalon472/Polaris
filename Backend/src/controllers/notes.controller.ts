@@ -95,7 +95,7 @@ export const getNoteBySlug = async (req: Request, res: Response) => {
 
 export const createNote = async (req: Request, res: Response) => {
   try {
-    const { title, body, tags, type } = req.body;
+    const { title, body, tags, type, description } = req.body;
 
     const existingTitle = await Note.findOne({ title: title });
     if (existingTitle) {
@@ -110,6 +110,7 @@ export const createNote = async (req: Request, res: Response) => {
       title,
       body,
       bodyText: body, //TODO: Make markdown stripper method after confirming format (i.e. stripHtml(body))
+      description,
       slug,
       tags,
       type,
@@ -128,7 +129,8 @@ export const createNote = async (req: Request, res: Response) => {
 export const editNote = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const { title, body, tags, type, pinned, references } = req.body;
+    const { title, body, tags, type, pinned, references, description } =
+      req.body;
 
     const note = await Note.findOne({ _id: id, author: req.userId });
 
@@ -191,6 +193,7 @@ export const editNote = async (req: Request, res: Response) => {
     if (type !== undefined) note.type = type;
     if (pinned !== undefined) note.pinned = pinned;
     if (references !== undefined) note.references = newRefs;
+    if (description !== undefined) note.description = description;
 
     await note.save();
 
