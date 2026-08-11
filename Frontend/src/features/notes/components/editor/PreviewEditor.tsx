@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import FieldLabel from "./FieldLabel";
+import { WikiLink } from "./Wikilink";
 
 interface PreviewEditorProps {
   noteDescription: string;
@@ -55,11 +56,9 @@ const PreviewEditor = ({
           vertical
           width={100}
         >
-          <div className="flex gap-4 p-4 bg-surface rounded-md shrink-0 w-full">
+          <div className="flex gap-4 p-2 bg-surface rounded-md shrink-0 w-full flex-wrap">
             {references.map((item) => (
-              // TODO: swap out with wikilink, need to edit wikilink component
-              // to have a non-nodewrapper version
-              <div key={item._id}>{item.title}</div>
+              <WikiLink key={item._id} title={item.title} slug={item.slug} />
             ))}
           </div>
         </FieldLabel>
@@ -70,9 +69,9 @@ const PreviewEditor = ({
           vertical
           width={100}
         >
-          <div className="flex gap-4 p-4 bg-surface rounded-md shrink-0 w-full">
+          <div className="flex gap-4 p-2 bg-surface rounded-md shrink-0 w-full flex-wrap">
             {referencedBy.map((item) => (
-              <div key={item._id}>{item.title}</div>
+              <WikiLink key={item._id} title={item.title} slug={item.slug} />
             ))}
           </div>
         </FieldLabel>

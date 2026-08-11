@@ -2,7 +2,7 @@ import { InputRule, Node, mergeAttributes } from "@tiptap/core";
 import Link from "@tiptap/extension-link";
 import { TextSelection } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
-import WikiLinkNode from "./Wikilink";
+import { WikiLinkNode } from "./Wikilink";
 
 export const WikiLinkExtension = Node.create({
   name: "wikilink",
