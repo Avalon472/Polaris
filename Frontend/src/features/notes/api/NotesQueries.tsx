@@ -18,11 +18,15 @@ export const useGetAllNotes = () => {
 };
 
 //Works for ID, tags, slugs
-export const useGetNotesByParam = (param: NoteQueryType, value: string) => {
+export const useGetNotesByParam = (
+  param: NoteQueryType,
+  value: string,
+  enabled: boolean = true,
+) => {
   return useQuery({
     queryKey: ["notes", param, value],
     queryFn: async () => {
-      if (value !== "null") {
+      if (value !== "null" && enabled) {
         const { data } = await api.get(`/notes/${param}/${value}`);
         return data as Note[];
       } else {

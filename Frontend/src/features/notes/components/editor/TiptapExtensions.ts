@@ -16,6 +16,7 @@ export const WikiLinkExtension = Node.create({
       slug: { default: null },
       title: { default: null },
       id: { default: null },
+      enabled: { default: true },
     };
   },
 
@@ -39,17 +40,24 @@ export const WikiLinkExtension = Node.create({
     const title = node.attrs?.title || "";
     const slug = node.attrs?.slug || "";
     const id = node.attrs?.id || null;
+    const enabled = node.attrs?.enabled ?? true;
 
-    return `[[${title}|${slug}|${id}]]`;
+    return `[[${title}|${slug}|${id}|${enabled}]]`;
   },
 
   // Tells TipTap how to deserialize/render the node
   parseMarkdown(token) {
     const content = token.text ?? "";
-    const [title, slug, id] = content.split("|");
+    const [title, slug, id, enabled] = content.split("|");
     return {
       type: "wikilink",
-      attrs: { title, slug, id: id ?? null },
+      attrs: {
+        title,
+        slug,
+        id: id && id !== "null" ? id : null,
+        // Wikilinks made before adding this attribute will be undefined
+        enabled: enabled === undefined ? true : enabled === "true",
+      },
     };
   },
 

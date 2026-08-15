@@ -39,18 +39,26 @@ export const WikiLink = ({
 };
 
 export const WikiLinkNode = ({ node, updateAttributes }: NodeViewProps) => {
-  const { id, slug: embeddedSlug, title: embeddedTitle } = node.attrs;
+  const { id, slug: embeddedSlug, title: embeddedTitle, enabled } = node.attrs;
 
   const noteID: string | undefined = id !== "null" ? id : undefined;
   // Query by ID if available, otherwise slug
-  const { data: linkedNote } = useGetNotesByParam(
+  const { data: linkedNote, isLoading } = useGetNotesByParam(
     noteID ? "id" : "slug",
     noteID ?? embeddedSlug,
+    enabled,
   );
 
   // Sync attributes whenever the live note data changes
   useEffect(() => {
-    if (!linkedNote?.[0]) return;
+    if (isLoading || !enabled) {
+      return;
+    }
+    if (!linkedNote?.[0]) {
+      // Mark note as dead if it didn't resolve
+      updateAttributes({ enabled: false });
+      return;
+    }
     const note = linkedNote[0];
 
     // Update cached values if anything has drifted
@@ -65,7 +73,7 @@ export const WikiLinkNode = ({ node, updateAttributes }: NodeViewProps) => {
         title: note.title,
       });
     }
-  }, [linkedNote]);
+  }, [linkedNote, isLoading, enabled]);
 
   return (
     // Needs to have NodeViewWrapper as root element to allow for
