@@ -30,6 +30,8 @@ const NoteDetails = () => {
   const [isChanged, setIsChanged] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
+  if (!slug) return <div>404, no route param provided</div>;
+
   const isNew = slug === "new" || !slug;
 
   const {
@@ -42,22 +44,27 @@ const NoteDetails = () => {
     undefined,
   );
 
-  useEffect(() => {
+  const [prevSlug, setPrevSlug] = useState<string | null>(null);
+
+  if (slug !== prevSlug) {
+    setPrevSlug(slug ?? null);
     setEditing(isNew);
     setIsChanged(false);
     setDeleteOpen(false);
-  }, [slug]);
+    // Set draftData synchronously for new notes, otherwise clear it and let
+    // the useEffect define it once the note query has resolved
+    setDraftData(
+      isNew ? { title: "New Note", body: "Let's get started" } : undefined,
+    );
+  }
 
   useEffect(() => {
-    if (isNew) {
-      setDraftData({ title: "New Note", body: "Let's get started" });
-      return;
-    }
-    if (note?.[0]) {
+    // Already handled above, returns early to prevent extra evaluations
+    if (isNew) return;
+    if (note?.[0]?.slug === slug) {
       setDraftData({
-        // Only IDs are needed from the references
         ...note[0],
-        references: note[0].references?.map((r) => r._id),
+        references: note[0].references?.map((ref) => ref._id),
       });
     }
   }, [note, isNew, slug]);
@@ -71,7 +78,6 @@ const NoteDetails = () => {
   const isPending =
     isLoading || isRefetching || activeNote.isPending || deleteNote.isPending;
 
-  if (!slug) return <div>404, no route param provided</div>;
   if (isPending || !draftData) {
     return <LoadingSpinner />;
   }
@@ -240,7 +246,6 @@ const NoteDetails = () => {
       </FieldLabel>
 
       <Editor
-        key={slug}
         initialContent={draftData.body}
         isEditing={editing}
         onChange={(content) => {
