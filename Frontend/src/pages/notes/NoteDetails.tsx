@@ -43,21 +43,24 @@ const NoteDetails = () => {
   );
 
   useEffect(() => {
-    if (note?.[0]) {
-      // Only the ids are needed from the references
-      setDraftData({
-        ...note[0],
-        references: note[0].references?.map((reference) => reference._id),
-      });
-    }
+    setEditing(isNew);
+    setIsChanged(false);
+    setDeleteOpen(false);
+  }, [slug]);
+
+  useEffect(() => {
     if (isNew) {
-      setDraftData({
-        title: "New Note",
-        body: "Let's get started",
-      });
-      setEditing(true);
+      setDraftData({ title: "New Note", body: "Let's get started" });
+      return;
     }
-  }, [note, isNew]);
+    if (note?.[0]) {
+      setDraftData({
+        // Only IDs are needed from the references
+        ...note[0],
+        references: note[0].references?.map((r) => r._id),
+      });
+    }
+  }, [note, isNew, slug]);
 
   const deleteNote = useDeleteNote();
   const updateNote = useUpdateNote();
@@ -135,7 +138,7 @@ const NoteDetails = () => {
           />
           <HomeIcon
             strokeWidth={1}
-            size={25}
+            size={30}
             onClick={() => navigate("/notes")}
             className="text-text hover:text-accent transition-colors duration-200"
           />
@@ -237,7 +240,7 @@ const NoteDetails = () => {
       </FieldLabel>
 
       <Editor
-        key={draftData.title}
+        key={slug}
         initialContent={draftData.body}
         isEditing={editing}
         onChange={(content) => {

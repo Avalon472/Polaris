@@ -58,10 +58,12 @@ const Navbar = () => {
           </h1>
           <div className="relative w-6 h-6 shrink-0">
             <PanelLeftCloseIcon
+              strokeWidth={1.5}
               onClick={() => setCollapsed(!collapsed)}
               className={`absolute transition-all duration-300 ${collapsed ? "opacity-0 pointer-events-none" : "opacity-100"} hover:text-accent`}
             />
             <PanelRightCloseIcon
+              strokeWidth={1.5}
               onClick={() => setCollapsed(!collapsed)}
               className={`absolute transition-all duration-300 ${collapsed ? "opacity-100" : "opacity-0 pointer-events-none"} hover:text-accent`}
             />
@@ -76,9 +78,7 @@ const Navbar = () => {
       </div>
 
       {/* Body of navbar */}
-      <div
-        className={`flex flex-col size-full text-text ${collapsed ? "p-1" : "p-3"}`}
-      >
+      <div className={`flex flex-col size-full text-text p-2`}>
         <div className="flex flex-col items-start gap-2">
           <p className={`text-muted ${collapsed ? "invisible" : ""}`}>
             Workspace

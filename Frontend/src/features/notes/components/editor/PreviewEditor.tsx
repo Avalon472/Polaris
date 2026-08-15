@@ -28,7 +28,7 @@ const PreviewEditor = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
-      className={`absolute bg-bg2-solid w-2/5 h-2/3 origin-center left-full inset-0 flex flex-col my-auto transition-transform duration-600
+      className={`absolute bg-bg2-solid w-2/5 h-1/2 origin-center left-full inset-0 flex flex-col my-auto transition-transform duration-600
         rounded-xl p-4 border gap-4 ${isOpen ? "-translate-x-full border-accent" : "-translate-x-4 border-border"}`}
     >
       <div className="flex flex-col gap-4">
@@ -42,10 +42,11 @@ const PreviewEditor = ({
           <textarea
             name="noteDescriptionInput"
             className={`${editing ? "bg-bg3 border border-border" : "bg-surface border border-transparent"} 
-            p-2 rounded-lg max-h-70 min-h-40 size-full text-muted-foreground outline-none`}
+            p-2 rounded-lg h-30 size-full text-muted-foreground outline-none resize-none`}
             readOnly={!editing}
             value={noteDescription}
             onChange={(e) => onChange(e.target.value)}
+            maxLength={200}
           />
         </FieldLabel>
 
@@ -56,7 +57,7 @@ const PreviewEditor = ({
           vertical
           width={100}
         >
-          <div className="flex gap-4 p-2 bg-surface rounded-md shrink-0 w-full flex-wrap">
+          <div className="flex gap-4 p-2 bg-surface rounded-md shrink-0 w-full flex-wrap min-h-10">
             {references.map((item) => (
               <WikiLink key={item._id} title={item.title} slug={item.slug} />
             ))}
@@ -69,7 +70,7 @@ const PreviewEditor = ({
           vertical
           width={100}
         >
-          <div className="flex gap-4 p-2 bg-surface rounded-md shrink-0 w-full flex-wrap">
+          <div className="flex gap-4 p-2 bg-surface rounded-md shrink-0 w-full flex-wrap min-h-10">
             {referencedBy.map((item) => (
               <WikiLink key={item._id} title={item.title} slug={item.slug} />
             ))}

@@ -93,7 +93,7 @@ function Editor({
           // Cast to set to deduplicate
           onReferencesChange([...new Set(ids)]);
         }}
-        className={`overflow-y-auto ${isEditing ? "[&_a]:pointer-events-none [&_a]:pointer-text py-2" : "py-4"} transition-all duration-200`}
+        className={`overflow-y-auto ${isEditing ? "[&_a]:pointer-events-none [&_a]:pointer-text py-2" : "py-4"} transition-all duration-200 scrollbar-thin`}
       />
     </div>
   );
