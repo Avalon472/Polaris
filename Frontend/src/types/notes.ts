@@ -23,6 +23,7 @@ export interface NoteListItem {
   type?: NoteType;
   updatedAt: string;
   pinned: boolean;
+  path: string;
 }
 
 // Full shape
@@ -57,3 +58,11 @@ export interface UpdateNotePayload extends NotePayload {
 }
 
 export type NoteQueryType = "id" | "tag" | "slug";
+
+export interface NoteFileNode {
+  type: "folder" | "note";
+  name: string;
+  path: string;
+  children?: NoteFileNode[]; // for folders
+  noteSlug?: string; // for notes
+}

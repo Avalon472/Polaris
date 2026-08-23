@@ -21,6 +21,7 @@ const NoteSchema = new Schema(
       enum: ["general", "framework", "tool", "project-spec", "article"],
       default: "general",
     },
+    path: { type: String, default: "/" },
 
     // Soft delete
     archivedAt: { type: Date, default: null },
