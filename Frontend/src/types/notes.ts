@@ -65,4 +65,5 @@ export interface NoteFileNode {
   path: string;
   children?: NoteFileNode[]; // for folders
   noteSlug?: string; // for notes
+  noteType?: NoteType; // for notes
 }

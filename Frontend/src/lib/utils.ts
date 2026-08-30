@@ -1,4 +1,4 @@
-import type { NoteFileNode, NoteListItem } from "@/types/notes";
+import { type NoteFileNode, type NoteListItem } from "@/types/notes";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -28,6 +28,7 @@ export const createFileTree = (noteList: NoteListItem[]): NoteFileNode[] => {
         name: note.title,
         path: "/",
         noteSlug: note.slug,
+        noteType: note.type ?? "general",
       });
     } else {
       // Sibling nodes, or empty list if the folder hasn't been created yet
@@ -41,6 +42,7 @@ export const createFileTree = (noteList: NoteListItem[]): NoteFileNode[] => {
         name: note.title,
         path: notePath,
         noteSlug: note.slug,
+        noteType: note.type ?? "general",
       });
     }
   }

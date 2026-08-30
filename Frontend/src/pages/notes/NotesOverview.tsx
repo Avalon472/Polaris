@@ -1,11 +1,11 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
-import ViewPlaceholder from "@/components/layout/ViewPlaceholder";
 import {
   useGetAllNotes,
   usePinnedNotes,
   useRecentNotes,
 } from "@/features/notes/api/NotesQueries";
 import NotesBoard from "@/features/notes/components/dashboard/NotesBoard";
+import NotesFileExplorer from "@/features/notes/components/dashboard/NotesFileExplorer";
 import NotesSidebar from "@/features/notes/components/dashboard/NotesSidebar";
 
 const NotesOverview = () => {
@@ -23,8 +23,7 @@ const NotesOverview = () => {
           <NotesBoard notes={pinnedNotes} boardTitle="Pinned" />
           <NotesBoard notes={recentNotes} boardTitle="Recent" />
         </div>
-        {/* Newspanel */}
-        <ViewPlaceholder text="Notes Explorer Panel" />
+        <NotesFileExplorer />
       </div>
     </div>
   );
