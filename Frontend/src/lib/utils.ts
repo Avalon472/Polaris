@@ -98,3 +98,11 @@ const sortNodes = (nodes: NoteFileNode[]): NoteFileNode[] => {
         : node,
     );
 };
+
+export const sortNodeLayer = (nodes: NoteFileNode[]): NoteFileNode[] => {
+  // Same sort algorithm but avoids recursive sorting for folders
+  return nodes.sort((a, b) => {
+    if (a.type !== b.type) return a.type === "folder" ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
+};

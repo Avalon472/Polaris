@@ -1,80 +1,76 @@
-import { createFileTree } from "@/lib/utils";
-import type { NoteFileNode } from "@/types/notes";
-import {
-  ClipboardList,
-  FileText,
-  Newspaper,
-  ToolCase,
-  Wrench,
-} from "lucide-react";
-import { useMemo } from "react";
+import { createFileTree, sortNodeLayer } from "@/lib/utils";
+import { FolderPlus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetAllNotes } from "../../api/NotesQueries";
-
-interface FileNodeProps {
-  node: NoteFileNode;
-}
-const FileNode = ({ node }: FileNodeProps) => {
-  const iconSize = 50;
-  const navigate = useNavigate();
-  // Using an IIFE to immediately decide icon using the type
-  const noteTypeIcon = (() => {
-    switch (node.noteType) {
-      case "framework":
-        return <ToolCase className="text-framework shrink-0" size={iconSize} />;
-      case "project-spec":
-        return (
-          <ClipboardList
-            className="text-project-spec shrink-0"
-            size={iconSize}
-          />
-        );
-      case "tool":
-        return <Wrench className="text-tool shrink-0" size={iconSize} />;
-      case "article":
-        return <Newspaper className="text-article shrink-0" size={iconSize} />;
-      case "general":
-      default:
-        return <FileText className="text-general shrink-0" size={iconSize} />;
-    }
-  })();
-
-  return (
-    <div
-      className="gap-2 items-center justify-center p-2 text-text hover:text-accent
-    hover:shadow hover:-translate-y-1 transition-all duration-400 ease-in-out shadow-accent
-    bg-bg2 border border-border rounded-2xl flex flex-col overflow-hidden size-28 cursor-pointer"
-      onClick={() => {
-        navigate(`/notes/${node.noteSlug}`);
-      }}
-    >
-      {noteTypeIcon}
-      <p className="w-full text-center text-sm/4 line-clamp-2 overflow-hidden text-ellipsis mb-auto">
-        {node.name}
-      </p>
-    </div>
-  );
-};
+import AddFolderModal from "../explorer/AddFolderModal";
+import FileNode from "../explorer/FileNode";
 
 const NotesFileExplorer = () => {
+  const navigate = useNavigate();
   // TODO: Add state object for current folder,
   // change displayed notes based on folder
   // add breadcrumb at top to show file path
   const { data: notes } = useGetAllNotes();
-  // Memoize file tree so it doesn't get constantly recalculated
-  const fileTree = useMemo(() => createFileTree(notes ?? []), [notes]);
+
+  const [currentPath, setCurrentPath] = useState("/");
+  const [addFolder, setAddFolder] = useState(false);
+  // Originally memoized but shifted to state object to
+  // allow for resorting after adding or moving a file node
+  const [fileTree, setFileTree] = useState(createFileTree(notes ?? []));
+  useEffect(() => {
+    setFileTree(createFileTree(notes ?? []));
+  }, [notes]);
   return (
-    <div className="size-full flex flex-col">
+    <div className="h-1/2 flex-1 min-h-0 w-full flex flex-col">
       <p className="pl-2 text-subtle">Note Exporer</p>
 
-      <div className="h-full bg-bg3 p-4 gap-4 overflow-y-scroll scrollbar-thin rounded-2xl border border-border content-start flex flex-wrap">
-        {fileTree.map((node) => (
-          <FileNode
-            key={node.type === "note" ? node.noteSlug : node.path}
-            node={node}
-          />
-        ))}
+      <div className="flex flex-col h-full bg-bg3 py-2 px-4 rounded-2xl border border-border content-start ">
+        <div className="flex">
+          <p>Home {currentPath}</p>
+          <FolderPlus className="ml-auto" onClick={() => setAddFolder(true)} />
+        </div>
+
+        <div className="flex flex-wrap gap-4 py-2 overflow-y-scroll scrollbar-thin">
+          {fileTree.map((node) => {
+            if (node.path === currentPath) {
+              return node.type === "note" ? (
+                <FileNode
+                  type="note"
+                  clickHandler={() => {
+                    navigate(`/notes/${node.noteSlug}`);
+                  }}
+                  node={node}
+                />
+              ) : (
+                <FileNode
+                  key={node.path}
+                  type="folder"
+                  clickHandler={() => {
+                    setCurrentPath(node.name);
+                  }}
+                  folderName={node.name}
+                />
+              );
+            }
+          })}
+        </div>
       </div>
+
+      <AddFolderModal
+        isOpen={addFolder}
+        onOpenChange={setAddFolder}
+        onConfirm={(folderName) => {
+          fileTree.push({
+            type: "folder",
+            name: folderName,
+            path: currentPath,
+            children: [],
+          });
+
+          setFileTree(sortNodeLayer(fileTree));
+        }}
+      />
     </div>
   );
 };

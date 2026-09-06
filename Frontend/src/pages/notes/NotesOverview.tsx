@@ -19,7 +19,7 @@ const NotesOverview = () => {
     <div className="flex w-full h-full">
       <NotesSidebar notes={noteData} />
       <div className="h-full w-full flex flex-col gap-4 p-4">
-        <div className="flex gap-4 h-1/2 justify-between">
+        <div className="flex flex-1 gap-4 h-1/2 justify-between">
           <NotesBoard notes={pinnedNotes} boardTitle="Pinned" />
           <NotesBoard notes={recentNotes} boardTitle="Recent" />
         </div>
