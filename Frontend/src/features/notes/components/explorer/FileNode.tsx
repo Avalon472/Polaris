@@ -11,10 +11,17 @@ import {
 interface FileNodeProps {
   type: "note" | "folder";
   clickHandler: () => void;
+  selected: boolean;
   node?: NoteFileNode;
   folderName?: string;
 }
-const FileNode = ({ type, clickHandler, node, folderName }: FileNodeProps) => {
+const FileNode = ({
+  type,
+  clickHandler,
+  selected,
+  node,
+  folderName,
+}: FileNodeProps) => {
   const iconSize = 50;
   // Using an IIFE to immediately decide icon using the type
   const noteTypeIcon = (() => {
@@ -50,9 +57,10 @@ const FileNode = ({ type, clickHandler, node, folderName }: FileNodeProps) => {
 
   return (
     <div
-      className="gap-2 items-center justify-center p-2 text-text hover:text-accent
+      className={`gap-2 items-center justify-center p-2 text-text hover:text-accent
     hover:shadow hover:-translate-y-1 transition-all duration-400 ease-in-out shadow-accent
-    bg-bg2 border border-border rounded-2xl flex flex-col overflow-hidden size-28 cursor-pointer"
+border border-border rounded-2xl flex flex-col overflow-hidden w-30 h-28 cursor-pointer
+    ${selected ? "bg-surface" : "bg-bg2"}`}
       onClick={() => {
         clickHandler();
       }}

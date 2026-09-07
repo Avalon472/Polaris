@@ -129,7 +129,7 @@ export const createNote = async (req: Request, res: Response) => {
 export const editNote = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const { title, body, tags, type, pinned, references, description } =
+    const { title, body, path, tags, type, pinned, references, description } =
       req.body;
 
     const note = await Note.findOne({ _id: id, author: req.userId });
@@ -189,6 +189,7 @@ export const editNote = async (req: Request, res: Response) => {
       note.bodyText = body;
     }
 
+    if (path !== undefined) note.path = path;
     if (tags !== undefined) note.tags = tags;
     if (type !== undefined) note.type = type;
     if (pinned !== undefined) note.pinned = pinned;

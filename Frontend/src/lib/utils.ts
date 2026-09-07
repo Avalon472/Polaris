@@ -35,8 +35,10 @@ export const createFileTree = (noteList: NoteListItem[]): NoteFileNode[] => {
       const childrenNodes = findCreateFolder(
         noteSegments,
         root,
+        "/",
         `/${noteSegments[0]}`,
       );
+
       childrenNodes.push({
         type: "note",
         name: note.title,
@@ -53,6 +55,7 @@ export const createFileTree = (noteList: NoteListItem[]): NoteFileNode[] => {
 const findCreateFolder = (
   segments: string[],
   nodes: NoteFileNode[],
+  currentPath: string,
   fullPath: string,
 ): NoteFileNode[] => {
   if (segments.length === 0) return nodes;
@@ -69,18 +72,15 @@ const findCreateFolder = (
     folder = {
       type: "folder",
       name: headSegment,
-      path: fullPath,
+      path: currentPath,
       children: [],
     };
     nodes.push(folder);
   }
 
+  const nextPath = `${fullPath}/${rest[0] ?? ""}`.replace(/\/$/, "");
   // Recurse to get deepest existing path
-  return findCreateFolder(
-    rest,
-    folder.children!,
-    `${fullPath}/${rest[0] ?? ""}`,
-  );
+  return findCreateFolder(rest, folder.children!, `${fullPath}/`, nextPath);
 };
 
 const sortNodes = (nodes: NoteFileNode[]): NoteFileNode[] => {

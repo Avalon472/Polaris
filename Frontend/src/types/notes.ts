@@ -46,6 +46,7 @@ export interface NoteReference {
 export interface NotePayload {
   title: string;
   body: string;
+  path: string;
   tags?: string[];
   type?: NoteType;
   references?: string[];

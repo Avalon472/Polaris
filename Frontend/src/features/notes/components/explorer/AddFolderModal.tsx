@@ -29,20 +29,18 @@ const AddFolderModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Folder</DialogTitle>
-
-          <input
-            className={`bg-bg3 border border-border outline-none placeholder:text-subtle`}
-            placeholder="Folder Name"
-            name="folderName"
-            type="text"
-            onChange={(e) => {
-              setFolderName(e.target.value);
-            }}
-            value={folderName}
-          />
         </DialogHeader>
-
-        <div className="flex justify-end gap-2 pt-4">
+        <input
+          className={`h-10 text-lg px-2 rounded-md bg-bg3 border border-border outline-none placeholder:text-subtle`}
+          placeholder="Folder Name"
+          name="folderName"
+          type="text"
+          onChange={(e) => {
+            setFolderName(e.target.value);
+          }}
+          value={folderName}
+        />
+        <div className="flex justify-end gap-2">
           <button
             type="button"
             onClick={(e) => {
