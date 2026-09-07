@@ -1,6 +1,6 @@
-import { createFileTree, sortNodeLayer } from "@/lib/utils";
+import { createFileTree, findLayerParent, sortNodeLayer } from "@/lib/utils";
 import type { UpdateNotePayload } from "@/types/notes";
-import { FolderPlus, Move, X } from "lucide-react";
+import { FolderPlus, Move, MoveUp, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,8 @@ import FileNode from "../explorer/FileNode";
 
 const NotesFileExplorer = () => {
   const navigate = useNavigate();
-  // TODO: Add breadcrumb at top to show file path
+  // TODO: Add breadcrumb at top to show file path,
+  // better refresh tree after adding a node in a deeper layer
   const { data: notes } = useGetAllNotes();
   const updateNote = useUpdateNote();
 
@@ -28,6 +29,8 @@ const NotesFileExplorer = () => {
   }, [notes]);
   console.log(fileTree);
   console.log(currentPath);
+  const iconCoreClasses =
+    "transition-all duration-300 text-text hover:text-accent";
   return (
     <div className="h-1/2 flex-1 min-h-0 w-full flex flex-col select-none">
       <p className="pl-2 text-subtle">Note Exporer</p>
@@ -36,13 +39,36 @@ const NotesFileExplorer = () => {
         <div className="flex border-b border-border w-full p-2 px-4">
           <p>Home{currentPath}</p>
           <div className="flex gap-2 ml-auto">
+            <MoveUp
+              className={`${currentPath === "/" ? "text-muted" : "text-text hover:text-accent"} transition-all duration-300`}
+              onClick={() => {
+                if (currentPath !== "/") {
+                  // Find index of last '/' before end of string, make substring from start of path until that '/' to get parent path
+                  const parentPath = currentPath.slice(
+                    0,
+                    currentPath.lastIndexOf("/", currentPath.length - 2) + 1,
+                  );
+                  setCurrentPath(parentPath);
+                  setLocalTree(findLayerParent(fileTree, currentPath));
+                }
+              }}
+            />
             {moveNode ? (
-              <X onClick={() => setMoveNode(false)} />
+              <X
+                className={`${iconCoreClasses}`}
+                onClick={() => setMoveNode(false)}
+              />
             ) : (
-              <Move onClick={() => setMoveNode(true)} />
+              <Move
+                className={`${iconCoreClasses}`}
+                onClick={() => setMoveNode(true)}
+              />
             )}
 
-            <FolderPlus onClick={() => setAddFolder(true)} />
+            <FolderPlus
+              className={`${iconCoreClasses}`}
+              onClick={() => setAddFolder(true)}
+            />
           </div>
         </div>
 
@@ -104,7 +130,7 @@ const NotesFileExplorer = () => {
         isOpen={addFolder}
         onOpenChange={setAddFolder}
         onConfirm={(folderName) => {
-          fileTree.push({
+          localTree.push({
             type: "folder",
             name: folderName,
             path: currentPath,

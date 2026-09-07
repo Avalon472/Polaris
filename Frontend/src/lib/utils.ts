@@ -106,3 +106,34 @@ export const sortNodeLayer = (nodes: NoteFileNode[]): NoteFileNode[] => {
     return a.name.localeCompare(b.name);
   });
 };
+
+export const findLayerParent = (
+  nodes: NoteFileNode[],
+  currentFolderPath: string,
+): NoteFileNode[] => {
+  const parentSegments = currentFolderPath
+    .split("/")
+    .filter(Boolean)
+    .slice(0, -1);
+  const parentPath =
+    parentSegments.length === 0 ? "/" : `/${parentSegments.join("/")}/`;
+
+  // Check if parent or self is root level
+  if (parentPath === "/" || currentFolderPath === "/") {
+    return nodes;
+  }
+
+  let currentLayer = nodes;
+  for (const segment of parentSegments) {
+    const folder = currentLayer.find(
+      (node) => node.type === "folder" && node.name === segment,
+    );
+    // Jump back to root if a segment or its child nodes can't be located
+    if (!folder || !folder.children) {
+      return nodes;
+    }
+    currentLayer = folder.children!;
+  }
+
+  return currentLayer;
+};
