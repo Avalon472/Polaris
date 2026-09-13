@@ -22,7 +22,7 @@ createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <App />
         <Toaster
-          position="bottom-right"
+          position="top-center"
           toastOptions={{
             style: {
               border: "0.5px solid rgba(255,255,255,0.08)",

@@ -37,19 +37,34 @@ const AddFolderModal = ({
             Enter the Name of Your New Folder:
           </DialogDescription>
         </DialogHeader>
-        <input
-          className={`h-10 text-lg px-2 rounded-md bg-bg3 border border-border outline-none placeholder:text-subtle`}
-          placeholder="Folder Name"
-          name="folderName"
-          type="text"
-          onChange={(e) => {
-            setFolderName(e.target.value);
+        <form
+          id="folderNameForm"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (currentLayerFolders.includes(folderName)) {
+              toast.error(
+                "Another folder at this level already has that name. Please enter a different name.",
+              );
+            } else {
+              handleConfirm();
+            }
           }}
-          value={folderName}
-        />
+        >
+          <input
+            className={`h-10 w-full text-lg px-2 rounded-md bg-bg3 border border-border outline-none placeholder:text-subtle`}
+            placeholder="Folder Name"
+            name="folderName"
+            type="text"
+            onChange={(e) => {
+              setFolderName(e.target.value);
+            }}
+            value={folderName}
+          />
+        </form>
         <div className="flex justify-end gap-2">
           <button
             type="button"
+            form="folderNameForm"
             onClick={(e) => {
               e.preventDefault();
               onOpenChange(false);
@@ -59,17 +74,7 @@ const AddFolderModal = ({
             Cancel
           </button>
           <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              if (currentLayerFolders.includes(folderName)) {
-                toast.error(
-                  "Another folder at this level already has that name. Please enter a different name.",
-                );
-              } else {
-                handleConfirm();
-              }
-            }}
+            type="submit"
             className="buttonCore text-success hover:text-success border-subtle hover:border-success"
           >
             Create
