@@ -1,7 +1,12 @@
-import { createFileTree, findLayerParent, sortNodeLayer } from "@/lib/utils";
-import type { UpdateNotePayload } from "@/types/notes";
+import {
+  createFileTree,
+  findLayerByPath,
+  findLayerParent,
+  sortNodeLayer,
+} from "@/lib/utils";
+import { type NoteFileNode, type UpdateNotePayload } from "@/types/notes";
 import { FolderPlus, Move, MoveUp, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useUpdateNote } from "../../api/NotesMutations";
@@ -16,19 +21,25 @@ const NotesFileExplorer = () => {
   const { data: notes } = useGetAllNotes();
   const updateNote = useUpdateNote();
 
+  const fileTree = useMemo(() => createFileTree(notes ?? []), [notes]);
+  const [localLayer, setLocalLayer] = useState(fileTree);
+  const [localFolders, setLocalFolders] = useState<NoteFileNode[]>([]);
+
   const [currentPath, setCurrentPath] = useState("/");
-  const [addFolder, setAddFolder] = useState(false);
-  // Originally memoized but shifted to state object to
-  // allow for resorting after adding or moving a file node
-  const [fileTree, setFileTree] = useState(createFileTree(notes ?? []));
-  const [localTree, setLocalTree] = useState(fileTree);
   const [selectedNode, setSelectedNode] = useState("");
+  const [addFolder, setAddFolder] = useState(false);
   const [moveNode, setMoveNode] = useState(false);
+
   useEffect(() => {
-    setFileTree(createFileTree(notes ?? []));
-  }, [notes]);
-  console.log(fileTree);
-  console.log(currentPath);
+    const realNodes = findLayerByPath(fileTree, currentPath);
+    const localNodes = localFolders.filter(
+      (folder) =>
+        folder.path === currentPath &&
+        !realNodes.some((n) => n.type === "folder" && n.name === folder.name),
+    );
+    setLocalLayer(sortNodeLayer([...realNodes, ...localNodes]));
+  }, [fileTree, currentPath, localFolders]);
+
   const iconCoreClasses =
     "transition-all duration-300 text-text hover:text-accent";
   return (
@@ -49,7 +60,7 @@ const NotesFileExplorer = () => {
                     currentPath.lastIndexOf("/", currentPath.length - 2) + 1,
                   );
                   setCurrentPath(parentPath);
-                  setLocalTree(findLayerParent(fileTree, currentPath));
+                  setLocalLayer(findLayerParent(fileTree, currentPath));
                 }
               }}
             />
@@ -73,7 +84,7 @@ const NotesFileExplorer = () => {
         </div>
 
         <div className="flex flex-wrap h-full gap-4 p-4 overflow-y-scroll scrollbar-thin">
-          {localTree.map((node) => {
+          {localLayer.map((node) => {
             if (node.path === currentPath) {
               return node.type === "note" ? (
                 <FileNode
@@ -95,24 +106,26 @@ const NotesFileExplorer = () => {
                 />
               ) : (
                 <FileNode
-                  key={node.path}
+                  key={node.name}
                   type="folder"
                   clickHandler={() => {
                     if (moveNode) {
                       const movedNote = notes?.find(
                         (note) => note.slug === selectedNode,
                       );
-                      console.log(`${node.path}${node.name}/`, movedNote);
                       updateNote.mutate({
                         ...(movedNote as UpdateNotePayload),
                         path: `${node.path}${node.name}/`,
                       });
+                      setSelectedNode("");
+                      setMoveNode(false);
                     } else if (selectedNode !== node.name) {
                       setSelectedNode(node.name);
                     } else {
                       setCurrentPath(`${node.path}${node.name}/`);
-                      setLocalTree(
-                        localTree.find((folder) => folder.name === node.name)!
+                      setSelectedNode("");
+                      setLocalLayer(
+                        localLayer.find((folder) => folder.name === node.name)!
                           .children!,
                       );
                     }
@@ -128,16 +141,20 @@ const NotesFileExplorer = () => {
 
       <AddFolderModal
         isOpen={addFolder}
+        currentLayerFolders={localLayer
+          .filter((node) => node.type === "folder")
+          .map((node) => node.name)}
         onOpenChange={setAddFolder}
         onConfirm={(folderName) => {
-          localTree.push({
-            type: "folder",
-            name: folderName,
-            path: currentPath,
-            children: [],
-          });
-
-          setFileTree(sortNodeLayer(fileTree));
+          setLocalFolders((prev) => [
+            ...prev,
+            {
+              type: "folder",
+              name: folderName,
+              path: currentPath,
+              children: [],
+            },
+          ]);
         }}
       />
     </div>

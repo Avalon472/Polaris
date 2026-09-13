@@ -137,3 +137,27 @@ export const findLayerParent = (
 
   return currentLayer;
 };
+
+export const findLayerByPath = (
+  tree: NoteFileNode[],
+  targetPath: string,
+): NoteFileNode[] => {
+  // Guard against calling on root level
+  if (targetPath === "/") return tree.filter((node) => node.path === "/");
+
+  // Split path into segments to navigate the tree
+  const segments = targetPath.split("/").filter(Boolean);
+
+  let currentNodes = tree;
+
+  for (const segment of segments) {
+    const folder = currentNodes.find(
+      (n) => n.type === "folder" && n.name === segment,
+    );
+    if (!folder || !folder.children) return [];
+    currentNodes = folder.children;
+  }
+
+  // Returns the children of the deepest matched folder
+  return currentNodes;
+};

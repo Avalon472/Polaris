@@ -54,7 +54,9 @@ const NoteDetails = () => {
     // Set draftData synchronously for new notes, otherwise clear it and let
     // the useEffect define it once the note query has resolved
     setDraftData(
-      isNew ? { title: "New Note", body: "Let's get started" } : undefined,
+      isNew
+        ? { title: "New Note", body: "Let's get started", path: "/" }
+        : undefined,
     );
   }
 
