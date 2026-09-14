@@ -79,7 +79,7 @@ const NotesSidebar = ({ notes: noteContents }: SidebarProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="-ml-1.5">
             {filterOptions.map((type) => (
-              <DropdownMenuItem onClick={() => setFilterType(type)}>
+              <DropdownMenuItem key={type} onClick={() => setFilterType(type)}>
                 <div className="flex w-full justify-between">
                   <p>{type[0].toUpperCase() + type.slice(1)}</p>{" "}
                   <p className="text-accent">{filterCounts[type]}</p>

@@ -68,3 +68,9 @@ export interface NoteFileNode {
   noteSlug?: string; // for notes
   noteType?: NoteType; // for notes
 }
+
+export const NotePanelType = {
+  PINNED: "pinned",
+  RECENT: "recent",
+  EXPLORER: "explorer",
+};

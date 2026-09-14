@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import {
   createFileTree,
   findLayerByPath,
@@ -16,9 +17,8 @@ import FileNode from "../explorer/FileNode";
 
 const NotesFileExplorer = () => {
   const navigate = useNavigate();
-  // TODO: Add breadcrumb at top to show file path,
-  // better refresh tree after adding a node in a deeper layer
-  const { data: notes } = useGetAllNotes();
+  // TODO: Add breadcrumb at top to show file path
+  const { data: notes, isLoading } = useGetAllNotes();
   const updateNote = useUpdateNote();
 
   const fileTree = useMemo(() => createFileTree(notes ?? []), [notes]);
@@ -42,7 +42,9 @@ const NotesFileExplorer = () => {
 
   const iconCoreClasses =
     "transition-all duration-300 text-text hover:text-accent";
-  return (
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : (
     <div className="h-1/2 flex-1 min-h-0 w-full flex flex-col select-none">
       <p className="pl-2 text-subtle">Note Exporer</p>
 
@@ -83,7 +85,12 @@ const NotesFileExplorer = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap h-full gap-4 p-4 overflow-y-scroll scrollbar-thin">
+        <div
+          className="grid auto-rows-min h-full gap-4 p-4 overflow-y-scroll scrollbar-thin"
+          style={{
+            gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
+          }}
+        >
           {localLayer.map((node) => {
             if (node.path === currentPath) {
               return node.type === "note" ? (

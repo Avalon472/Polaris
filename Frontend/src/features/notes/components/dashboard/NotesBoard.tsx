@@ -5,10 +5,15 @@ import Notecard from "./Notecard";
 
 interface NoteboardProps {
   notes?: NoteListItem[];
+  width?: number;
   boardTitle: string;
 }
 
-const NotesBoard = ({ notes: noteContents, boardTitle }: NoteboardProps) => {
+const NotesBoard = ({
+  notes: noteContents,
+  width = 50,
+  boardTitle,
+}: NoteboardProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const notesPerPage = 8;
   const maxPages = Math.ceil((noteContents?.length ?? 0) / notesPerPage);
@@ -19,7 +24,7 @@ const NotesBoard = ({ notes: noteContents, boardTitle }: NoteboardProps) => {
   }, [currentPage, noteContents]);
 
   return (
-    <div className="w-1/2 h-full flex flex-col">
+    <div className="h-full flex flex-col" style={{ width: `${width}%` }}>
       <p className="pl-2 text-subtle">{boardTitle}</p>
       {noteContents ? (
         <>
