@@ -44,72 +44,81 @@ const Navbar = () => {
 
   const { data: authUser } = useAuthUser();
 
+  const mobileViewportShadow =
+    "after:absolute after:top-0 after:right-0 after:h-full after:w-56 after:translate-x-full after:bg-linear-to-r after:from-black/60 after:to-transparent after:pointer-events-none md:after:hidden";
   return (
     <div
-      className={`flex flex-col shrink-0 bg-bg2 h-screen border-r-2 border-border items-center transition-all duration-200 ${collapsed ? "w-16" : "w-56"}`}
+      className={`relative shrink-0 transition-all duration-200 w-16
+  ${!collapsed ? "md:w-56" : "md:w-16"}`}
     >
-      {/* Top of navbar */}
-      <div className="flex flex-col items-center justify-center text-text p-3 border-b-2 gap-2 w-full">
-        <div className="flex justify-center w-full">
-          <h1
-            className={`text-left overflow-hidden whitespace-nowrap transition-all duration-200 ${collapsed ? "invisible w-0" : "w-full"}`}
-          >
-            Polaris
-          </h1>
-          <div className="relative w-6 h-6 shrink-0">
-            <PanelLeftCloseIcon
-              strokeWidth={1.5}
-              onClick={() => setCollapsed(!collapsed)}
-              className={`absolute transition-all duration-300 ${collapsed ? "opacity-0 pointer-events-none" : "opacity-100"} hover:text-accent`}
-            />
-            <PanelRightCloseIcon
-              strokeWidth={1.5}
-              onClick={() => setCollapsed(!collapsed)}
-              className={`absolute transition-all duration-300 ${collapsed ? "opacity-100" : "opacity-0 pointer-events-none"} hover:text-accent`}
-            />
-          </div>
-        </div>
-        <InputGroup className={`bg-bg2 w-full ${collapsed ? "invisible" : ""}`}>
-          <InputGroupInput placeholder="Search..." />
-          <InputGroupAddon>
-            <Search />
-          </InputGroupAddon>
-        </InputGroup>
-      </div>
-
-      {/* Body of navbar */}
-      <div className={`flex flex-col size-full text-text p-2`}>
-        <div className="flex flex-col items-start gap-2">
-          <p className={`text-muted ${collapsed ? "invisible" : ""}`}>
-            Workspace
-          </p>
-          {navItems.map((item) => (
-            <NavbarItem
-              key={item.path}
-              label={item.label}
-              icon={item.icon}
-              isActive={item.activeFor.some((pattern) =>
-                matchPath(pattern, location.pathname),
-              )}
-              onClick={() => navigate(item.path)}
-              isCollapsed={collapsed}
-            />
-          ))}
-        </div>
-
-        {/* Bottom of navbar */}
-        <div className="mt-auto justify-center items-center p-2 flex border-t-2 border-border">
-          <LogOut
-            className={`-m-2 p-2 transition-all duration-300 text-destructive border border-transparent hover:border-destructive rounded-md size-10`}
-            onClick={() => {
-              logoutUser();
-            }}
-          />
-          {!collapsed && (
-            <div className="text-subtle ml-auto h-full">
-              {authUser!.username}
+      <div
+        className={`flex flex-col shrink-0 bg-bg2-solid h-screen border-r-2 border-border items-center transition-all duration-200 absolute 
+          ${collapsed ? "w-16" : `w-56 ${mobileViewportShadow}`}
+    `}
+      >
+        {/* Top of navbar */}
+        <div className="flex flex-col items-center justify-center text-text p-3 border-b-2 gap-2 w-full">
+          <div className="flex justify-center w-full">
+            <h1
+              className={`text-left overflow-hidden whitespace-nowrap transition-all duration-200 ${collapsed ? "invisible w-0" : "w-full"}`}
+            >
+              Polaris
+            </h1>
+            <div className="relative w-6 h-6 shrink-0">
+              <PanelLeftCloseIcon
+                strokeWidth={1.5}
+                onClick={() => setCollapsed(!collapsed)}
+                className={`absolute transition-all duration-300 ${collapsed ? "opacity-0 pointer-events-none" : "opacity-100"} hover:text-accent`}
+              />
+              <PanelRightCloseIcon
+                strokeWidth={1.5}
+                onClick={() => setCollapsed(!collapsed)}
+                className={`absolute transition-all duration-300 ${collapsed ? "opacity-100" : "opacity-0 pointer-events-none"} hover:text-accent`}
+              />
             </div>
-          )}
+          </div>
+          <InputGroup
+            className={`bg-bg2 w-full ${collapsed ? "invisible" : ""}`}
+          >
+            <InputGroupInput placeholder="Search..." />
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
+        {/* Body of navbar */}
+        <div className={`flex flex-col size-full text-text p-2`}>
+          <div className="flex flex-col items-start gap-2">
+            <p className={`text-muted ${collapsed ? "invisible" : ""}`}>
+              Workspace
+            </p>
+            {navItems.map((item) => (
+              <NavbarItem
+                key={item.path}
+                label={item.label}
+                icon={item.icon}
+                isActive={item.activeFor.some((pattern) =>
+                  matchPath(pattern, location.pathname),
+                )}
+                onClick={() => navigate(item.path)}
+                isCollapsed={collapsed}
+              />
+            ))}
+          </div>
+          {/* Bottom of navbar */}
+          <div className="mt-auto justify-center items-center p-2 flex border-t-2 border-border">
+            <LogOut
+              className={`-m-2 p-2 transition-all duration-300 text-destructive border border-transparent hover:border-destructive rounded-md size-10`}
+              onClick={() => {
+                logoutUser();
+              }}
+            />
+            {!collapsed && (
+              <div className="text-subtle ml-auto h-full">
+                {authUser!.username}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

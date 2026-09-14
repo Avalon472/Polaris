@@ -109,9 +109,9 @@
   --bg: #0a0f1c99;
   --bg2: #151b2e99;
   --bg3: #1d254099;
-  --bg-solid: #0a0f1cf1;
-  --bg2-solid: #151b2ef1;
-  --bg3-solid: #1d2540f1;
+  --bg-solid: #0a0f1cf9;
+  --bg2-solid: #151b2ef9;
+  --bg3-solid: #1d2540f9;
   --bgTransparent: #0a0f1c3e;
   --surface: rgba(255, 255, 255, 0.04);
   --border-hover: rgba(255, 255, 255, 0.13);
@@ -152,6 +152,7 @@
 
 @layer utilities {
   .scrollbar-thin {
+    scrollbar-gutter: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border-hover) transparent;
   }
