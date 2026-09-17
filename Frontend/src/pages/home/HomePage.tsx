@@ -21,18 +21,18 @@ const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notePanelOption, setNotePanelOption] = useState(NotePanelType.PINNED);
   const { isLoading } = useGetAllNotes();
+  const { data: recentNotes } = useRecentNotes();
+  const { data: pinnedNotes } = usePinnedNotes();
 
   const notePanelContent = (() => {
     switch (notePanelOption) {
       case NotePanelType.RECENT:
-        const { data: recentNotes } = useRecentNotes();
         return (
           <NotesBoard notes={recentNotes} width={100} boardTitle="Recent" />
         );
       case NotePanelType.EXPLORER:
         return <NotesFileExplorer />;
       case NotePanelType.PINNED:
-        const { data: pinnedNotes } = usePinnedNotes();
         return (
           <NotesBoard notes={pinnedNotes} width={100} boardTitle="Pinned" />
         );
