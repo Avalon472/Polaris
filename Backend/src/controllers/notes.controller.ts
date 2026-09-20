@@ -138,12 +138,15 @@ export const editNote = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "No note was found." });
     }
 
-    const oldRefs = note.references.map((refId: mongoose.Types.ObjectId) =>
-      refId.toString(),
+    const oldRefs = note.references.map(
+      ({ _id: refId }: { _id: mongoose.Types.ObjectId }) => refId.toString(),
     );
-    const newRefs = (references ?? []).map(
-      (refId: string) => new mongoose.Types.ObjectId(refId),
-    );
+    const newRefs = references
+      ? references.map(
+          ({ _id: refId }: { _id: string }) =>
+            new mongoose.Types.ObjectId(refId),
+        )
+      : [];
     const newRefStrings = newRefs.map((refId: ObjectId) => refId.toString());
 
     // Compute differences from old note

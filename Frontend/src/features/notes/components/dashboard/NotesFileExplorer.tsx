@@ -61,8 +61,21 @@ const NotesFileExplorer = () => {
                     0,
                     currentPath.lastIndexOf("/", currentPath.length - 2) + 1,
                   );
-                  setCurrentPath(parentPath);
-                  setLocalLayer(findLayerParent(fileTree, currentPath));
+                  // TODO: Revise when breadcrumb implemented
+                  if (moveNode && selectedNode && parentPath === "/") {
+                    const movedNote = notes?.find(
+                      (note) => note.slug === selectedNode,
+                    );
+                    updateNote.mutate({
+                      ...(movedNote as UpdateNotePayload),
+                      path: `/`,
+                    });
+                    setSelectedNode("");
+                    setMoveNode(false);
+                  } else {
+                    setCurrentPath(parentPath);
+                    setLocalLayer(findLayerParent(fileTree, currentPath));
+                  }
                 }
               }}
             />
