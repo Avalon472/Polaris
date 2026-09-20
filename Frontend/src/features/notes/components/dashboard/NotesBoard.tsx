@@ -1,5 +1,12 @@
 import ItemPagination from "@/components/layout/ItemPagination";
-import type { NoteListItem } from "@/types/notes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { type NoteListItem } from "@/types/notes";
+import { ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import Notecard from "./Notecard";
 
@@ -15,13 +22,13 @@ const NotesBoard = ({
   boardTitle,
 }: NoteboardProps) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const notesPerPage = 8;
+  const [notesPerPage, setNotesPerPage] = useState(8);
   const maxPages = Math.ceil((noteContents?.length ?? 0) / notesPerPage);
 
   const displayedNotes = useMemo(() => {
     const startIndex = (currentPage - 1) * notesPerPage;
     return noteContents?.slice(startIndex, startIndex + notesPerPage) ?? [];
-  }, [currentPage, noteContents]);
+  }, [currentPage, notesPerPage, noteContents]);
 
   return (
     <div className="h-full flex flex-col" style={{ width: `${width}%` }}>
@@ -29,7 +36,7 @@ const NotesBoard = ({
       {noteContents ? (
         <>
           <div
-            className="size-full bg-bg3 p-4 gap-4 overflow-y-scroll scrollbar-thin rounded-t-2xl grid justify-center border border-border border-b-0"
+            className="size-full bg-bg3 p-4 gap-6 overflow-y-scroll scrollbar-thin rounded-t-2xl grid justify-center border border-border border-b-0"
             style={{
               gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             }}
@@ -38,7 +45,30 @@ const NotesBoard = ({
               return <Notecard key={note._id} noteContent={note} />;
             })}
           </div>
-          <div className="mt-auto w-full bg-bg3 border-2 border-border rounded-b-2xl">
+          <div className="mt-auto w-full bg-bg3 border-2 border-border rounded-b-2xl flex justify-between px-4">
+            <div className="flex w-3/4 justify-center items-center gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={`outline-0 flex gap-1 items-center bg-bg3 border border-border px-1 rounded-sm 
+                    hover:bg-accent transition-colors duration-200`}
+                >
+                  <p className="text-sm">{notesPerPage}</p>
+                  <ChevronDown className="size-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="-ml-1.5 min-w-10">
+                  {[4, 8, 12, 16, 20].map((count) => (
+                    <DropdownMenuItem
+                      key={count}
+                      onClick={() => setNotesPerPage(count)}
+                      className={`${count === notesPerPage ? "bg-surface border border-accent" : ""}`}
+                    >
+                      <p className="w-full text-center">{count}</p>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <p className="text-sm text-muted mt-0.5 px-1">items per page</p>
+            </div>
             <ItemPagination
               currentPage={currentPage}
               maxPages={maxPages}
