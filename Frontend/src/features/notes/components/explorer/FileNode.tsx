@@ -57,10 +57,9 @@ const FileNode = ({
 
   return (
     <div
-      className={`gap-2 items-center justify-center p-2 text-text hover:text-accent
-    hover:shadow hover:-translate-y-1 transition-all duration-400 ease-in-out shadow-accent
-border border-border rounded-2xl flex flex-col overflow-hidden w-30 h-28 cursor-pointer
-    ${selected ? "bg-surface" : "bg-bg2"}`}
+      className={`gap-2 items-center justify-center p-2 text-text transition-all duration-400 
+        ease-in-out shadow-accent border border-border rounded-2xl flex flex-col overflow-hidden w-30 h-28 cursor-pointer
+    ${selected ? "bg-surface text-accent shadow -translate-y-1" : "bg-bg2 hover:text-accent hover:shadow hover:-translate-y-1"}`}
       onClick={() => {
         clickHandler();
       }}

@@ -69,12 +69,25 @@ const NotesFileExplorer = () => {
             {moveNode ? (
               <X
                 className={`${iconCoreClasses}`}
-                onClick={() => setMoveNode(false)}
+                onClick={() => {
+                  setMoveNode(false);
+                }}
               />
             ) : (
               <Move
                 className={`${iconCoreClasses}`}
-                onClick={() => setMoveNode(true)}
+                onClick={() => {
+                  setMoveNode(true);
+                  if (
+                    localLayer.find(
+                      (node) =>
+                        node.type === "folder" && node.name === selectedNode,
+                    )
+                  ) {
+                    setSelectedNode("");
+                    toast("Please select a note to move.");
+                  }
+                }}
               />
             )}
 
@@ -117,15 +130,19 @@ const NotesFileExplorer = () => {
                   type="folder"
                   clickHandler={() => {
                     if (moveNode) {
-                      const movedNote = notes?.find(
-                        (note) => note.slug === selectedNode,
-                      );
-                      updateNote.mutate({
-                        ...(movedNote as UpdateNotePayload),
-                        path: `${node.path}${node.name}/`,
-                      });
-                      setSelectedNode("");
-                      setMoveNode(false);
+                      if (selectedNode) {
+                        const movedNote = notes?.find(
+                          (note) => note.slug === selectedNode,
+                        );
+                        updateNote.mutate({
+                          ...(movedNote as UpdateNotePayload),
+                          path: `${node.path}${node.name}/`,
+                        });
+                        setSelectedNode("");
+                        setMoveNode(false);
+                      } else {
+                        toast.error("Folders cannot be moved.");
+                      }
                     } else if (selectedNode !== node.name) {
                       setSelectedNode(node.name);
                     } else {

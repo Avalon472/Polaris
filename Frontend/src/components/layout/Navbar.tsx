@@ -52,7 +52,7 @@ const Navbar = () => {
   ${!collapsed ? "md:w-56" : "md:w-16"}`}
     >
       <div
-        className={`flex flex-col shrink-0 bg-bg2-solid h-screen border-r-2 border-border items-center transition-all duration-200 absolute 
+        className={`flex flex-col shrink-0 bg-bg2-solid h-screen border-r-2 border-border items-center transition-all duration-200 absolute z-99
           ${collapsed ? "w-16" : `w-56 ${mobileViewportShadow}`}
     `}
       >

@@ -21,6 +21,7 @@ import {
   TagIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
 const NoteDetails = () => {
@@ -53,11 +54,7 @@ const NoteDetails = () => {
     setDeleteOpen(false);
     // Set draftData synchronously for new notes, otherwise clear it and let
     // the useEffect define it once the note query has resolved
-    setDraftData(
-      isNew
-        ? { title: "New Note", body: "Let's get started", path: "/" }
-        : undefined,
-    );
+    setDraftData(isNew ? { title: "", body: "", path: "/" } : undefined);
   }
 
   useEffect(() => {
@@ -88,6 +85,10 @@ const NoteDetails = () => {
   const noteData = isNew ? null : note![0];
 
   const handleSave = () => {
+    if (!draftData.body || !draftData.title) {
+      toast.error("The note requires both a title and body to be set.");
+      return;
+    }
     if (!draftData.description) {
       setDraftData(() => ({
         ...draftData,

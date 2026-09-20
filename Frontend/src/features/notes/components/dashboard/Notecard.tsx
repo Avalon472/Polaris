@@ -47,7 +47,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
           className={`bg-bg2 border border-border rounded-2xl flex flex-col text-text min-h-0 overflow-hidden ${
             isOnSidebar
               ? "h-26 p-2 hover:outline"
-              : "h-42 px-4 py-3 gap-1 hover:shadow hover:-translate-y-1 transition-all duration-400 ease-in-out shadow-accent"
+              : "h-40 px-4 py-3 gap-1 hover:shadow hover:-translate-y-1 transition-all duration-400 ease-in-out shadow-accent"
           }`}
         >
           <div className="flex items-center justify-between">

@@ -51,7 +51,7 @@ function Editor({
       className={`flex flex-col h-full border border-border rounded-[10px] overflow-hidden ${isEditing ? "bg-bg3" : "bg-surface"} transition-all duration-200`}
     >
       <div
-        className={`${isEditing ? "opacity-100 h-10" : "opacity-0 h-0 pointer-events-none"} transition-all duration-200`}
+        className={`${isEditing ? "opacity-100 h-fit" : "opacity-0 h-0 pointer-events-none"} transition-all duration-200`}
       >
         <Toolbar editor={editor} />
       </div>

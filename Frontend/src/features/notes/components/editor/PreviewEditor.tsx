@@ -28,7 +28,7 @@ const PreviewEditor = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
-      className={`absolute bg-bg2-solid w-2/5 h-120 origin-center left-full inset-0 flex flex-col my-auto transition-transform duration-600
+      className={`absolute bg-bg2-solid md:w-1/3 w-80 h-120 origin-center left-full inset-0 flex flex-col my-auto transition-transform duration-600
         rounded-xl p-4 border gap-4 ${isOpen ? "-translate-x-full border-accent" : "-translate-x-4 border-border"}`}
     >
       <div className="flex flex-col gap-4">

@@ -20,7 +20,7 @@ const ToolbarBtn = ({
     onMouseDown={(e) => e.preventDefault()}
     onClick={onClick}
     className={`
-      px-3 py-1 rounded text-sm transition-colors border border-surface
+      px-3 py-1 rounded text-sm transition-colors border border-surface shrink-0
       ${
         isActive
           ? "bg-accent-purple-bg text-accent"
@@ -50,11 +50,12 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
       isBulletList: ctx.editor.isActive("bulletList"),
       isCodeBlock: ctx.editor.isActive("codeBlock"),
       isBlockquote: ctx.editor.isActive("blockquote"),
+      isAtLink: ctx.editor.isActive("link"),
     }),
   });
 
   return (
-    <div className="flex items-center gap-2 px-3 py-2 border-b border-border bg-bg2">
+    <div className="flex overflow-x-auto scrollbar-thin items-center gap-2 px-3 py-2 border-b border-border bg-bg2">
       <ToolbarBtn
         title="Bold"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -131,7 +132,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
           if (!url || url === "") return;
           editor.chain().focus().setLink({ href: url }).run();
         }}
-        isActive={editorState.isBold}
+        isActive={editorState.isAtLink}
       >
         <Link className="text-xs" size={16} />
       </ToolbarBtn>
