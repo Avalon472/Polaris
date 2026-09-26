@@ -64,7 +64,6 @@ const AddFolderModal = ({
         <div className="flex justify-end gap-2">
           <button
             type="button"
-            form="folderNameForm"
             onClick={(e) => {
               e.preventDefault();
               onOpenChange(false);
@@ -75,6 +74,7 @@ const AddFolderModal = ({
           </button>
           <button
             type="submit"
+            form="folderNameForm"
             className="buttonCore text-success hover:text-success border-subtle hover:border-success"
           >
             Create

@@ -67,7 +67,9 @@ const NotesBoard = ({
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <p className="text-sm text-muted mt-0.5 px-1">items per page</p>
+              <p className="text-sm text-muted px-1 leading-3.5 line-clamp-2">
+                per page
+              </p>
             </div>
             <ItemPagination
               currentPage={currentPage}

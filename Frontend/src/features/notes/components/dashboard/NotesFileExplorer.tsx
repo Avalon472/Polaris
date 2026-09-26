@@ -48,7 +48,10 @@ const NotesFileExplorer = () => {
     <div className="h-1/2 flex-1 min-h-0 w-full flex flex-col select-none">
       <p className="pl-2 text-subtle">Note Exporer</p>
 
-      <div className="flex flex-col h-full bg-bg3 overflow-y-auto rounded-2xl border border-border content-start ">
+      <div
+        className="flex flex-col h-full bg-bg3 overflow-y-auto rounded-2xl border border-border content-start"
+        onClick={() => setSelectedNode("")}
+      >
         <div className="flex border-b border-border w-full p-2 px-4">
           <p>Home{currentPath}</p>
           <div className="flex gap-2 ml-auto">
@@ -70,26 +73,28 @@ const NotesFileExplorer = () => {
                       ...(movedNote as UpdateNotePayload),
                       path: `/`,
                     });
-                    setSelectedNode("");
                     setMoveNode(false);
                   } else {
                     setCurrentPath(parentPath);
                     setLocalLayer(findLayerParent(fileTree, currentPath));
                   }
+                  setSelectedNode("");
                 }
               }}
             />
             {moveNode ? (
               <X
                 className={`${iconCoreClasses}`}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setMoveNode(false);
                 }}
               />
             ) : (
               <Move
                 className={`${iconCoreClasses}`}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setMoveNode(true);
                   if (
                     localLayer.find(
@@ -153,6 +158,11 @@ const NotesFileExplorer = () => {
                         });
                         setSelectedNode("");
                         setMoveNode(false);
+                        setLocalFolders(
+                          localFolders.filter(
+                            (folder) => folder.name !== node.name,
+                          ),
+                        );
                       } else {
                         toast.error("Folders cannot be moved.");
                       }
