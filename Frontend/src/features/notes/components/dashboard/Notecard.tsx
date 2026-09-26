@@ -1,15 +1,8 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import type { NoteListItem, UpdateNotePayload } from "@/types/notes";
-import { EllipsisVertical, PinIcon } from "lucide-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDeleteNote, useUpdateNote } from "../../api/NotesMutations";
-import DeleteModal from "../DeleteModal";
+import { PinIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useUpdateNote } from "../../api/NotesMutations";
+import NoteOptionMenu from "./NoteOptionMenu";
 import TagList from "./TagList";
 
 interface NotecardProps {
@@ -18,10 +11,7 @@ interface NotecardProps {
 }
 
 const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
-  const deleteNote = useDeleteNote();
   const updateNote = useUpdateNote();
-  const navigate = useNavigate();
-  const [deleteOpen, setDeleteOpen] = useState(false);
 
   // Using an IIFE to immediately decide color using the type
   const noteTypeColor = (() => {
@@ -55,45 +45,7 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
               {noteContent.type}
             </span>
 
-            <div className="flex">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <div className="-m-2 p-2 group cursor-pointer">
-                    <EllipsisVertical className="size-4 text-text group-hover:text-accent" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(`/notes/${noteContent.slug}`);
-                    }}
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      updateNote.mutate({
-                        ...(noteContent as UpdateNotePayload),
-                        pinned: !noteContent.pinned,
-                      });
-                    }}
-                  >
-                    {noteContent.pinned ? "Unpin" : "Pin"}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setDeleteOpen(true);
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            <NoteOptionMenu noteContent={noteContent} />
           </div>
 
           {isOnSidebar ? (
@@ -141,16 +93,6 @@ const Notecard = ({ noteContent, isOnSidebar = false }: NotecardProps) => {
           </div>
         </div>
       </Link>
-
-      <DeleteModal
-        isOpen={deleteOpen}
-        onOpenChange={setDeleteOpen}
-        title={`Delete "${noteContent.title}"?`}
-        description="This note will be permanently deleted. This action cannot be undone."
-        onConfirm={() => {
-          deleteNote.mutate(noteContent._id);
-        }}
-      />
     </div>
   );
 };

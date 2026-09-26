@@ -1,4 +1,4 @@
-import type { NoteFileNode } from "@/types/notes";
+import type { NoteFileNode, NoteListItem } from "@/types/notes";
 import {
   ClipboardList,
   FileText,
@@ -7,6 +7,7 @@ import {
   ToolCase,
   Wrench,
 } from "lucide-react";
+import NoteOptionMenu from "../dashboard/NoteOptionMenu";
 
 interface FileNodeProps {
   type: "note" | "folder";
@@ -14,6 +15,7 @@ interface FileNodeProps {
   selected: boolean;
   node?: NoteFileNode;
   folderName?: string;
+  noteContent?: NoteListItem;
 }
 const FileNode = ({
   type,
@@ -21,6 +23,7 @@ const FileNode = ({
   selected,
   node,
   folderName,
+  noteContent,
 }: FileNodeProps) => {
   const iconSize = 50;
   // Using an IIFE to immediately decide icon using the type
@@ -57,7 +60,7 @@ const FileNode = ({
 
   return (
     <div
-      className={`gap-2 items-center justify-center p-2 text-text transition-all duration-400 
+      className={`gap-2 items-center justify-center p-2 text-text transition-all duration-400 relative
         ease-in-out shadow-accent border border-border rounded-2xl flex flex-col overflow-hidden w-30 h-28 cursor-pointer
     ${selected ? "bg-surface text-accent shadow -translate-y-2" : "bg-bg2 hover:text-accent hover:shadow hover:-translate-y-1"}`}
       onClick={(e) => {
@@ -69,6 +72,12 @@ const FileNode = ({
       <p className="w-full text-center text-sm/4 line-clamp-2 overflow-hidden text-ellipsis mb-auto">
         {fileName}
       </p>
+
+      {noteContent && (
+        <div className="absolute right-2 top-2">
+          <NoteOptionMenu noteContent={noteContent} />
+        </div>
+      )}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import {
   sortNodeLayer,
 } from "@/lib/utils";
 import { type NoteFileNode, type UpdateNotePayload } from "@/types/notes";
-import { FolderPlus, Move, MoveUp, X } from "lucide-react";
+import { FilePlus, FolderPlus, Move, MoveUp, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -113,11 +113,18 @@ const NotesFileExplorer = () => {
               className={`${iconCoreClasses}`}
               onClick={() => setAddFolder(true)}
             />
+
+            <FilePlus
+              className={`${iconCoreClasses}`}
+              onClick={() => {
+                navigate("/notes/new");
+              }}
+            />
           </div>
         </div>
 
         <div
-          className="grid auto-rows-min h-full gap-4 p-4 overflow-y-scroll scrollbar-thin"
+          className="grid place-items-center auto-rows-min h-full gap-4 p-4 overflow-y-scroll scrollbar-thin"
           style={{
             gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
           }}
@@ -141,6 +148,9 @@ const NotesFileExplorer = () => {
                   }}
                   selected={selectedNode === node.noteSlug}
                   node={node}
+                  noteContent={notes?.find(
+                    (note) => note.slug === node.noteSlug,
+                  )}
                 />
               ) : (
                 <FileNode
