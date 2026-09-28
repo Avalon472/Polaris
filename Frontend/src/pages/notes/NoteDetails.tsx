@@ -11,6 +11,7 @@ import PreviewEditor from "@/features/notes/components/editor/PreviewEditor";
 import TagEditor from "@/features/notes/components/editor/TagsEditor";
 import Editor from "@/features/notes/components/editor/TextEditor";
 import TypeDropdown from "@/features/notes/components/editor/TypeDropdown";
+import UnsavedChangesModal from "@/features/notes/components/UnsavedChangesModal";
 import { createDescription } from "@/lib/utils";
 import type { NotePayload } from "@/types/notes";
 import {
@@ -22,11 +23,16 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useBlocker, useNavigate, useParams } from "react-router-dom";
 
 const NoteDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isChanged && currentLocation !== nextLocation,
+  );
+
   const [editing, setEditing] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -124,6 +130,7 @@ const NoteDetails = () => {
     }
   };
 
+  //TODO: Decide if cancel should reset or not
   const handleCancel = () => {
     setEditing(false);
     setIsChanged(false);
@@ -131,6 +138,7 @@ const NoteDetails = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDraftData({ ...draftData, [e.target.name]: e.target.value });
+    setIsChanged(true);
   };
 
   const titleClass =
@@ -166,14 +174,13 @@ const NoteDetails = () => {
                 </button>
               )}
 
-              {isChanged ? (
-                <button
-                  onClick={handleSave}
-                  className="buttonCore text-success hover:text-success border-subtle hover:border-success"
-                >
-                  Save Changes
-                </button>
-              ) : null}
+              <button
+                onClick={handleSave}
+                disabled={!isChanged}
+                className={`buttonCore ${isChanged ? "text-success hover:text-success border-subtle hover:border-success" : "text-subtle"}`}
+              >
+                Save Changes
+              </button>
             </>
           ) : null}
           <button
@@ -198,7 +205,9 @@ const NoteDetails = () => {
             selectedTags={draftData.tags ?? []}
             onSelect={(tags) => {
               setDraftData({ ...draftData, tags });
-              setIsChanged(true);
+              if (tags && tags !== noteData?.tags) {
+                setIsChanged(true);
+              }
             }}
             editing={editing}
           />
@@ -214,7 +223,9 @@ const NoteDetails = () => {
             selectedType={draftData.type ?? "general"}
             onSelect={(type) => {
               setDraftData({ ...draftData, type: type! });
-              setIsChanged(true);
+              if (type && type !== noteData?.type) {
+                setIsChanged(true);
+              }
             }}
             editing={editing}
           />
@@ -237,7 +248,6 @@ const NoteDetails = () => {
             disabled={!editing}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               handleInputChange(event);
-              setIsChanged(true);
             }}
             value={draftData.title}
           />
@@ -252,8 +262,10 @@ const NoteDetails = () => {
         initialContent={draftData.body}
         isEditing={editing}
         onChange={(content) => {
-          setDraftData(() => ({ ...draftData, body: content }));
-          setIsChanged(true);
+          if (content !== draftData.body) {
+            setDraftData(() => ({ ...draftData, body: content }));
+            setIsChanged(true);
+          }
         }}
         onReferencesChange={(newRefs) =>
           setDraftData(() => ({ ...draftData, references: newRefs }))
@@ -280,6 +292,13 @@ const NoteDetails = () => {
           setDraftData(() => ({ ...draftData, description: desc }));
         }}
       />
+
+      {blocker.state === "blocked" && (
+        <UnsavedChangesModal
+          onCancel={() => blocker.reset()}
+          onConfirm={() => blocker.proceed()}
+        />
+      )}
     </div>
   );
 };
