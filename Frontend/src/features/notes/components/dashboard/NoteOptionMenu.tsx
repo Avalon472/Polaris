@@ -27,8 +27,8 @@ const NoteOptionMenu = ({ noteContent }: NoteOptionMenuProps) => {
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="-m-2 p-2 group cursor-pointer">
-            <EllipsisVertical className="size-4 text-text group-hover:text-accent" />
+          <div className="-m-2.5 p-2.5 group/trigger cursor-pointer">
+            <EllipsisVertical className="size-4 text-text group-hover/trigger:text-accent transition-all duration-300" />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent onClick={(e) => e.stopPropagation()}>

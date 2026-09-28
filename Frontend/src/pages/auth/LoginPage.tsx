@@ -23,10 +23,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center">
+    <div className="h-full w-full flex flex-col items-center justify-center relative">
       <form
         onSubmit={handleSubmit}
-        className="h-3/5 w-xl flex flex-col gap-4 items-center justify-center bg-bg3 rounded-2xl p-8 [box-shadow:0_0_40px_8px_var(--success-border)]"
+        className="h-3/5 md:w-xl w-3/4 flex flex-col gap-4 items-center justify-center bg-bg3 rounded-2xl p-8 [box-shadow:0_0_40px_8px_var(--success-border)]"
       >
         <h1 className="text-text text-2xl tracking-tight mb-2">Polaris</h1>
 

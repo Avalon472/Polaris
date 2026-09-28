@@ -60,7 +60,7 @@ const FileNode = ({
 
   return (
     <div
-      className={`gap-2 items-center justify-center p-2 text-text transition-all duration-400 relative
+      className={`gap-2 items-center justify-center p-2 text-text transition-all duration-400 relative group
         ease-in-out shadow-accent border border-border rounded-2xl flex flex-col overflow-hidden w-30 h-28 cursor-pointer
     ${selected ? "bg-surface text-accent shadow -translate-y-2" : "bg-bg2 hover:text-accent hover:shadow hover:-translate-y-1"}`}
       onClick={(e) => {
@@ -74,7 +74,7 @@ const FileNode = ({
       </p>
 
       {noteContent && (
-        <div className="absolute right-2 top-2">
+        <div className="absolute right-2 top-2 opacity-50 group-hover:opacity-100 text-text transition-all duration-400">
           <NoteOptionMenu noteContent={noteContent} />
         </div>
       )}

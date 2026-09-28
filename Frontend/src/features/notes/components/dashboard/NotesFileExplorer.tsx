@@ -100,10 +100,13 @@ const NotesFileExplorer = () => {
                     localLayer.find(
                       (node) =>
                         node.type === "folder" && node.name === selectedNode,
-                    )
+                    ) ||
+                    !selectedNode
                   ) {
                     setSelectedNode("");
                     toast("Please select a note to move.");
+                  } else if (selectedNode) {
+                    toast("Please select a folder to move the note to.");
                   }
                 }}
               />

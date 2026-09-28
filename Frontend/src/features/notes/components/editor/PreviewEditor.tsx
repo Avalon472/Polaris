@@ -46,7 +46,7 @@ const PreviewEditor = ({
             readOnly={!editing}
             value={noteDescription}
             onChange={(e) => onChange(e.target.value)}
-            maxLength={200}
+            maxLength={150}
           />
         </FieldLabel>
 
