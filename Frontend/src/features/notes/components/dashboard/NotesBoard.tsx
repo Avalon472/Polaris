@@ -32,11 +32,13 @@ const NotesBoard = ({
 
   return (
     <div className="h-full flex flex-col" style={{ width: `${width}%` }}>
-      <p className="pl-2 text-subtle">{boardTitle}</p>
+      <p className="px-6 py-0.5 text-text bg-bg2 rounded-t-2xl border-2 border-b-0">
+        {boardTitle}
+      </p>
       {noteContents ? (
         <>
           <div
-            className="size-full bg-bg3 p-4 gap-6 overflow-y-scroll scrollbar-thin rounded-t-2xl grid justify-center border border-border border-b-0"
+            className="size-full bg-bg3 p-4 gap-6 overflow-y-scroll scrollbar-thin grid justify-center border border-border border-b-0"
             style={{
               gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             }}
@@ -45,7 +47,7 @@ const NotesBoard = ({
               return <Notecard key={note._id} noteContent={note} />;
             })}
           </div>
-          <div className="mt-auto w-full bg-bg3 border-2 border-border rounded-b-2xl flex justify-between px-4">
+          <div className="mt-auto w-full bg-bg2 border-2 border-border rounded-b-2xl flex justify-between px-4">
             <div className="flex w-3/4 justify-center items-center gap-1">
               <DropdownMenu>
                 <DropdownMenuTrigger

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 //Login mutation
 export const useLogin = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (credentials: {
@@ -20,6 +21,7 @@ export const useLogin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
       toast.success("Login successful");
+      navigate("/", { replace: true });
     },
   });
 };
