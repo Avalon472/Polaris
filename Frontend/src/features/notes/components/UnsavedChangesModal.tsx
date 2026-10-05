@@ -9,18 +9,25 @@ import {
 interface UnsavedChangesProps {
   onConfirm: () => void;
   onCancel: () => void;
+  displayText?: string;
 }
 
-const UnsavedChangesModal = ({ onConfirm, onCancel }: UnsavedChangesProps) => {
+const UnsavedChangesModal = ({
+  onConfirm,
+  onCancel,
+  displayText,
+}: UnsavedChangesProps) => {
+  const defaultDescription =
+    "You have unsaved changes. Leaving this page will revert those changes. Please ensure you have saved your progress before proceeding.";
   return (
     <Dialog open={true}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Warning!</DialogTitle>
           <DialogDescription>
-            You have unsaved changes. Leaving this page will revert those
-            changes. Please ensure you have saved your progress before
-            proceeding.
+            <p>
+              {displayText !== undefined ? displayText : defaultDescription}
+            </p>
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2">

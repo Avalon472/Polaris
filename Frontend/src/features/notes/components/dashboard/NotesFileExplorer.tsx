@@ -9,11 +9,12 @@ import { type NoteFileNode, type UpdateNotePayload } from "@/types/notes";
 import { FilePlus, FolderPlus, Move, MoveUp, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useBlocker, useNavigate } from "react-router-dom";
 import { useUpdateNote } from "../../api/NotesMutations";
 import { useGetAllNotes } from "../../api/NotesQueries";
 import AddFolderModal from "../explorer/AddFolderModal";
 import FileNode from "../explorer/FileNode";
+import UnsavedChangesModal from "../UnsavedChangesModal";
 
 const NotesFileExplorer = () => {
   const navigate = useNavigate();
@@ -29,6 +30,11 @@ const NotesFileExplorer = () => {
   const [selectedNode, setSelectedNode] = useState("");
   const [addFolder, setAddFolder] = useState(false);
   const [moveNode, setMoveNode] = useState(false);
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      localFolders.length !== 0 && currentLocation !== nextLocation,
+  );
 
   useEffect(() => {
     const realNodes = findLayerByPath(fileTree, currentPath);
@@ -159,6 +165,9 @@ const NotesFileExplorer = () => {
                 <FileNode
                   key={node.name}
                   type="folder"
+                  temporary={localFolders.some(
+                    (folder) => folder.name === node.name,
+                  )}
                   clickHandler={() => {
                     if (moveNode) {
                       if (selectedNode) {
@@ -217,6 +226,15 @@ const NotesFileExplorer = () => {
           ]);
         }}
       />
+
+      {blocker.state === "blocked" && (
+        <UnsavedChangesModal
+          onCancel={() => blocker.reset()}
+          onConfirm={() => blocker.proceed()}
+          displayText="You have folders without any contents. All empty folders will be deleted. 
+          Please ensure all folders you would like to keep have contents before proceeding"
+        />
+      )}
     </div>
   );
 };

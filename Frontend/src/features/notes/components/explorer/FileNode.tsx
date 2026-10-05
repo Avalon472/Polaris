@@ -3,6 +3,7 @@ import {
   ClipboardList,
   FileText,
   FolderClosed,
+  FolderOpen,
   Newspaper,
   ToolCase,
   Wrench,
@@ -16,6 +17,7 @@ interface FileNodeProps {
   node?: NoteFileNode;
   folderName?: string;
   noteContent?: NoteListItem;
+  temporary?: boolean;
 }
 const FileNode = ({
   type,
@@ -24,8 +26,9 @@ const FileNode = ({
   node,
   folderName,
   noteContent,
+  temporary = false,
 }: FileNodeProps) => {
-  const iconSize = 50;
+  const iconSize = 44;
   // Using an IIFE to immediately decide icon using the type
   const noteTypeIcon = (() => {
     if (type === "note" && node) {
@@ -52,6 +55,11 @@ const FileNode = ({
           return <FileText className="text-general shrink-0" size={iconSize} />;
       }
     } else {
+      if (temporary) {
+        return (
+          <FolderOpen className="text-accent/60 shrink-0" size={iconSize} />
+        );
+      }
       return <FolderClosed className="text-accent shrink-0" size={iconSize} />;
     }
   })();
@@ -60,9 +68,9 @@ const FileNode = ({
 
   return (
     <div
-      className={`gap-2 items-center justify-center p-2 text-text transition-all duration-400 relative group
-        ease-in-out shadow-accent border border-border rounded-2xl flex flex-col overflow-hidden w-30 h-28 cursor-pointer
-    ${selected ? "bg-surface text-accent shadow -translate-y-2" : "bg-bg2 hover:text-accent hover:shadow hover:-translate-y-1"}`}
+      className={`gap-1 items-center justify-center p-1 transition-all duration-400 relative group
+        ease-in-out shadow-accent border border-border rounded-2xl flex flex-col overflow-hidden max-w-32 min-w-30 h-24 cursor-pointer
+    ${selected ? "bg-surface text-accent shadow -translate-y-2" : "bg-bg2 text-text hover:text-accent hover:shadow hover:-translate-y-1"}`}
       onClick={(e) => {
         e.stopPropagation();
         clickHandler();
