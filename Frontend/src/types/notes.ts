@@ -74,3 +74,11 @@ export const NotePanelType = {
   RECENT: "recent",
   EXPLORER: "explorer",
 };
+
+export interface NoteFilter {
+  pinned?: boolean;
+  updatedWithinDays?: number;
+  tags?: string[];
+  type?: string;
+  newestFirst: boolean;
+}

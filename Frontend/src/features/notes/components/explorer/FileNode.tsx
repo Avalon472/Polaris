@@ -68,8 +68,8 @@ const FileNode = ({
 
   return (
     <div
-      className={`gap-1 items-center justify-center p-1 transition-all duration-400 relative group
-        ease-in-out shadow-accent border border-border rounded-2xl flex flex-col overflow-hidden max-w-32 min-w-30 h-24 cursor-pointer
+      className={`gap-1 items-center justify-center p-1 transition-all duration-400 relative group m-1
+        ease-in-out shadow-accent border border-border rounded-2xl flex flex-col overflow-hidden w-9/10 h-24 cursor-pointer
     ${selected ? "bg-surface text-accent shadow -translate-y-2" : "bg-bg2 text-text hover:text-accent hover:shadow hover:-translate-y-1"}`}
       onClick={(e) => {
         e.stopPropagation();

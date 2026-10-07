@@ -38,7 +38,7 @@ const Navbar = () => {
     // { label: "AI Assistant", icon: <Bot size={16} />, path: "/ai" },
   ];
 
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState<boolean>(true);
 
   const { mutate: logoutUser } = useLogout();
 
