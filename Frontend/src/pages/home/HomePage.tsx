@@ -12,7 +12,7 @@ import {
   useRecentNotes,
 } from "@/features/notes/api/NotesQueries";
 import NotesBoard from "@/features/notes/components/dashboard/NotesBoard";
-import NotesFileExplorer from "@/features/notes/components/dashboard/NotesFileExplorer";
+import NotesFileExplorer from "@/features/notes/components/explorer/NotesFileExplorer";
 import { NotePanelType } from "@/types/notes";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";

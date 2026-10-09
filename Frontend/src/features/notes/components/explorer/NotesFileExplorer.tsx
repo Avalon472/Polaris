@@ -12,9 +12,9 @@ import toast from "react-hot-toast";
 import { useBlocker, useNavigate } from "react-router-dom";
 import { useUpdateNote } from "../../api/NotesMutations";
 import { useGetAllNotes } from "../../api/NotesQueries";
-import AddFolderModal from "../explorer/AddFolderModal";
-import FileNode from "../explorer/FileNode";
 import UnsavedChangesModal from "../UnsavedChangesModal";
+import AddFolderModal from "./AddFolderModal";
+import FileNode from "./FileNode";
 
 const NotesFileExplorer = ({ width = 100 }) => {
   const navigate = useNavigate();
