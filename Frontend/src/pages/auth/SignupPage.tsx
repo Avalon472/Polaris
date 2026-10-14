@@ -122,7 +122,7 @@ const SignupPage = () => {
       </form>
       <a
         href="https://unsplash.com/@jeremybishop"
-        className="absolute right-0 bottom-0 text-subtle text-md p-2"
+        className="absolute right-0 bottom-0 text-subtle text-base p-2"
       >
         Photo by Jeremy Bishop
       </a>

@@ -76,9 +76,9 @@ export const NotePanelType = {
 };
 
 export interface NoteFilter {
-  pinned?: boolean;
-  updatedWithinDays?: number;
-  tags?: string[];
-  type?: string;
+  pinned: boolean;
+  tags: string[];
+  types: string[];
   newestFirst: boolean;
+  updatedWithinDays?: number;
 }

@@ -17,7 +17,7 @@ const TooltipItem = ({ syntax, name, description = "" }: TooltipItemProps) => (
   border-border hover:border-border-hover transition-colors duration-300"
   >
     <div>
-      <p className="text-md font-bold">{name}</p>
+      <p className="text-base font-bold">{name}</p>
       {description && <p className="text-sm italic">{description}</p>}
     </div>
 
@@ -48,7 +48,7 @@ const EditorTooltip = () => {
           Syntax Guide
         </div>
         <div className="flex flex-col gap-3 max-h-[50vh] overflow-y-scroll scrollbar-thin bg-bg3 rounded-lg p-2">
-          <div className="text-md italic">Standard Syntax</div>
+          <div className="text-base italic">Standard Syntax</div>
 
           <TooltipItem syntax="**text**" name="Bold" />
           <TooltipItem syntax="_text_" name="Italic" />
@@ -64,7 +64,7 @@ const EditorTooltip = () => {
           <TooltipItem syntax="> text" name="Blockquote" />
           <TooltipItem syntax="---" name="Divider" />
 
-          <div className="text-md italic">Custom Syntax</div>
+          <div className="text-base italic">Custom Syntax</div>
 
           <TooltipItem
             syntax="[text](url)"

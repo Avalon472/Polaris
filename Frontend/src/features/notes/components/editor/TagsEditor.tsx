@@ -21,19 +21,21 @@ interface TagEditorProps {
   selectedTags: string[];
   onSelect: (tags: string[]) => void;
   editing: boolean;
+  editable?: boolean;
 }
 
 const TagEditor = ({
   selectedTags,
   onSelect,
   editing = false,
+  editable = true,
 }: TagEditorProps) => {
   const anchor = useComboboxAnchor();
   const { data: tags, isLoading } = useGetTags();
   const [inputValue, setInputValue] = React.useState("");
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === " " && inputValue.trim()) {
+    if (e.key === " " && inputValue.trim() && editable) {
       const newTag = inputValue.trim().toLowerCase();
       if (!selectedTags.includes(newTag)) {
         onSelect([...selectedTags, newTag]);
@@ -76,17 +78,21 @@ const TagEditor = ({
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
+                maxLength={25}
               />
             </React.Fragment>
           )}
         </ComboboxValue>
       </ComboboxChips>
       <ComboboxContent anchor={anchor}>
-        <ComboboxEmpty>
-          {inputValue.trim()
-            ? `Press Space to add "${inputValue.trim()}"`
-            : "No tags found."}
-        </ComboboxEmpty>
+        {editable && (
+          <ComboboxEmpty>
+            {inputValue.trim()
+              ? `Press Space to add "${inputValue.trim()}"`
+              : "No tags found."}
+          </ComboboxEmpty>
+        )}
+
         <ComboboxList>
           {isLoading ? (
             <LoadingSpinner />
