@@ -25,9 +25,7 @@ const UnsavedChangesModal = ({
         <DialogHeader>
           <DialogTitle>Warning!</DialogTitle>
           <DialogDescription>
-            <p>
-              {displayText !== undefined ? displayText : defaultDescription}
-            </p>
+            {displayText !== undefined ? displayText : defaultDescription}
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2">

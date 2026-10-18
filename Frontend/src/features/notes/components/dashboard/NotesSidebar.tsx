@@ -81,7 +81,7 @@ const NotesSidebar = ({ notes: noteContents }: SidebarProps) => {
             {filterOptions.map((type) => (
               <DropdownMenuItem key={type} onClick={() => setFilterType(type)}>
                 <div className="flex w-full justify-between">
-                  <p>{type[0].toUpperCase() + type.slice(1)}</p>{" "}
+                  <p>{type[0].toUpperCase() + type.slice(1)}</p>
                   <p className="text-accent">{filterCounts[type]}</p>
                 </div>
               </DropdownMenuItem>
@@ -101,7 +101,9 @@ const NotesSidebar = ({ notes: noteContents }: SidebarProps) => {
       {filteredNotes ? (
         <div className="gap-4 flex flex-col overflow-y-auto scrollbar-thin">
           {filteredNotes.map((note) => {
-            return <Notecard key={note._id} noteContent={note} isOnSidebar />;
+            return (
+              <Notecard key={note._id} noteContent={note} filterTags={[]} />
+            );
           })}
         </div>
       ) : (

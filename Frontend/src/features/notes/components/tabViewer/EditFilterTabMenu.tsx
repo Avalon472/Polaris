@@ -27,9 +27,6 @@ const EditFilterTabMenu = ({
     "appearance-none size-4 bg-surface rounded-xs border border-border checked:bg-accent cursor-pointer hover:border-white/60 transition-all duration-200";
   return (
     <div className="flex flex-col w-full p-1 pb-0 gap-2 justify-center">
-      <p className="border-b border-surface text-center w-full">
-        Filter Options
-      </p>
       <Accordion type="multiple" defaultValue={["tags", "type"]}>
         <AccordionItem value={"tags"}>
           <AccordionTrigger className="hover:no-underline">

@@ -68,10 +68,10 @@ const TagEditor = ({
                 <ComboboxChip
                   key={value}
                   showRemove={editing}
-                  className={`buttonCore text-accent border-accent bg-transparent
+                  className={`buttonCore text-accent border-accent bg-transparent relative overflow-visible
               ${editing ? "text-text bg-accent" : ""}`}
                 >
-                  {value}
+                  <span className="w-full truncate">{value}</span>
                 </ComboboxChip>
               ))}
               <ComboboxChipsInput
@@ -99,7 +99,7 @@ const TagEditor = ({
           ) : (
             (item) => (
               <ComboboxItem key={item} value={item}>
-                {item}
+                <span className="w-full truncate">{item}</span>
               </ComboboxItem>
             )
           )}
