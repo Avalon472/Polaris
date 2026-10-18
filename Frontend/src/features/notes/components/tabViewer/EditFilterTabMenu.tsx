@@ -32,7 +32,7 @@ const EditFilterTabMenu = ({
           <AccordionTrigger className="hover:no-underline">
             Tags
           </AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent key={editedFilter.tags.length}>
             <TagEditor
               selectedTags={editedFilter.tags ?? []}
               onSelect={(tags) => {

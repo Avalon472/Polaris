@@ -44,7 +44,9 @@ const NotesBoard = ({
             }}
           >
             {displayedNotes.map((note) => {
-              return <Notecard key={note._id} noteContent={note} />;
+              return (
+                <Notecard key={note._id} noteContent={note} filterTags={[]} />
+              );
             })}
           </div>
           <div className="mt-auto w-full bg-bg2 border-2 border-border rounded-b-2xl flex justify-between px-4">

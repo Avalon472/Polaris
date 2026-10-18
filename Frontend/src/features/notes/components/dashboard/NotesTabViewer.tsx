@@ -48,7 +48,8 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
     },
   ]);
 
-  const [selectedFilter, setSelectedFilter] = useState(filters[0].filterName);
+  const [selectedFilter, setSelectedFilter] = useState(filters[0]);
+  const [openFilterOptions, setOpenFilterOptions] = useState(false);
 
   const applyFilter = (filter: NoteFilter) => {
     let target;
@@ -85,13 +86,10 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
   }, [currentPage, notesPerPage, filteredNotes]);
 
   useEffect(() => {
-    const filterOptions = filters.find(
-      (x) => x.filterName === selectedFilter,
-    )!.filterCriteria;
-    applyFilter(filterOptions);
+    applyFilter(selectedFilter.filterCriteria);
   }, [notes, filters]);
 
-  // TODO: Add menu for editing/adding filters
+  // TODO: Add menu for adding filters, decide between adding extra state var or making a blank filter object to pass in to modal
   return isLoading ? (
     <LoadingSpinner />
   ) : (
@@ -102,10 +100,11 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
             // TODO: change the p tag to be a conditionally active text input for changing filter name
             <div
               className={`flex justify-between px-6 py-0.5 text-text rounded-t-2xl max-w-1/2 min-w-10 w-full items-center transition-all duration-200
-            ${filter.filterName === selectedFilter ? "-mt-2 bg-accent" : "border bg-bg2 hover:bg-surface"}`}
+            ${filter.filterName === selectedFilter.filterName ? "-mt-2 bg-accent" : "border bg-bg2 hover:bg-surface"}`}
               key={filter.filterName}
               onClick={() => {
-                setSelectedFilter(filter.filterName);
+                setSelectedFilter(filter);
+
                 const newCriteria = filters.find(
                   (x) => x.filterName === filter.filterName,
                 )!.filterCriteria;
@@ -114,25 +113,12 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
             >
               <p>{filter.filterName}</p>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Edit className="size-5 text-text hover:opacity-60 cursor-pointer transition-all duration-200" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="-ml-1.5 w-50">
-                  <EditFilterTabMenu
-                    existingFilter={filter.filterCriteria}
-                    handleChange={(newOptions) => {
-                      setFilters((prev) =>
-                        prev.map((x) =>
-                          x.filterName === filter.filterName
-                            ? { ...x, filterCriteria: newOptions }
-                            : x,
-                        ),
-                      );
-                    }}
-                  />
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Edit
+                className={`size-5 text-text  cursor-pointer transition-all duration-200
+                  ${filter.filterName === selectedFilter.filterName ? "visible" : "hidden"}
+                  ${openFilterOptions ? "hover:opacity-60 " : "opacity-60 hover:opacity-100"}`}
+                onClick={() => setOpenFilterOptions(!openFilterOptions)}
+              />
             </div>
           ))}
         </div>
@@ -147,18 +133,48 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
       </div>
 
       {filteredNotes ? (
-        <>
+        <div className="flex flex-1 min-h-0 h-full border border-border border-y-0 bg-bg3">
           <div
-            className="size-full bg-bg3 p-4 gap-5 overflow-y-scroll scrollbar-thin grid justify-center border border-border border-y-0"
+            className={`shrink-0 overflow-y-scroll scrollbar-thin ${openFilterOptions ? "w-50 border-r border-border px-2" : "w-0"} transition-all duration-200 bg-bg2`}
+          >
+            <EditFilterTabMenu
+              key={selectedFilter.filterName}
+              existingFilter={selectedFilter.filterCriteria}
+              handleChange={(newOptions) => {
+                setFilters((prev) =>
+                  prev.map((x) =>
+                    x.filterName ===
+                    filters.find(
+                      (x) => x.filterName === selectedFilter.filterName,
+                    )!.filterName
+                      ? { ...x, filterCriteria: newOptions }
+                      : x,
+                  ),
+                );
+              }}
+            />
+          </div>
+          <div
+            className="size-full p-4 gap-5 overflow-y-scroll scrollbar-thin grid justify-center"
             style={{
               gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             }}
           >
             {displayedNotes.map((note) => {
-              return <Notecard key={note._id} noteContent={note} />;
+              return (
+                <Notecard
+                  key={note._id}
+                  noteContent={note}
+                  filterTags={
+                    filters.find(
+                      (x) => x.filterName === selectedFilter.filterName,
+                    )!.filterCriteria.tags
+                  }
+                />
+              );
             })}
           </div>
-        </>
+        </div>
       ) : (
         <div className="flex size-full bg-bg3 p-4 border border-border border-y-0 items-center justify-center">
           No notes found

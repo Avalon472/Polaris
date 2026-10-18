@@ -1,16 +1,12 @@
-import LoadingSpinner from "@/components/layout/LoadingSpinner";
-import { useGetAllNotes } from "@/features/notes/api/NotesQueries";
-import NotesFileExplorer from "@/features/notes/components/dashboard/NotesFileExplorer";
 import NotesTabViewer from "@/features/notes/components/dashboard/NotesTabViewer";
+import NotesFileExplorer from "@/features/notes/components/explorer/NotesFileExplorer";
 
 const NotesOverview = () => {
-  const { data: noteData, isLoading } = useGetAllNotes();
+  // const { data: noteData, isLoading } = useGetAllNotes();
   // const { data: pinnedNotes } = usePinnedNotes();
   // const { data: recentNotes } = useRecentNotes();
 
-  return isLoading ? (
-    <LoadingSpinner />
-  ) : (
+  return (
     // TODO: Remove sidebar and board files once tab viewer is complete
     <div className="flex w-full h-full">
       {/* <NotesSidebar notes={noteData} /> */}
