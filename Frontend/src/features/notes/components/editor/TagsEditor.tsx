@@ -84,7 +84,7 @@ const TagEditor = ({
           )}
         </ComboboxValue>
       </ComboboxChips>
-      <ComboboxContent anchor={anchor}>
+      <ComboboxContent anchor={anchor} className={"z-999"}>
         {editable && (
           <ComboboxEmpty>
             {inputValue.trim()

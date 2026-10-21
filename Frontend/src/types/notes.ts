@@ -82,3 +82,9 @@ export interface NoteFilter {
   newestFirst: boolean;
   updatedWithinDays?: number;
 }
+
+export interface FilterInstance {
+  filterName: string;
+  filterCriteria: NoteFilter;
+  isEditable: boolean;
+}

@@ -6,20 +6,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type NoteFilter } from "@/types/notes";
-import { ChevronDown, Edit, Plus } from "lucide-react";
+import { type FilterInstance, type NoteFilter } from "@/types/notes";
+import { ChevronDown, Edit, Plus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useGetAllNotes } from "../../api/NotesQueries";
 import EditFilterTabMenu from "../tabViewer/EditFilterTabMenu";
+import AddFilterModal from "./AddFilterModal";
 import Notecard from "./Notecard";
 
 interface NotesTabViewerProps {}
-
-interface FilterInstance {
-  filterName: string;
-  filterCriteria: NoteFilter;
-  isEditable: boolean;
-}
 
 const NotesTabViewer = ({}: NotesTabViewerProps) => {
   const { data: notes, isLoading } = useGetAllNotes();
@@ -50,6 +45,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
 
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [openFilterOptions, setOpenFilterOptions] = useState(false);
+  const [openAddFilter, setOpenAddFilter] = useState(false);
 
   const applyFilter = (filter: NoteFilter) => {
     let target;
@@ -111,14 +107,23 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
                 applyFilter(newCriteria);
               }}
             >
-              <p>{filter.filterName}</p>
+              <p className="text-text text-lg">{filter.filterName}</p>
 
-              <Edit
-                className={`size-5 text-text  cursor-pointer transition-all duration-200
-                  ${filter.filterName === selectedFilter.filterName ? "visible" : "hidden"}
-                  ${openFilterOptions ? "hover:opacity-60 " : "opacity-60 hover:opacity-100"}`}
-                onClick={() => setOpenFilterOptions(!openFilterOptions)}
-              />
+              <div
+                className={`flex gap-4 items-center ${filter.filterName === selectedFilter.filterName ? "visible" : "hidden"}`}
+              >
+                <Edit
+                  className={`size-6 text-text  cursor-pointer transition-all duration-200
+                  
+                  ${openFilterOptions ? "hover:opacity-60" : "opacity-60 hover:opacity-100"}`}
+                  onClick={() => setOpenFilterOptions(!openFilterOptions)}
+                />
+                <X
+                  className={`transition-all duration-200 text-text hover:text-destructive h-7
+                ${filter.isEditable ? "visible" : "hidden"}
+                `}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -127,7 +132,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
             className="w-full h-full ml-0.5 text-text rounded-t-2xl cursor-pointer
          hover:text-accent hover:bg-surface transition-all duration-200 flex items-center justify-center"
           >
-            <Plus />
+            <Plus onClick={() => setOpenAddFilter(true)} />
           </button>
         </div>
       </div>
@@ -212,6 +217,13 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
           onSelect={(n) => setCurrentPage(n)}
         />
       </div>
+      <AddFilterModal
+        isOpen={openAddFilter}
+        onOpenChange={setOpenAddFilter}
+        onConfirm={(newFilter) => {
+          setFilters((prev) => [...prev, newFilter]);
+        }}
+      />
     </div>
   );
 };
