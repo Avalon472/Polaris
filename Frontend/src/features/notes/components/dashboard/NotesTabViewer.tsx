@@ -18,6 +18,7 @@ interface NotesTabViewerProps {}
 const NotesTabViewer = ({}: NotesTabViewerProps) => {
   const { data: notes, isLoading } = useGetAllNotes();
   const [filteredNotes, setFilteredNotes] = useState(notes);
+  const MaxFilters = 4;
 
   const [filters, setFilters] = useState<FilterInstance[]>([
     {
@@ -105,11 +106,11 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
   ) : (
     <div className="h-full flex flex-col w-full">
       <div className="flex rounded-t-2xl border-2 bg-bg3 border-t border-l-0">
-        <div className="flex w-9/10 gap-0.5 h-8 border-b border-b-accent">
+        <div className="flex w-full gap-0.5 h-8 border-b border-b-accent flex-1 min-w-0">
           {Object.values(filters).map((filter) => (
             <div
-              className={`flex justify-center px-6 py-0.5 text-text rounded-t-2xl max-w-1/2 min-w-10 w-full items-center transition-all duration-200 gap-1
-            ${filter.id === selectedFilter.id ? "-mt-2 bg-accent min-w-fit" : "border bg-bg2 hover:bg-surface"}`}
+              className={`flex justify-center px-6 py-0.5 text-text rounded-t-2xl max-w-1/2 w-full items-center transition-all duration-200 gap-2 flex-1
+            ${filter.id === selectedFilter.id ? "-mt-2 bg-accent min-w-fit" : "border bg-bg2 hover:bg-surface min-w-0"}`}
               key={filter.id}
               onClick={() => {
                 setSelectedFilterId(filter.id);
@@ -120,7 +121,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
                 applyFilter(newCriteria);
               }}
             >
-              <div className={`flex gap-2 items-center w-full`}>
+              <div className={`flex gap-0.5 items-center w-full`}>
                 {openFilterOptions && filter.id === selectedFilterId ? (
                   <input
                     className={`field-sizing-content text-lg px-1 rounded-md bg-bg3 border border-border outline-none placeholder:text-subtle`}
@@ -145,13 +146,13 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
                   />
                 ) : (
                   <p
-                    className={`text-text text-lg px-1 cursor-default ${filter.id === selectedFilter.id ? "w-fit" : "truncate"}`}
+                    className={`text-text text-lg px-1 cursor-default ${filter.id === selectedFilter.id ? "w-fit" : "w-full truncate"}`}
                   >
                     {filter.filterName}
                   </p>
                 )}
                 <Edit
-                  className={`size-5 text-text  cursor-pointer transition-all duration-200 shrink-0
+                  className={`size-5 text-text cursor-pointer transition-all duration-200 shrink-0
                   ${openFilterOptions ? "hover:opacity-60" : "opacity-50 hover:opacity-100"}
                   ${filter.id === selectedFilter.id ? "visible" : "hidden"}`}
                   onClick={() => {
@@ -179,10 +180,13 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
             </div>
           ))}
         </div>
-        <div className="flex w-1/10 justify-center items-center border-b border-b-accent ">
+        <div
+          className={`flex justify-center items-center border-b border-b-accent
+          ${filters.length < MaxFilters ? "visible w-10 shrink-0" : "hidden w-0"}`}
+        >
           <button
-            className="w-full h-full ml-0.5 text-text rounded-t-2xl cursor-pointer
-         hover:text-accent hover:bg-surface transition-all duration-200 flex items-center justify-center"
+            className={`w-full h-full ml-0.5 text-text rounded-t-2xl cursor-pointer
+         hover:text-accent hover:bg-surface transition-all duration-200 flex items-center justify-center`}
           >
             <Plus
               onClick={() =>
@@ -222,10 +226,14 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
             />
           </div>
           <div
-            className="size-full p-4 gap-5 overflow-y-scroll scrollbar-thin grid justify-center"
-            style={{
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            }}
+            // className="size-full p-4 gap-5 overflow-y-auto scrollbar-thin grid grid-cols-1 grid-flow-row md:grid-rows-2 md:grid-flow-col md:auto-rows-fr justify-start"
+            // style={{
+            //   gridAutoColumns: "minmax(280px, 1fr)",
+            // }}
+            className="size-full p-4 gap-5 overflow-y-auto scrollbar-thin grid
+             grid-cols-[minmax(0,1fr)]
+             md:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))]
+             content-start"
           >
             {displayedNotes.map((note) => {
               return (
@@ -261,7 +269,10 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
               {[4, 8, 12, 16, 20].map((count) => (
                 <DropdownMenuItem
                   key={count}
-                  onClick={() => setNotesPerPage(count)}
+                  onClick={() => {
+                    setNotesPerPage(count);
+                    setCurrentPage(1);
+                  }}
                   className={`${count === notesPerPage ? "bg-surface border border-accent" : ""}`}
                 >
                   <p className="w-full text-center">{count}</p>

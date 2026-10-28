@@ -18,7 +18,7 @@ function App() {
       ) : (
         <>
           {authUser && <Navbar />}
-          <div className="w-full mx-auto">
+          <div className="w-full mx-auto flex-1 min-w-0">
             <Outlet />
           </div>
         </>

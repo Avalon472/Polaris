@@ -16,7 +16,7 @@ import UnsavedChangesModal from "../UnsavedChangesModal";
 import AddFolderModal from "./AddFolderModal";
 import FileNode from "./FileNode";
 
-const NotesFileExplorer = ({ width = 100 }) => {
+const NotesFileExplorer = ({ minWidth = 100 }) => {
   const navigate = useNavigate();
   // TODO: Add breadcrumb at top to show file path
   const { data: notes, isLoading } = useGetAllNotes();
@@ -52,8 +52,8 @@ const NotesFileExplorer = ({ width = 100 }) => {
     <LoadingSpinner />
   ) : (
     <div
-      className="h-1/2 flex-1 min-h-0 flex flex-col select-none"
-      style={{ width: `${width}%` }}
+      className="min-h-full flex-1 flex flex-col select-none"
+      style={{ minWidth: `${minWidth}%` }}
     >
       <div
         className="flex flex-col h-full bg-bg3 overflow-y-auto rounded-2xl border border-border content-start"
@@ -136,7 +136,7 @@ const NotesFileExplorer = ({ width = 100 }) => {
         <div
           className="grid place-items-center auto-rows-min h-full gap-4 p-4 overflow-y-scroll scrollbar-thin"
           style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
           }}
         >
           {localLayer.map((node) => {
