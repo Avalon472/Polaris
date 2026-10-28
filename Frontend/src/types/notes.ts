@@ -86,5 +86,5 @@ export interface NoteFilter {
 export interface FilterInstance {
   filterName: string;
   filterCriteria: NoteFilter;
-  isEditable: boolean;
+  id: string;
 }

@@ -11,7 +11,6 @@ import { ChevronDown, Edit, Plus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useGetAllNotes } from "../../api/NotesQueries";
 import EditFilterTabMenu from "../tabViewer/EditFilterTabMenu";
-import AddFilterModal from "./AddFilterModal";
 import Notecard from "./Notecard";
 
 interface NotesTabViewerProps {}
@@ -29,7 +28,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
         types: [],
         tags: [],
       },
-      isEditable: false,
+      id: Math.random().toString(36).substring(2, 11),
     },
     {
       filterName: "Pinned",
@@ -39,13 +38,27 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
         types: [],
         tags: [],
       },
-      isEditable: false,
+      id: Math.random().toString(36).substring(2, 11),
     },
   ]);
 
-  const [selectedFilter, setSelectedFilter] = useState(filters[0]);
+  const basicFilter = {
+    filterName: "New Filter",
+    filterCriteria: {
+      pinned: false,
+      tags: [],
+      types: [],
+      newestFirst: true,
+    },
+    isEditable: true,
+  };
+
   const [openFilterOptions, setOpenFilterOptions] = useState(false);
-  const [openAddFilter, setOpenAddFilter] = useState(false);
+  const [selectedFilterId, setSelectedFilterId] = useState(filters[0].id);
+  const selectedFilter =
+    filters.find((filter) => filter.id === selectedFilterId) ?? filters[0];
+
+  const [editedFilterName, setEditerFilterName] = useState("");
 
   const applyFilter = (filter: NoteFilter) => {
     let target;
@@ -82,10 +95,11 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
   }, [currentPage, notesPerPage, filteredNotes]);
 
   useEffect(() => {
-    applyFilter(selectedFilter.filterCriteria);
-  }, [notes, filters]);
+    if (selectedFilter) {
+      applyFilter(selectedFilter.filterCriteria);
+    }
+  }, [notes, selectedFilter]);
 
-  // TODO: Add menu for adding filters, decide between adding extra state var or making a blank filter object to pass in to modal
   return isLoading ? (
     <LoadingSpinner />
   ) : (
@@ -93,13 +107,12 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
       <div className="flex rounded-t-2xl border-2 bg-bg3 border-t border-l-0">
         <div className="flex w-9/10 gap-0.5 h-8 border-b border-b-accent">
           {Object.values(filters).map((filter) => (
-            // TODO: change the p tag to be a conditionally active text input for changing filter name
             <div
-              className={`flex justify-between px-6 py-0.5 text-text rounded-t-2xl max-w-1/2 min-w-10 w-full items-center transition-all duration-200
-            ${filter.filterName === selectedFilter.filterName ? "-mt-2 bg-accent" : "border bg-bg2 hover:bg-surface"}`}
-              key={filter.filterName}
+              className={`flex justify-center px-6 py-0.5 text-text rounded-t-2xl max-w-1/2 min-w-10 w-full items-center transition-all duration-200 gap-1
+            ${filter.id === selectedFilter.id ? "-mt-2 bg-accent min-w-fit" : "border bg-bg2 hover:bg-surface"}`}
+              key={filter.id}
               onClick={() => {
-                setSelectedFilter(filter);
+                setSelectedFilterId(filter.id);
 
                 const newCriteria = filters.find(
                   (x) => x.filterName === filter.filterName,
@@ -107,23 +120,62 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
                 applyFilter(newCriteria);
               }}
             >
-              <p className="text-text text-lg">{filter.filterName}</p>
+              <div className={`flex gap-2 items-center w-full`}>
+                {openFilterOptions && filter.id === selectedFilterId ? (
+                  <input
+                    className={`field-sizing-content text-lg px-1 rounded-md bg-bg3 border border-border outline-none placeholder:text-subtle`}
+                    type="text"
+                    onChange={(e) => {
+                      setEditerFilterName(e.target.value);
+                    }}
+                    value={editedFilterName}
+                    onBlur={() => {
+                      const trimmedName = editedFilterName.trim();
 
-              <div
-                className={`flex gap-4 items-center ${filter.filterName === selectedFilter.filterName ? "visible" : "hidden"}`}
-              >
+                      if (trimmedName) {
+                        setFilters((prev) =>
+                          prev.map((x) =>
+                            x.id === filter.id
+                              ? { ...x, filterName: trimmedName }
+                              : x,
+                          ),
+                        );
+                      }
+                    }}
+                  />
+                ) : (
+                  <p
+                    className={`text-text text-lg px-1 cursor-default ${filter.id === selectedFilter.id ? "w-fit" : "truncate"}`}
+                  >
+                    {filter.filterName}
+                  </p>
+                )}
                 <Edit
-                  className={`size-6 text-text  cursor-pointer transition-all duration-200
-                  
-                  ${openFilterOptions ? "hover:opacity-60" : "opacity-60 hover:opacity-100"}`}
-                  onClick={() => setOpenFilterOptions(!openFilterOptions)}
-                />
-                <X
-                  className={`transition-all duration-200 text-text hover:text-destructive h-7
-                ${filter.isEditable ? "visible" : "hidden"}
-                `}
+                  className={`size-5 text-text  cursor-pointer transition-all duration-200 shrink-0
+                  ${openFilterOptions ? "hover:opacity-60" : "opacity-50 hover:opacity-100"}
+                  ${filter.id === selectedFilter.id ? "visible" : "hidden"}`}
+                  onClick={() => {
+                    setOpenFilterOptions(!openFilterOptions);
+                    setEditerFilterName(filter.filterName);
+                  }}
                 />
               </div>
+
+              <X
+                className={`transition-all duration-200 text-text hover:text-destructive size-6 shrink-0 ml-auto
+                ${filters.length === 1 ? "hidden" : "visible"}
+                `}
+                onClick={() => {
+                  const remainingFilters = filters.filter(
+                    (x) => x.id !== filter.id,
+                  );
+
+                  setFilters(remainingFilters);
+                  if (selectedFilterId === filter.id) {
+                  }
+                  setSelectedFilterId(remainingFilters[0].id);
+                }}
+              />
             </div>
           ))}
         </div>
@@ -132,7 +184,17 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
             className="w-full h-full ml-0.5 text-text rounded-t-2xl cursor-pointer
          hover:text-accent hover:bg-surface transition-all duration-200 flex items-center justify-center"
           >
-            <Plus onClick={() => setOpenAddFilter(true)} />
+            <Plus
+              onClick={() =>
+                setFilters((prev) => [
+                  ...prev,
+                  {
+                    ...basicFilter,
+                    id: Math.random().toString(36).substring(2, 11),
+                  },
+                ])
+              }
+            />
           </button>
         </div>
       </div>
@@ -143,7 +205,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
             className={`shrink-0 overflow-y-scroll scrollbar-thin ${openFilterOptions ? "w-50 border-r border-border px-2" : "w-0"} transition-all duration-200 bg-bg2`}
           >
             <EditFilterTabMenu
-              key={selectedFilter.filterName}
+              key={selectedFilter.id}
               existingFilter={selectedFilter.filterCriteria}
               handleChange={(newOptions) => {
                 setFilters((prev) =>
@@ -217,13 +279,6 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
           onSelect={(n) => setCurrentPage(n)}
         />
       </div>
-      <AddFilterModal
-        isOpen={openAddFilter}
-        onOpenChange={setOpenAddFilter}
-        onConfirm={(newFilter) => {
-          setFilters((prev) => [...prev, newFilter]);
-        }}
-      />
     </div>
   );
 };
