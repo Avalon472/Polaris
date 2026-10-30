@@ -7,10 +7,16 @@ export const useAuthUser = () =>
   useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
-      const { data } = await api.get("/auth/");
-      return data as AuthUser;
+      try {
+        const { data } = await api.get("/auth/");
+        return data as AuthUser;
+      } catch (err: any) {
+        if (err?.response?.status === 401) return null; // logged out, not a failure
+        throw err;
+      }
     },
     //Don't retry, don't refetch, user needs to log in again
     retry: false,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
