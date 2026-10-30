@@ -2,11 +2,12 @@ import api from "@/lib/axios";
 import type { NotePayload, UpdateNotePayload } from "@/types/notes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const useCreateNote = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
 
   return useMutation({
     mutationFn: async (payload: NotePayload) => {
@@ -17,7 +18,9 @@ export const useCreateNote = () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Your note: ${data.title} was created successfully!`);
-      navigate(`/notes/`, { replace: true });
+      if (location.pathname !== "/notes/") {
+        navigate(`/notes/`, { replace: true });
+      }
     },
     onError: (error) => toast.error(error.message),
   });
@@ -26,6 +29,7 @@ export const useCreateNote = () => {
 export const useDeleteNote = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
 
   return useMutation({
     mutationFn: async (noteId: string) => {
@@ -36,7 +40,9 @@ export const useDeleteNote = () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Note deleted successfully!`);
-      navigate("/notes/");
+      if (location.pathname !== "/notes/") {
+        navigate(`/notes/`);
+      }
     },
     onError: (error) => toast.error(error.message),
   });
@@ -45,6 +51,7 @@ export const useDeleteNote = () => {
 export const useUpdateNote = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
 
   return useMutation({
     mutationFn: async ({ _id, ...payload }: UpdateNotePayload) => {
@@ -55,7 +62,9 @@ export const useUpdateNote = () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Your note: ${data.title} was updated successfully!`);
-      navigate("/notes/");
+      if (location.pathname !== "/notes/") {
+        navigate(`/notes/`);
+      }
     },
     onError: (error) => toast.error(error.message),
   });

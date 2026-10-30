@@ -104,6 +104,9 @@ export const WikiLinkExtension = Node.create({
 });
 
 export const CustomLink = Link.extend({
+  name: "customLink",
+  inclusive: false,
+  exitable: true,
   addKeyboardShortcuts() {
     const convertLink = () => {
       const { state, view } = this.editor;

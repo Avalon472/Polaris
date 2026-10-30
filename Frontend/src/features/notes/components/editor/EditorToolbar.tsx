@@ -53,90 +53,95 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
       isAtLink: ctx.editor.isActive("link"),
     }),
   });
-
   return (
-    <div className="flex overflow-x-auto scrollbar-thin items-center gap-2 px-3 py-2 border-b border-border bg-bg2">
-      <ToolbarBtn
-        title="Bold"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        isActive={editorState.isBold}
-      >
-        <strong>B</strong>
-      </ToolbarBtn>
+    <div className="flex items-stretch gap-2 px-3 py-2 border-b border-border bg-bg2">
+      <div className="flex items-center gap-2 flex-wrap max-h-18 overflow-y-auto scrollbar-thin">
+        <ToolbarBtn
+          title="Bold"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          isActive={editorState.isBold}
+        >
+          <strong>B</strong>
+        </ToolbarBtn>
 
-      <ToolbarBtn
-        title="Italic"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        isActive={editorState.isItalic}
-      >
-        <em>I</em>
-      </ToolbarBtn>
+        <ToolbarBtn
+          title="Italic"
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          isActive={editorState.isItalic}
+        >
+          <em>I</em>
+        </ToolbarBtn>
 
-      <ToolbarBtn
-        title="Inline code"
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        isActive={editorState.isCode}
-      >
-        {"</>"}
-      </ToolbarBtn>
+        <ToolbarBtn
+          title="Inline code"
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          isActive={editorState.isCode}
+        >
+          {"</>"}
+        </ToolbarBtn>
 
-      {/* divider */}
-      <div className="w-px h-4 bg-transparent mx-1" />
+        {/* divider */}
+        <div className="w-px h-4 bg-transparent mx-1" />
 
-      <ToolbarBtn
-        title="Heading 1"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        isActive={editorState.isH1}
-      >
-        H1
-      </ToolbarBtn>
+        <ToolbarBtn
+          title="Heading 1"
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+          isActive={editorState.isH1}
+        >
+          H1
+        </ToolbarBtn>
 
-      <ToolbarBtn
-        title="Heading 2"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        isActive={editorState.isH2}
-      >
-        H2
-      </ToolbarBtn>
+        <ToolbarBtn
+          title="Heading 2"
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+          isActive={editorState.isH2}
+        >
+          H2
+        </ToolbarBtn>
 
-      <div className="w-px h-4 bg-transparent mx-1" />
+        <div className="w-px h-4 bg-transparent mx-1" />
 
-      <ToolbarBtn
-        title="Bullet list"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        isActive={editorState.isBulletList}
-      >
-        • List
-      </ToolbarBtn>
+        <ToolbarBtn
+          title="Bullet list"
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          isActive={editorState.isBulletList}
+        >
+          • List
+        </ToolbarBtn>
 
-      <ToolbarBtn
-        title="Code block"
-        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        isActive={editorState.isCodeBlock}
-      >
-        Block
-      </ToolbarBtn>
+        <ToolbarBtn
+          title="Code block"
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          isActive={editorState.isCodeBlock}
+        >
+          Block
+        </ToolbarBtn>
 
-      <ToolbarBtn
-        title="Blockquote"
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        isActive={editorState.isBlockquote}
-      >
-        "
-      </ToolbarBtn>
-      <ToolbarBtn
-        title="Hyperlink"
-        onClick={() => {
-          const previousUrl = editor.getAttributes("link").href;
-          const url = window.prompt("URL", previousUrl);
-          if (!url || url === "") return;
-          editor.chain().focus().setLink({ href: url }).run();
-        }}
-        isActive={editorState.isAtLink}
-      >
-        <Link className="text-xs" size={16} />
-      </ToolbarBtn>
-      <div className="ml-auto">
+        <ToolbarBtn
+          title="Blockquote"
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          isActive={editorState.isBlockquote}
+        >
+          "
+        </ToolbarBtn>
+        <ToolbarBtn
+          title="Hyperlink"
+          onClick={() => {
+            const previousUrl = editor.getAttributes("link").href;
+            const url = window.prompt("URL", previousUrl);
+            if (!url || url === "") return;
+            editor.chain().focus().setLink({ href: url }).run();
+          }}
+          isActive={editorState.isAtLink}
+        >
+          <Link className="text-xs" size={16} />
+        </ToolbarBtn>
+      </div>
+      <div className="ml-auto border-l border-border px-4 flex items-center justify-center">
         <EditorTooltip />
       </div>
     </div>

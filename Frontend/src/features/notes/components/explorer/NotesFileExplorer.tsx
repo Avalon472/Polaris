@@ -52,7 +52,7 @@ const NotesFileExplorer = ({ minWidth = 100 }) => {
     <LoadingSpinner />
   ) : (
     <div
-      className="min-h-full flex-1 flex flex-col select-none"
+      className="flex-1 flex flex-col select-none h-full max-h-120"
       style={{ minWidth: `${minWidth}%` }}
     >
       <div
@@ -134,7 +134,7 @@ const NotesFileExplorer = ({ minWidth = 100 }) => {
         </div>
 
         <div
-          className="grid place-items-center auto-rows-min h-full gap-4 p-4 overflow-y-scroll scrollbar-thin"
+          className="grid place-items-center auto-rows-min h-full gap-4 p-4 overflow-y-scroll scrollbar-thin "
           style={{
             gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
           }}

@@ -31,7 +31,7 @@ const EditorTooltip = () => {
       <PopoverTrigger asChild>
         <button
           onMouseDown={(e) => e.preventDefault()}
-          className="py-1 text-xs mr-4"
+          className="py-1 text-xs"
         >
           <InfoIcon
             size={24}
