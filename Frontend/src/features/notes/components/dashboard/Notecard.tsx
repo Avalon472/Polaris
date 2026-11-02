@@ -62,7 +62,7 @@ const Notecard = ({ noteContent, filterTags }: NotecardProps) => {
 
           <div className="flex mt-auto border-t border-border pt-1 items-center gap-1">
             {noteContent.tags ? (
-              <div className="flex w-[95%]">
+              <div className="flex w-[calc(100%-1rem)]">
                 <TagList tags={noteContent.tags} filterTags={filterTags} />
               </div>
             ) : (

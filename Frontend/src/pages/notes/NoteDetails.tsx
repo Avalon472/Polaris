@@ -21,20 +21,29 @@ import {
   LayoutPanelLeft,
   TagIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useBlocker, useNavigate, useParams } from "react-router-dom";
 
 const NoteDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+
+  // Need to bundle with ref to allow immediate state change and evaluation
+  const [isChanged, setIsChanged] = useState(false);
+  const isChangedRef = useRef(false);
+
+  const updateIsChanged = (value: boolean) => {
+    isChangedRef.current = value;
+    setIsChanged(value);
+  };
+
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      isChanged && currentLocation !== nextLocation,
+      isChangedRef.current && currentLocation !== nextLocation,
   );
 
   const [editing, setEditing] = useState(false);
-  const [isChanged, setIsChanged] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   if (!slug) return <div>404, no route param provided</div>;
@@ -56,7 +65,7 @@ const NoteDetails = () => {
   if (slug !== prevSlug) {
     setPrevSlug(slug ?? null);
     setEditing(isNew);
-    setIsChanged(false);
+    updateIsChanged(false);
     setDeleteOpen(false);
     // Set draftData synchronously for new notes, otherwise clear it and let
     // the useEffect define it once the note query has resolved
@@ -108,7 +117,7 @@ const NoteDetails = () => {
         },
         {
           onSuccess: () => {
-            setIsChanged(false);
+            updateIsChanged(false);
             setEditing(false);
           },
         },
@@ -121,7 +130,7 @@ const NoteDetails = () => {
         },
         {
           onSuccess: (data) => {
-            setIsChanged(false);
+            updateIsChanged(false);
             setEditing(false);
             navigate(`/notes/${data.slug}`);
           },
@@ -133,12 +142,12 @@ const NoteDetails = () => {
   //TODO: Decide if cancel should reset or not
   const handleCancel = () => {
     setEditing(false);
-    setIsChanged(false);
+    updateIsChanged(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDraftData({ ...draftData, [e.target.name]: e.target.value });
-    setIsChanged(true);
+    updateIsChanged(true);
   };
 
   const titleClass =
@@ -206,7 +215,7 @@ const NoteDetails = () => {
             onSelect={(tags) => {
               setDraftData({ ...draftData, tags });
               if (tags && tags !== noteData?.tags) {
-                setIsChanged(true);
+                updateIsChanged(true);
               }
             }}
             editing={editing}
@@ -224,7 +233,7 @@ const NoteDetails = () => {
             onSelect={(type) => {
               setDraftData({ ...draftData, type: type! });
               if (type && type !== noteData?.type) {
-                setIsChanged(true);
+                updateIsChanged(true);
               }
             }}
             editing={editing}
@@ -264,7 +273,7 @@ const NoteDetails = () => {
         onChange={(content) => {
           if (content !== draftData.body) {
             setDraftData(() => ({ ...draftData, body: content }));
-            setIsChanged(true);
+            updateIsChanged(true);
           }
         }}
         onReferencesChange={(newRefs) =>
