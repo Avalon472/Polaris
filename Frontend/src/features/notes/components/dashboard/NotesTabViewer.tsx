@@ -13,35 +13,93 @@ import { useGetAllNotes } from "../../api/NotesQueries";
 import EditFilterTabMenu from "../tabViewer/EditFilterTabMenu";
 import Notecard from "./Notecard";
 
-interface NotesTabViewerProps {}
+interface NotesTabPreferences {
+  filters: FilterInstance[];
+  notesPerPage: number;
+  currentPage: number;
+}
 
-const NotesTabViewer = ({}: NotesTabViewerProps) => {
+const NotesTabViewer = () => {
   const { data: notes, isLoading } = useGetAllNotes();
   const [filteredNotes, setFilteredNotes] = useState(notes);
   const MaxFilters = 4;
 
-  const [filters, setFilters] = useState<FilterInstance[]>([
-    {
-      filterName: "Recents",
-      filterCriteria: {
-        newestFirst: true,
-        pinned: false,
-        types: [],
-        tags: [],
+  const defaultPreferences: NotesTabPreferences = {
+    filters: [
+      {
+        filterName: "Recents",
+        filterCriteria: {
+          newestFirst: true,
+          pinned: false,
+          types: [],
+          tags: [],
+        },
+        id: Math.random().toString(36).substring(2, 11),
       },
-      id: Math.random().toString(36).substring(2, 11),
-    },
-    {
-      filterName: "Pinned",
-      filterCriteria: {
-        newestFirst: false,
-        pinned: true,
-        types: [],
-        tags: [],
+      {
+        filterName: "Pinned",
+        filterCriteria: {
+          newestFirst: false,
+          pinned: true,
+          types: [],
+          tags: [],
+        },
+        id: Math.random().toString(36).substring(2, 11),
       },
-      id: Math.random().toString(36).substring(2, 11),
-    },
-  ]);
+    ],
+
+    notesPerPage: 8,
+    currentPage: 1,
+  };
+
+  const [preferences, setPreferences] = useState<NotesTabPreferences>(() => {
+    // Attempt to initialize filters using previously made and stored ones
+    try {
+      const saved = localStorage.getItem("note-filter-preferences");
+      if (saved) {
+        return JSON.parse(saved) as NotesTabPreferences;
+      }
+    } catch (error) {
+      console.error("Failed to load saved filter preferences:", error);
+    }
+
+    return defaultPreferences;
+  });
+
+  // const [filters, setFilters] = useState<FilterInstance[]>(() => {
+  //   // Attempt to initialize filters using previously made and stored ones
+  //   try {
+  //     const saved = localStorage.getItem("note-filters");
+
+  //     if (saved) {
+  //       return JSON.parse(saved) as FilterInstance[];
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to load saved filters:", error);
+  //   }
+  //   return [
+  //     {
+  //       filterName: "Recents",
+  //       filterCriteria: {
+  //         newestFirst: true,
+  //         pinned: false,
+  //         types: [],
+  //         tags: [],
+  //       },
+  //       id: Math.random().toString(36).substring(2, 11),
+  //     },
+  //     {
+  //       filterName: "Pinned",
+  //       filterCriteria: {
+  //         newestFirst: false,
+  //         pinned: true,
+  //         types: [],
+  //         tags: [],
+  //       },
+  //       id: Math.random().toString(36).substring(2, 11),
+  //     },
+  //   ];
+  // });
 
   const basicFilter = {
     filterName: "New Filter",
@@ -55,9 +113,12 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
   };
 
   const [openFilterOptions, setOpenFilterOptions] = useState(false);
-  const [selectedFilterId, setSelectedFilterId] = useState(filters[0].id);
+  const [selectedFilterId, setSelectedFilterId] = useState(
+    preferences.filters[0].id,
+  );
   const selectedFilter =
-    filters.find((filter) => filter.id === selectedFilterId) ?? filters[0];
+    preferences.filters.find((filter) => filter.id === selectedFilterId) ??
+    preferences.filters[0];
 
   const [editedFilterName, setEditerFilterName] = useState("");
 
@@ -86,14 +147,19 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
     setFilteredNotes(target);
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [notesPerPage, setNotesPerPage] = useState(8);
-  const maxPages = Math.ceil((filteredNotes?.length ?? 0) / notesPerPage);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [notesPerPage, setNotesPerPage] = useState(8);
+  const maxPages = Math.ceil(
+    (filteredNotes?.length ?? 0) / preferences.notesPerPage,
+  );
 
   const displayedNotes = useMemo(() => {
-    const startIndex = (currentPage - 1) * notesPerPage;
-    return filteredNotes?.slice(startIndex, startIndex + notesPerPage) ?? [];
-  }, [currentPage, notesPerPage, filteredNotes]);
+    const startIndex = (preferences.currentPage - 1) * preferences.notesPerPage;
+    return (
+      filteredNotes?.slice(startIndex, startIndex + preferences.notesPerPage) ??
+      []
+    );
+  }, [preferences.currentPage, preferences.notesPerPage, filteredNotes]);
 
   useEffect(() => {
     if (selectedFilter) {
@@ -101,13 +167,20 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
     }
   }, [notes, selectedFilter]);
 
+  useEffect(() => {
+    localStorage.setItem(
+      "note-filter-preferences",
+      JSON.stringify(preferences),
+    );
+  }, [preferences]);
+
   return isLoading ? (
     <LoadingSpinner />
   ) : (
     <div className="h-full flex flex-col w-full">
       <div className="flex rounded-t-2xl border-2 bg-bg3 border-t border-l-0">
         <div className="flex w-full gap-0.5 h-8 border-b border-b-accent flex-1 min-w-0">
-          {Object.values(filters).map((filter) => (
+          {Object.values(preferences.filters).map((filter) => (
             <div
               className={`flex justify-center px-6 py-0.5 text-text rounded-t-2xl max-w-1/2 w-full items-center transition-all duration-200 gap-2 flex-1
             ${filter.id === selectedFilter.id ? "-mt-2 bg-accent min-w-fit" : "border bg-bg2 hover:bg-surface min-w-0"}`}
@@ -115,7 +188,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
               onClick={() => {
                 setSelectedFilterId(filter.id);
 
-                const newCriteria = filters.find(
+                const newCriteria = preferences.filters.find(
                   (x) => x.filterName === filter.filterName,
                 )!.filterCriteria;
                 applyFilter(newCriteria);
@@ -134,13 +207,14 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
                       const trimmedName = editedFilterName.trim();
 
                       if (trimmedName) {
-                        setFilters((prev) =>
-                          prev.map((x) =>
+                        setPreferences((prev) => ({
+                          ...prev,
+                          filters: prev.filters.map((x) =>
                             x.id === filter.id
                               ? { ...x, filterName: trimmedName }
                               : x,
                           ),
-                        );
+                        }));
                       }
                     }}
                   />
@@ -164,14 +238,18 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
 
               <X
                 className={`transition-all duration-200 text-text hover:text-destructive size-6 shrink-0 ml-auto
-                ${filters.length === 1 ? "hidden" : "visible"}
+                ${preferences.filters.length === 1 ? "hidden" : "visible"}
                 `}
                 onClick={() => {
-                  const remainingFilters = filters.filter(
+                  const remainingFilters = preferences.filters.filter(
                     (x) => x.id !== filter.id,
                   );
 
-                  setFilters(remainingFilters);
+                  // setFilters(remainingFilters);
+                  setPreferences((prev) => ({
+                    ...prev,
+                    filters: remainingFilters,
+                  }));
                   if (selectedFilterId === filter.id) {
                   }
                   setSelectedFilterId(remainingFilters[0].id);
@@ -182,7 +260,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
         </div>
         <div
           className={`flex justify-center items-center border-b border-b-accent
-          ${filters.length < MaxFilters ? "visible w-10 shrink-0" : "hidden w-0"}`}
+          ${preferences.filters.length < MaxFilters ? "visible w-10 shrink-0" : "hidden w-0"}`}
         >
           <button
             className={`w-full h-full ml-0.5 text-text rounded-t-2xl cursor-pointer
@@ -190,13 +268,16 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
           >
             <Plus
               onClick={() =>
-                setFilters((prev) => [
+                setPreferences((prev) => ({
                   ...prev,
-                  {
-                    ...basicFilter,
-                    id: Math.random().toString(36).substring(2, 11),
-                  },
-                ])
+                  filters: [
+                    ...prev.filters,
+                    {
+                      ...basicFilter,
+                      id: Math.random().toString(36).substring(2, 11),
+                    },
+                  ],
+                }))
               }
             />
           </button>
@@ -212,28 +293,29 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
               key={selectedFilter.id}
               existingFilter={selectedFilter.filterCriteria}
               handleChange={(newOptions) => {
-                setFilters((prev) =>
-                  prev.map((x) =>
+                setPreferences((prev) => ({
+                  ...prev,
+                  filters: prev.filters.map((x) =>
                     x.filterName ===
-                    filters.find(
+                    preferences.filters.find(
                       (x) => x.filterName === selectedFilter.filterName,
                     )!.filterName
                       ? { ...x, filterCriteria: newOptions }
                       : x,
                   ),
-                );
+                }));
               }}
             />
           </div>
           <div
-            // className="size-full p-4 gap-5 overflow-y-auto scrollbar-thin grid grid-cols-1 grid-flow-row md:grid-rows-2 md:grid-flow-col md:auto-rows-fr justify-start"
-            // style={{
-            //   gridAutoColumns: "minmax(280px, 1fr)",
-            // }}
-            className="size-full p-4 gap-5 overflow-y-auto scrollbar-thin grid
-             grid-cols-[minmax(0,1fr)]
-             md:grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))]
-             content-start"
+            className={`size-full p-4 gap-5 overflow-y-auto scrollbar-thin grid content-start
+              ${
+                preferences.notesPerPage === 4
+                  ? "grid-cols-2 grid-rows-2"
+                  : preferences.notesPerPage === 8
+                    ? "grid-cols-4 grid-rows-2"
+                    : "grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))]"
+              }`}
           >
             {displayedNotes.map((note) => {
               return (
@@ -241,7 +323,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
                   key={note._id}
                   noteContent={note}
                   filterTags={
-                    filters.find(
+                    preferences.filters.find(
                       (x) => x.filterName === selectedFilter.filterName,
                     )!.filterCriteria.tags
                   }
@@ -262,7 +344,7 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
               className={`outline-0 flex gap-1 items-center bg-bg3 border border-border px-1 rounded-sm 
                     hover:bg-accent transition-colors duration-200`}
             >
-              <p className="text-sm">{notesPerPage}</p>
+              <p className="text-sm">{preferences.notesPerPage}</p>
               <ChevronDown className="size-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="-ml-1.5 min-w-10">
@@ -270,10 +352,15 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
                 <DropdownMenuItem
                   key={count}
                   onClick={() => {
-                    setNotesPerPage(count);
-                    setCurrentPage(1);
+                    // setNotesPerPage(count);
+                    // setCurrentPage(1);
+                    setPreferences((prev) => ({
+                      ...prev,
+                      notesPerPage: count,
+                      currentPage: 1,
+                    }));
                   }}
-                  className={`${count === notesPerPage ? "bg-surface border border-accent" : ""}`}
+                  className={`${count === preferences.notesPerPage ? "bg-surface border border-accent" : ""}`}
                 >
                   <p className="w-full text-center">{count}</p>
                 </DropdownMenuItem>
@@ -285,9 +372,11 @@ const NotesTabViewer = ({}: NotesTabViewerProps) => {
           </p>
         </div>
         <ItemPagination
-          currentPage={currentPage}
+          currentPage={preferences.currentPage}
           maxPages={maxPages}
-          onSelect={(n) => setCurrentPage(n)}
+          onSelect={(
+            n, //setCurrentPage(n)
+          ) => setPreferences((prev) => ({ ...prev, currentPage: n }))}
         />
       </div>
     </div>
