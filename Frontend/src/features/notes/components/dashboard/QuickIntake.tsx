@@ -1,8 +1,8 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import Editor from "@/features/notes/components/editor/TextEditor";
-import { createDescription } from "@/lib/utils";
+import { compareObjects, createDescription } from "@/lib/utils";
 import type { NotePayload } from "@/types/notes";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useBlocker } from "react-router-dom";
 import { useCreateNote } from "../../api/NotesMutations";
@@ -11,25 +11,24 @@ import UnsavedChangesModal from "../UnsavedChangesModal";
 const QuickIntake = () => {
   const createNote = useCreateNote();
 
-  const blankNote = {
+  const blankNote: NotePayload = {
     title: "",
     body: "",
     path: "/",
+    references: [],
   };
 
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      isChanged && currentLocation !== nextLocation,
+      !compareObjects(draftData, blankNote) && currentLocation !== nextLocation,
   );
 
-  const [isChanged, setIsChanged] = useState(false);
   const [draftData, setDraftData] = useState<NotePayload>(blankNote);
 
   const eligibleForSave = draftData.body && draftData.title;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDraftData({ ...draftData, [e.target.name]: e.target.value });
-    setIsChanged(true);
+    setDraftData({ ...draftData, title: e.target.value });
   };
 
   const handleSave = () => {
@@ -50,12 +49,19 @@ const QuickIntake = () => {
       },
       {
         onSuccess: () => {
-          setIsChanged(false);
           setDraftData(blankNote);
         },
       },
     );
   };
+
+  useEffect(() => {
+    return () => {
+      if (blocker.state === "blocked") {
+        blocker.reset();
+      }
+    };
+  }, [blocker]);
 
   const titleClass =
     "text-2xl leading-normal w-full px-8 py-2 rounded-2xl truncate min-h-16";
@@ -87,10 +93,7 @@ const QuickIntake = () => {
         initialContent={draftData.body}
         isEditing={true}
         onChange={(content) => {
-          if (content !== draftData.body) {
-            setDraftData(() => ({ ...draftData, body: content }));
-            setIsChanged(true);
-          }
+          setDraftData(() => ({ ...draftData, body: content }));
         }}
         onReferencesChange={(newRefs) =>
           setDraftData(() => ({ ...draftData, references: newRefs }))

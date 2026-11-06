@@ -18,10 +18,10 @@ const UnsavedChangesModal = ({
   displayText,
 }: UnsavedChangesProps) => {
   const defaultDescription =
-    "You have unsaved changes. Leaving this page will revert those changes. Please ensure you have saved your progress before proceeding.";
+    "You have unsaved changes. Are you sure you want to leave this page?";
   return (
     <Dialog open={true}>
-      <DialogContent>
+      <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>Warning!</DialogTitle>
           <DialogDescription>

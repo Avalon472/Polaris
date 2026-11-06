@@ -161,3 +161,29 @@ export const findLayerByPath = (
   // Returns the children of the deepest matched folder
   return currentNodes;
 };
+
+export function compareObjects(a: any, b: any): boolean {
+  // Same reference or primitive value
+  if (a === b) return true;
+
+  // Null checks and type mismatches
+  if (
+    a === null ||
+    b === null ||
+    typeof a !== "object" ||
+    typeof b !== "object"
+  ) {
+    return false;
+  }
+
+  // Compare object keys
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  if (keysA.length !== keysB.length) return false;
+
+  // Recursively compare each property
+  return keysA.every(
+    (key) => Object.hasOwn(b, key) && compareObjects(a[key], b[key]),
+  );
+}
