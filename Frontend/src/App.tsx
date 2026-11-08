@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import LoadingSpinner from "./components/layout/LoadingSpinner";
 import Navbar from "./components/layout/Navbar";
+import { UnsavedChangesProvider } from "./contexts/UnsavedChangesContext";
 import { useAuthUser } from "./features/auth/api/AuthQueries";
 import splash from "./res/Splash.jpg";
 
@@ -19,7 +20,10 @@ function App() {
         <>
           {authUser && <Navbar />}
           <div className="w-full mx-auto flex-1 min-w-0">
-            <Outlet />
+            {/* Allows blocker to both be registered by children and be inside the router declaration */}
+            <UnsavedChangesProvider>
+              <Outlet />
+            </UnsavedChangesProvider>
           </div>
         </>
       )}

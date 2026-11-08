@@ -1,4 +1,5 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import {
   createFileTree,
   findLayerByPath,
@@ -9,10 +10,9 @@ import { type NoteFileNode, type UpdateNotePayload } from "@/types/notes";
 import { FilePlus, FolderPlus, Move, MoveUp, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { useBlocker, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUpdateNote } from "../../api/NotesMutations";
 import { useGetAllNotes } from "../../api/NotesQueries";
-import UnsavedChangesModal from "../UnsavedChangesModal";
 import AddFolderModal from "./AddFolderModal";
 import FileNode from "./FileNode";
 
@@ -31,9 +31,9 @@ const NotesFileExplorer = ({ minWidth = 100 }) => {
   const [addFolder, setAddFolder] = useState(false);
   const [moveNode, setMoveNode] = useState(false);
 
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      localFolders.length !== 0 && currentLocation !== nextLocation,
+  useUnsavedChanges(
+    () => localFolders.length !== 0,
+    "You have folders without any contents. All empty folders will be deleted.",
   );
 
   useEffect(() => {
@@ -227,15 +227,6 @@ const NotesFileExplorer = ({ minWidth = 100 }) => {
           ]);
         }}
       />
-
-      {blocker.state === "blocked" && (
-        <UnsavedChangesModal
-          onCancel={() => blocker.reset()}
-          onConfirm={() => blocker.proceed()}
-          displayText="You have folders without any contents. All empty folders will be deleted. 
-          Please ensure all folders you would like to keep have contents before proceeding"
-        />
-      )}
     </div>
   );
 };

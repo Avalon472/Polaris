@@ -24,8 +24,10 @@ const UnsavedChangesModal = ({
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>Warning!</DialogTitle>
-          <DialogDescription>
-            {displayText !== undefined ? displayText : defaultDescription}
+          <DialogDescription className="whitespace-pre-line">
+            {displayText !== undefined
+              ? displayText.trim()
+              : defaultDescription}
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2">

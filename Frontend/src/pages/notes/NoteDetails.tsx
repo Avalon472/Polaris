@@ -11,8 +11,8 @@ import PreviewEditor from "@/features/notes/components/editor/PreviewEditor";
 import TagEditor from "@/features/notes/components/editor/TagsEditor";
 import Editor from "@/features/notes/components/editor/TextEditor";
 import TypeDropdown from "@/features/notes/components/editor/TypeDropdown";
-import UnsavedChangesModal from "@/features/notes/components/UnsavedChangesModal";
-import { createDescription } from "@/lib/utils";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { compareObjects, createDescription } from "@/lib/utils";
 import type { NotePayload } from "@/types/notes";
 import {
   ArrowBigLeftDash,
@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useBlocker, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const NoteDetails = () => {
   const { slug } = useParams();
@@ -37,11 +37,6 @@ const NoteDetails = () => {
     isChangedRef.current = value;
     setIsChanged(value);
   };
-
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      isChangedRef.current && currentLocation !== nextLocation,
-  );
 
   const [editing, setEditing] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -69,7 +64,9 @@ const NoteDetails = () => {
     setDeleteOpen(false);
     // Set draftData synchronously for new notes, otherwise clear it and let
     // the useEffect define it once the note query has resolved
-    setDraftData(isNew ? { title: "", body: "", path: "/" } : undefined);
+    setDraftData(
+      isNew ? { title: "", body: "", path: "/", references: [] } : undefined,
+    );
   }
 
   useEffect(() => {
@@ -82,6 +79,20 @@ const NoteDetails = () => {
       });
     }
   }, [note, isNew, slug]);
+
+  useUnsavedChanges(
+    () =>
+      !compareObjects(
+        note && !isNew
+          ? {
+              ...note[0],
+              references: note[0].references?.map((ref) => ref._id),
+            }
+          : { title: "", body: "", path: "/", references: [] },
+        draftData,
+      ),
+    "You have unsaved changes. Are you sure you want to leave this page? \n\n If you have not made any active changes, your wikilinks may have updated to reflect changes in other notes.",
+  );
 
   const deleteNote = useDeleteNote();
   const updateNote = useUpdateNote();
@@ -301,13 +312,6 @@ const NoteDetails = () => {
           setDraftData(() => ({ ...draftData, description: desc }));
         }}
       />
-
-      {blocker.state === "blocked" && (
-        <UnsavedChangesModal
-          onCancel={() => blocker.reset()}
-          onConfirm={() => blocker.proceed()}
-        />
-      )}
     </div>
   );
 };

@@ -1,12 +1,11 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import Editor from "@/features/notes/components/editor/TextEditor";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { compareObjects, createDescription } from "@/lib/utils";
 import type { NotePayload } from "@/types/notes";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useBlocker } from "react-router-dom";
 import { useCreateNote } from "../../api/NotesMutations";
-import UnsavedChangesModal from "../UnsavedChangesModal";
 
 const QuickIntake = () => {
   const createNote = useCreateNote();
@@ -18,9 +17,9 @@ const QuickIntake = () => {
     references: [],
   };
 
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      !compareObjects(draftData, blankNote) && currentLocation !== nextLocation,
+  useUnsavedChanges(
+    () => !compareObjects(draftData, blankNote),
+    "Your draft has not been saved. Unsaved changes will be lost upon leaving the page.",
   );
 
   const [draftData, setDraftData] = useState<NotePayload>(blankNote);
@@ -54,14 +53,6 @@ const QuickIntake = () => {
       },
     );
   };
-
-  useEffect(() => {
-    return () => {
-      if (blocker.state === "blocked") {
-        blocker.reset();
-      }
-    };
-  }, [blocker]);
 
   const titleClass =
     "text-2xl leading-normal w-full px-8 py-2 rounded-2xl truncate min-h-16";
@@ -99,14 +90,6 @@ const QuickIntake = () => {
           setDraftData(() => ({ ...draftData, references: newRefs }))
         }
       />
-
-      {blocker.state === "blocked" && (
-        <UnsavedChangesModal
-          onCancel={() => blocker.reset()}
-          onConfirm={() => blocker.proceed()}
-          displayText="Your draft has not been saved. Unsaved changes will be lost upon leaving the page."
-        />
-      )}
     </div>
   );
 };
