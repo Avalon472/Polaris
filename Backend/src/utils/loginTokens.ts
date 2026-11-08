@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { Response } from "express";
-import RefreshToken from "../models/refreshToken.model";
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import RefreshToken from "../models/refreshToken.model";
 
 export const signAccessToken = (userId: mongoose.Types.ObjectId): string => {
   return jwt.sign({ sub: userId }, process.env.ACCESS_TOKEN_SECRET!, {
@@ -29,7 +29,7 @@ export const issueTokens = async (
   res.cookie("refreshToken", rawRefreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", //User https only in prod
-    sameSite: "strict", //Prevent cross-site scripting attacks
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
