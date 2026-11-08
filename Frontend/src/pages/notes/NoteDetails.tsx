@@ -162,7 +162,7 @@ const NoteDetails = () => {
   };
 
   const titleClass =
-    "text-4xl leading-normal w-full px-8 py-2 rounded-2xl truncate min-h-16";
+    "text-2xl leading-normal w-full px-6 py-2 rounded-2xl truncate min-h-14";
   return (
     <div className="w-full h-full bg-bg3 p-4 overflow-clip flex flex-col gap-2 relative">
       <div className="w-full flex justify-between items-center border-b border-border pb-1.5">

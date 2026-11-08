@@ -55,7 +55,7 @@ const QuickIntake = () => {
   };
 
   const titleClass =
-    "text-2xl leading-normal w-full px-8 py-2 rounded-2xl truncate min-h-16";
+    "text-xl leading-normal w-full px-6 py-2 rounded-2xl truncate min-h-14";
   return createNote.isPending ? (
     <LoadingSpinner />
   ) : (

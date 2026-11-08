@@ -26,7 +26,7 @@ const ToolbarBtn = ({
     onMouseDown={(e) => e.preventDefault()}
     onClick={onClick}
     className={`
-      px-3 py-1 rounded text-sm transition-colors border border-surface shrink-0 h-8
+      px-3 py-1 rounded text-sm transition-colors border border-surface shrink-0 h-8 cursor-pointer
       ${
         isActive
           ? "bg-accent-purple-bg text-accent"
@@ -129,7 +129,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
           onClick={() => editor.chain().focus().toggleCode().run()}
           isActive={editorState.isCode}
         >
-          {"</>"}
+          Inline
         </ToolbarBtn>
 
         {/* divider */}
@@ -170,7 +170,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           isActive={editorState.isCodeBlock}
         >
-          Code
+          {"</>"}
         </ToolbarBtn>
 
         <ToolbarBtn

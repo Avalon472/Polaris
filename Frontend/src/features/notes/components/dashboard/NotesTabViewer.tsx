@@ -19,6 +19,7 @@ interface NotesTabPreferences {
   currentPage: number;
 }
 
+//TODO for later: Add in archiving mechanism and filter option to display them
 const NotesTabViewer = () => {
   const { data: notes, isLoading } = useGetAllNotes();
   const [filteredNotes, setFilteredNotes] = useState(notes);
