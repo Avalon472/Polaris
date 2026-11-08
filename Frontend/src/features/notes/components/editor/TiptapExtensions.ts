@@ -104,7 +104,6 @@ export const WikiLinkExtension = Node.create({
 });
 
 export const CustomLink = Link.extend({
-  name: "customLink",
   inclusive: false,
   exitable: true,
   addKeyboardShortcuts() {
@@ -124,17 +123,16 @@ export const CustomLink = Link.extend({
       const end = selection.from;
 
       // Replaces the markdown with href linked to label's text
-      tr.replaceWith(start, end, state.schema.text(label));
-      tr.addMark(
+      tr.replaceWith(
         start,
-        start + label.length,
-        state.schema.marks.link.create({ href }),
+        end,
+        state.schema.text(label, [this.type.create({ href })]),
       );
+
       // Need to place cursor at end and remove mark to prevent it from
       // sticking and extending when user types
       tr.setSelection(TextSelection.create(tr.doc, start + label.length));
-      tr.removeStoredMark(state.schema.marks.link);
-
+      tr.removeStoredMark(this.type);
       view.dispatch(tr);
 
       return true;

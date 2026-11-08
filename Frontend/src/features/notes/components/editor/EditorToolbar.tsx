@@ -56,7 +56,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
       isBulletList: ctx.editor.isActive("bulletList"),
       isCodeBlock: ctx.editor.isActive("codeBlock"),
       isBlockquote: ctx.editor.isActive("blockquote"),
-      isAtLink: ctx.editor.isActive("customLink"),
+      isAtLink: ctx.editor.isActive("link"),
     }),
   });
 
@@ -69,11 +69,10 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
 
   const handleOpenChange = (next: boolean) => {
     if (next) {
-      if (editor.isActive("customLink"))
-        editor.commands.extendMarkRange("customLink");
+      if (editor.isActive("link")) editor.commands.extendMarkRange("link");
       const { from, to } = editor.state.selection;
       setLinkText(editor.state.doc.textBetween(from, to, " "));
-      setLinkHref(editor.getAttributes("customLink").href ?? "");
+      setLinkHref(editor.getAttributes("link").href ?? "");
     }
     setOpen(next);
   };
@@ -83,7 +82,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
     const chain = editor.chain().focus();
 
     if (!href) {
-      chain.extendMarkRange("customLink").unsetLink().run();
+      chain.extendMarkRange("link").unsetLink().run();
     } else {
       const { from, to } = editor.state.selection;
       const original = editor.state.doc.textBetween(from, to, " ");
@@ -98,7 +97,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
             {
               type: "text",
               text,
-              marks: [{ type: "customLink", attrs: { href } }],
+              marks: [{ type: "link", attrs: { href } }],
             },
           )
           .run();
@@ -171,7 +170,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           isActive={editorState.isCodeBlock}
         >
-          Block
+          Code
         </ToolbarBtn>
 
         <ToolbarBtn
