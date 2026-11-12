@@ -45,15 +45,15 @@ const Navbar = () => {
   const { data: authUser } = useAuthUser();
 
   const mobileViewportShadow =
-    "after:absolute after:top-0 after:right-0 after:h-full after:w-56 after:translate-x-full after:bg-linear-to-r after:from-black/60 after:to-transparent after:pointer-events-none md:after:hidden";
+    "after:absolute after:top-0 after:right-0 after:h-full after:w-52 after:translate-x-full after:bg-linear-to-r after:from-black/60 after:to-transparent after:pointer-events-none md:after:hidden";
   return (
     <div
-      className={`relative shrink-0 transition-all duration-200 w-16
-  ${!collapsed ? "md:w-56" : "md:w-16"}`}
+      className={`relative shrink-0 transition-all duration-200 w-12
+  ${!collapsed ? "md:w-52" : ""}`}
     >
       <div
         className={`flex flex-col shrink-0 bg-bg2-solid h-screen border-r-2 border-border items-center transition-all duration-200 absolute z-20
-          ${collapsed ? "w-16" : `w-56 ${mobileViewportShadow}`}
+          ${collapsed ? "w-12" : `w-52 ${mobileViewportShadow}`}
     `}
       >
         {/* Top of navbar */}
@@ -87,7 +87,7 @@ const Navbar = () => {
           </InputGroup>
         </div>
         {/* Body of navbar */}
-        <div className={`flex flex-col size-full text-text p-2`}>
+        <div className={`flex flex-col size-full text-text py-2 px-1 md:px-2`}>
           <div className="flex flex-col items-start gap-2">
             <p className={`text-muted ${collapsed ? "invisible" : ""}`}>
               Workspace

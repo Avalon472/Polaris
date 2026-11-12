@@ -13,6 +13,10 @@ interface EditFilterTabMenuProps {
   existingFilter: NoteFilter;
 }
 
+const Spacer = () => {
+  return <div className="h-0.5 border-t border-border" />;
+};
+
 const EditFilterTabMenu = ({
   handleChange,
   existingFilter,
@@ -24,7 +28,7 @@ const EditFilterTabMenu = ({
   }, [editedFilter]);
 
   const checkboxStyle =
-    "appearance-none size-4 bg-surface rounded-xs border border-border checked:bg-accent cursor-pointer hover:border-white/60 transition-all duration-200";
+    "appearance-none size-4 bg-surface rounded-xs border border-border checked:bg-accent cursor-pointer hover:border-white/60 transition-all duration-200 shrink-0";
   return (
     <div className="flex flex-col w-full p-1 pb-0 gap-2 justify-center">
       <Accordion type="multiple" defaultValue={["tags", "type"]}>
@@ -49,7 +53,7 @@ const EditFilterTabMenu = ({
           <AccordionTrigger className="hover:no-underline">
             Type
           </AccordionTrigger>
-          <AccordionContent className="pb-0">
+          <AccordionContent className="pb-0 h-fit">
             {Object.values(NoteType).map((type) => (
               <div className="flex gap-4 p-1 items-center" key={type}>
                 <input
@@ -82,7 +86,10 @@ const EditFilterTabMenu = ({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      <div className="flex gap-4 p-1 border-t border-border items-center pt-2">
+
+      <Spacer />
+
+      <div className="flex gap-4 p-1 items-center">
         <input
           type="checkbox"
           id="pinnedCheckbox"
@@ -103,7 +110,9 @@ const EditFilterTabMenu = ({
         </label>
       </div>
 
-      <div className="flex gap-4 p-1 border-t border-border items-center pt-2">
+      <Spacer />
+
+      <div className="flex gap-4 p-1 items-center">
         <input
           type="checkbox"
           id="newestFirstCheckbox"
