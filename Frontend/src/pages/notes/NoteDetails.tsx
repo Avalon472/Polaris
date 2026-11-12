@@ -21,22 +21,13 @@ import {
   LayoutPanelLeft,
   TagIcon,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
 const NoteDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-
-  // Need to bundle with ref to allow immediate state change and evaluation
-  const [isChanged, setIsChanged] = useState(false);
-  const isChangedRef = useRef(false);
-
-  const updateIsChanged = (value: boolean) => {
-    isChangedRef.current = value;
-    setIsChanged(value);
-  };
 
   const [editing, setEditing] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -60,7 +51,6 @@ const NoteDetails = () => {
   if (slug !== prevSlug) {
     setPrevSlug(slug ?? null);
     setEditing(isNew);
-    updateIsChanged(false);
     setDeleteOpen(false);
     // Set draftData synchronously for new notes, otherwise clear it and let
     // the useEffect define it once the note query has resolved
@@ -80,18 +70,21 @@ const NoteDetails = () => {
     }
   }, [note, isNew, slug]);
 
+  const checkForChanges = () =>
+    !compareObjects(
+      note && !isNew
+        ? {
+            ...note[0],
+            references: note[0].references?.map((ref) => ref._id),
+          }
+        : { title: "", body: "", path: "/", references: [] },
+      draftData,
+    );
+
   useUnsavedChanges(
-    () =>
-      !compareObjects(
-        note && !isNew
-          ? {
-              ...note[0],
-              references: note[0].references?.map((ref) => ref._id),
-            }
-          : { title: "", body: "", path: "/", references: [] },
-        draftData,
-      ),
-    "You have unsaved changes. Are you sure you want to leave this page? \n\n If you have not made any active changes, your wikilinks may have updated to reflect changes in other notes.",
+    () => checkForChanges(),
+    `You have unsaved changes. Are you sure you want to leave this page?
+    ${note && note[0]?.body !== draftData?.body ? "\n\n If you have not made any active changes, your wikilinks may have updated to reflect changes in other notes." : ""}`,
   );
 
   const deleteNote = useDeleteNote();
@@ -109,6 +102,12 @@ const NoteDetails = () => {
   if (!note?.[0] && !isNew) return <div>Note not found</div>;
 
   const noteData = isNew ? null : note![0];
+
+  // useUnsavedChanges(
+  //   () => checkForChanges(),
+  //   `You have unsaved changes. Are you sure you want to leave this page?${noteData?.body !== draftData.body ? "\n\n If you have not made any active changes, your wikilinks may have updated to reflect changes in other notes." : ""}`,
+  //   // "You have unsaved changes. Are you sure you want to leave this page? \n\n If you have not made any active changes, your wikilinks may have updated to reflect changes in other notes.",
+  // );
 
   const handleSave = () => {
     if (!draftData.body || !draftData.title) {
@@ -128,7 +127,6 @@ const NoteDetails = () => {
         },
         {
           onSuccess: () => {
-            updateIsChanged(false);
             setEditing(false);
           },
         },
@@ -141,7 +139,6 @@ const NoteDetails = () => {
         },
         {
           onSuccess: (data) => {
-            updateIsChanged(false);
             setEditing(false);
             navigate(`/notes/${data.slug}`);
           },
@@ -153,12 +150,10 @@ const NoteDetails = () => {
   //TODO: Decide if cancel should reset or not
   const handleCancel = () => {
     setEditing(false);
-    updateIsChanged(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDraftData({ ...draftData, [e.target.name]: e.target.value });
-    updateIsChanged(true);
   };
 
   const titleClass =
@@ -196,8 +191,8 @@ const NoteDetails = () => {
 
               <button
                 onClick={handleSave}
-                disabled={!isChanged}
-                className={`buttonCore ${isChanged ? "text-success hover:text-success border-subtle hover:border-success" : "text-subtle"}`}
+                disabled={checkForChanges()}
+                className={`buttonCore ${checkForChanges() ? "text-success hover:text-success border-subtle hover:border-success" : "text-subtle"}`}
               >
                 Save Changes
               </button>
@@ -225,9 +220,6 @@ const NoteDetails = () => {
             selectedTags={draftData.tags ?? []}
             onSelect={(tags) => {
               setDraftData({ ...draftData, tags });
-              if (tags && tags !== noteData?.tags) {
-                updateIsChanged(true);
-              }
             }}
             editing={editing}
           />
@@ -243,9 +235,6 @@ const NoteDetails = () => {
             selectedType={draftData.type ?? "general"}
             onSelect={(type) => {
               setDraftData({ ...draftData, type: type! });
-              if (type && type !== noteData?.type) {
-                updateIsChanged(true);
-              }
             }}
             editing={editing}
           />
@@ -284,7 +273,6 @@ const NoteDetails = () => {
         onChange={(content) => {
           if (content !== draftData.body) {
             setDraftData(() => ({ ...draftData, body: content }));
-            updateIsChanged(true);
           }
         }}
         onReferencesChange={(newRefs) =>

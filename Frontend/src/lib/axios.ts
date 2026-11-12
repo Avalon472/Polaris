@@ -6,6 +6,18 @@ const api = axios.create({
   withCredentials: true,
 });
 
+export function getErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.error || error.message;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "An unexpected error occurred";
+}
+
 //Attach Access Token to every request automatically
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");

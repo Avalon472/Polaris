@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import api, { getErrorMessage } from "@/lib/axios";
 import type { NotePayload, UpdateNotePayload } from "@/types/notes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -22,7 +22,7 @@ export const useCreateNote = () => {
         navigate(`/notes/`, { replace: true });
       }
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error: any) => toast.error(getErrorMessage(error)),
   });
 };
 
@@ -44,7 +44,7 @@ export const useDeleteNote = () => {
         navigate(`/notes/`);
       }
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => toast.error(getErrorMessage(error)),
   });
 };
 
@@ -66,6 +66,6 @@ export const useUpdateNote = () => {
         navigate(`/notes/`);
       }
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => toast.error(getErrorMessage(error)),
   });
 };

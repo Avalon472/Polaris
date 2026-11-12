@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { useLogin } from "@/features/auth/api/AuthMutations";
 
+import { getErrorMessage } from "@/lib/axios";
 import { LockIcon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -65,7 +66,7 @@ const LoginPage = () => {
         <p
           className={`text-destructive text-sm text-center transition-opacity ${isError ? "opacity-100" : "opacity-0"}`}
         >
-          {error?.message ?? "\u00A0"}
+          {error ? getErrorMessage(error) : "\u00A0"}
         </p>
         <p className="text-subtle text-sm">Don't have an account?</p>
         <Link

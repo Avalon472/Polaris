@@ -1,4 +1,5 @@
 import { useSignup } from "@/features/auth/api/AuthMutations";
+import { getErrorMessage } from "@/lib/axios";
 import { LockIcon, MailIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -109,7 +110,7 @@ const SignupPage = () => {
         <p
           className={`text-destructive text-sm text-center transition-opacity ${displayError ? "opacity-100" : "opacity-0"}`}
         >
-          {displayError ?? "\u00A0"}
+          {error ? getErrorMessage(error) : "\u00A0"}
         </p>
         <p className="text-subtle text-sm"></p>
         Already have an account?
