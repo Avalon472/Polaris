@@ -67,41 +67,6 @@ const NotesTabViewer = () => {
     return defaultPreferences;
   });
 
-  // const [filters, setFilters] = useState<FilterInstance[]>(() => {
-  //   // Attempt to initialize filters using previously made and stored ones
-  //   try {
-  //     const saved = localStorage.getItem("note-filters");
-
-  //     if (saved) {
-  //       return JSON.parse(saved) as FilterInstance[];
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to load saved filters:", error);
-  //   }
-  //   return [
-  //     {
-  //       filterName: "Recents",
-  //       filterCriteria: {
-  //         newestFirst: true,
-  //         pinned: false,
-  //         types: [],
-  //         tags: [],
-  //       },
-  //       id: Math.random().toString(36).substring(2, 11),
-  //     },
-  //     {
-  //       filterName: "Pinned",
-  //       filterCriteria: {
-  //         newestFirst: false,
-  //         pinned: true,
-  //         types: [],
-  //         tags: [],
-  //       },
-  //       id: Math.random().toString(36).substring(2, 11),
-  //     },
-  //   ];
-  // });
-
   const basicFilter = {
     filterName: "New Filter",
     filterCriteria: {
@@ -148,8 +113,6 @@ const NotesTabViewer = () => {
     setFilteredNotes(target);
   };
 
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [notesPerPage, setNotesPerPage] = useState(8);
   const maxPages = Math.ceil(
     (filteredNotes?.length ?? 0) / preferences.notesPerPage,
   );
@@ -246,7 +209,6 @@ const NotesTabViewer = () => {
                     (x) => x.id !== filter.id,
                   );
 
-                  // setFilters(remainingFilters);
                   setPreferences((prev) => ({
                     ...prev,
                     filters: remainingFilters,
@@ -309,13 +271,13 @@ const NotesTabViewer = () => {
             />
           </div>
           <div
-            className={`size-full p-4 gap-5 overflow-y-auto scrollbar-thin grid content-start
+            className={`size-full p-4 gap-5 overflow-y-auto scrollbar-thin grid content-start grid-cols-1
               ${
                 preferences.notesPerPage === 4
-                  ? "grid-cols-2 grid-rows-2"
+                  ? "md:grid-cols-2 md:grid-rows-2"
                   : preferences.notesPerPage === 8
-                    ? "grid-cols-4 grid-rows-2"
-                    : "grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))]"
+                    ? "md:grid-cols-4 md:grid-rows-2"
+                    : "md:grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))]"
               }`}
           >
             {displayedNotes.map((note) => {
@@ -353,8 +315,6 @@ const NotesTabViewer = () => {
                 <DropdownMenuItem
                   key={count}
                   onClick={() => {
-                    // setNotesPerPage(count);
-                    // setCurrentPage(1);
                     setPreferences((prev) => ({
                       ...prev,
                       notesPerPage: count,
@@ -375,9 +335,9 @@ const NotesTabViewer = () => {
         <ItemPagination
           currentPage={preferences.currentPage}
           maxPages={maxPages}
-          onSelect={(
-            n, //setCurrentPage(n)
-          ) => setPreferences((prev) => ({ ...prev, currentPage: n }))}
+          onSelect={(n) =>
+            setPreferences((prev) => ({ ...prev, currentPage: n }))
+          }
         />
       </div>
     </div>

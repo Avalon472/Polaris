@@ -37,14 +37,11 @@ const Notecard = ({ noteContent, filterTags }: NotecardProps) => {
           className={`bg-bg2 border border-border rounded-2xl flex flex-col text-text min-h-0 overflow-hidden
             h-40 px-4 py-2 gap-1 hover:shadow hover:-translate-y-1 transition-all duration-400 ease-in-out shadow-accent`}
         >
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-subtle shrink-0">
-              <span className={`text-xs font-medium ${noteTypeColor} mr-2`}>
-                {noteContent.type}
-              </span>
-              Last Edited{" "}
-              {new Date(noteContent.updatedAt).toLocaleDateString("en-us")}
-            </p>
+          <div className="flex items-top justify-between">
+            <div className="flex flex-col md:flex-row font-medium text-subtle text-xs shrink-0 flex-wrap w-9/10 gap-x-2">
+              <p className={`${noteTypeColor}`}>{noteContent.type}</p>
+              <p>{`Last Edit ${new Date(noteContent.updatedAt).toLocaleDateString("en-us")}`}</p>
+            </div>
 
             <NoteOptionMenu noteContent={noteContent} />
           </div>
@@ -54,7 +51,7 @@ const Notecard = ({ noteContent, filterTags }: NotecardProps) => {
               {noteContent.title}
             </h2>
             <p
-              className={`text-sm text-muted leading-relaxed overflow-hidden line-clamp-3`}
+              className={`text-sm text-muted leading-tight overflow-hidden line-clamp-3`}
             >
               {noteContent.description}
             </p>
