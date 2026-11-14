@@ -28,9 +28,9 @@ const EditFilterTabMenu = ({
   }, [editedFilter]);
 
   const checkboxStyle =
-    "appearance-none size-4 bg-surface rounded-xs border border-border checked:bg-accent cursor-pointer hover:border-white/60 transition-all duration-200 shrink-0";
+    "appearance-none size-4 bg-surface rounded-xs border border-border checked:bg-accent cursor-pointer hover:border-white/60 transition-all duration-200 shrink-0 disabled:pointer-events-none disabled:bg-accent/60";
   return (
-    <div className="flex flex-col w-full p-1 pb-0 gap-2 justify-center">
+    <div className="flex flex-col w-full p-2 gap-2 justify-center">
       <Accordion type="multiple" defaultValue={["tags", "type"]}>
         <AccordionItem value={"tags"}>
           <AccordionTrigger className="hover:no-underline">
@@ -93,7 +93,7 @@ const EditFilterTabMenu = ({
         <input
           type="checkbox"
           id="pinnedCheckbox"
-          className={checkboxStyle}
+          className={`${checkboxStyle} `}
           checked={editedFilter.pinned}
           onChange={(e) => {
             setEditedFilter((prev) => ({
@@ -101,12 +101,35 @@ const EditFilterTabMenu = ({
               pinned: e.target.checked,
             }));
           }}
+          disabled={!editedFilter.unpinned}
         />
         <label
           htmlFor="pinnedCheckbox"
-          className="text-text text-sm cursor-pointer"
+          className={`text-sm  ${!editedFilter.unpinned ? "pointer-events-none text-subtle" : "text-text cursor-pointer"}`}
         >
           Pinned
+        </label>
+      </div>
+
+      <div className="flex gap-4 p-1 items-center">
+        <input
+          type="checkbox"
+          id="unpinnedCheckbox"
+          className={checkboxStyle}
+          checked={editedFilter.unpinned}
+          onChange={(e) => {
+            setEditedFilter((prev) => ({
+              ...prev,
+              unpinned: e.target.checked,
+            }));
+          }}
+          disabled={!editedFilter.pinned}
+        />
+        <label
+          htmlFor="unpinnedCheckbox"
+          className={`text-sm  ${!editedFilter.pinned ? "pointer-events-none text-subtle" : "text-text cursor-pointer"}`}
+        >
+          Unpinned
         </label>
       </div>
 

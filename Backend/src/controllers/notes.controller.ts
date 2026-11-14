@@ -10,8 +10,10 @@ export const getAllNotes = async (req: Request, res: Response) => {
       author: req.userId,
       type: { $ne: "project-item" },
     })
-      .sort({ updatedAt: -1 })
-      .populate({ path: "references referencedBy", select: "title slug" });
+      .select(
+        "-body -bodyText -archivedAt -author -createdAt -references -referencedBy",
+      )
+      .sort({ updatedAt: -1 });
 
     if (notes.length === 0) {
       return res.status(200).json([]);
@@ -30,10 +32,12 @@ export const getNoteById = async (req: Request, res: Response) => {
   try {
     const noteID = req.params.id;
 
-    const note = await Note.find({ _id: noteID, author: req.userId }).populate({
-      path: "references referencedBy",
-      select: "title slug",
-    });
+    const note = await Note.find({ _id: noteID, author: req.userId })
+      .select("-bodyText -author -createdAt")
+      .populate({
+        path: "references referencedBy",
+        select: "title slug",
+      });
 
     if (!note) {
       return res
@@ -53,10 +57,12 @@ export const getNoteById = async (req: Request, res: Response) => {
 export const getNoteByTag = async (req: Request, res: Response) => {
   try {
     const tags = req.params.tags;
-    const notes = await Note.find({ tags: tags, author: req.userId }).populate({
-      path: "references referencedBy",
-      select: "title slug",
-    });
+    const notes = await Note.find({ tags: tags, author: req.userId })
+      .select("-bodyText -author -createdAt")
+      .populate({
+        path: "references referencedBy",
+        select: "title slug",
+      });
 
     if (!notes.length) {
       return res.status(404).json({ message: "No notes found with this tag." });
@@ -74,10 +80,12 @@ export const getNoteByTag = async (req: Request, res: Response) => {
 export const getNoteBySlug = async (req: Request, res: Response) => {
   try {
     const slug = req.params.slug;
-    const notes = await Note.find({ slug: slug, author: req.userId }).populate({
-      path: "references referencedBy",
-      select: "title slug",
-    });
+    const notes = await Note.find({ slug: slug, author: req.userId })
+      .select("-bodyText -author -createdAt")
+      .populate({
+        path: "references referencedBy",
+        select: "title slug",
+      });
 
     if (!notes.length) {
       return res

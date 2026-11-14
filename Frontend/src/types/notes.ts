@@ -17,7 +17,6 @@ export interface NoteListItem {
   _id: string;
   title: string;
   slug: string;
-  body: string;
   description?: string;
   tags?: string[];
   type?: NoteType;
@@ -29,6 +28,7 @@ export interface NoteListItem {
 // Full shape
 export interface Note extends NoteListItem {
   author: string; // User ID
+  body: string;
   references?: NoteReference[];
   referencedBy?: NoteReference[];
   archivedAt?: string;
@@ -77,6 +77,7 @@ export const NotePanelType = {
 
 export interface NoteFilter {
   pinned: boolean;
+  unpinned: boolean;
   tags: string[];
   types: string[];
   newestFirst: boolean;

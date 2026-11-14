@@ -32,6 +32,7 @@ const NotesTabViewer = () => {
         filterCriteria: {
           newestFirst: true,
           pinned: false,
+          unpinned: true,
           types: [],
           tags: [],
         },
@@ -42,6 +43,7 @@ const NotesTabViewer = () => {
         filterCriteria: {
           newestFirst: false,
           pinned: true,
+          unpinned: false,
           types: [],
           tags: [],
         },
@@ -71,6 +73,7 @@ const NotesTabViewer = () => {
     filterName: "New Filter",
     filterCriteria: {
       pinned: false,
+      unpinned: true,
       tags: [],
       types: [],
       newestFirst: true,
@@ -94,7 +97,7 @@ const NotesTabViewer = () => {
     // Find all notes matching filter options
     target = notes?.filter(
       (note) =>
-        (filter.pinned === undefined || note.pinned === filter.pinned) &&
+        (note.pinned === filter.pinned || note.pinned === !filter.unpinned) &&
         (filter.types.length === 0 || filter.types.includes(note.type ?? "")) &&
         (filter.tags.length === 0 ||
           filter.tags.every((tag) => note.tags?.includes(tag))) &&

@@ -87,9 +87,9 @@ const Navbar = () => {
           </InputGroup>
         </div>
         {/* Body of navbar */}
-        <div className={`flex flex-col size-full text-text py-2 px-1 md:px-2`}>
+        <div className={`flex flex-col size-full text-text py-2 px-1`}>
           <div className="flex flex-col items-start gap-2">
-            <p className={`text-muted ${collapsed ? "invisible" : ""}`}>
+            <p className={`text-muted px-1 ${collapsed ? "invisible" : ""}`}>
               Workspace
             </p>
             {navItems.map((item) => (
