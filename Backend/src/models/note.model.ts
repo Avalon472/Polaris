@@ -18,7 +18,14 @@ const NoteSchema = new Schema(
     pinned: { type: Boolean, default: false },
     type: {
       type: String,
-      enum: ["general", "framework", "tool", "project-spec", "article"],
+      enum: [
+        "general",
+        "framework",
+        "tool",
+        "project-spec",
+        "article",
+        "project-item",
+      ],
       default: "general",
     },
     path: { type: String, default: "/" },

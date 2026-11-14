@@ -8,6 +8,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
     const notes = await Note.find({
       archivedAt: null,
       author: req.userId,
+      type: { $ne: "project-item" },
     })
       .sort({ updatedAt: -1 })
       .populate({ path: "references referencedBy", select: "title slug" });
