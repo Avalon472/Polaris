@@ -6,7 +6,7 @@ const ProjectItemSchema = new Schema(
     parentID: {
       type: Schema.Types.ObjectId,
       ref: "ProjectItem",
-      required: false,
+      required: false, // Has to be set to false to allow null as a value
       default: null,
     }, // Item with parent ID of null is the root item/epic for the project
     title: { type: String, required: true, unique: true, trim: true }, // Serves same purpose as note title, at higher level for easier access and searching
@@ -32,7 +32,7 @@ const ProjectItemSchema = new Schema(
     priority: {
       type: String,
       enum: ["low", "medium", "high", "urgent"],
-      required: true,
+      required: false, // Won't be necessary for epic and maybe feature levels
       default: "medium",
     },
     classification: {
@@ -40,6 +40,9 @@ const ProjectItemSchema = new Schema(
       enum: ["bug", "task", "subtask", "feature", "epic"],
       required: true,
     },
+
+    // Slightly redundant but helps track and populate relationship
+    children: [{ type: Schema.Types.ObjectId, ref: "ProjectItem" }],
 
     dueDate: { type: Date },
     completedAt: { type: Date },

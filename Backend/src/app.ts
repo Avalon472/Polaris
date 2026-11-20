@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 import authRoutes from "./routes/auth.routes";
 import noteRoutes from "./routes/notes.routes";
+import projectRoutes from "./routes/projects.routes";
 
 if (process.env.NODE_ENV !== "production") {
   dotenv.config();
@@ -29,5 +30,6 @@ app.use(cors(corsOptions));
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/projects", projectRoutes);
 
 export default app;
