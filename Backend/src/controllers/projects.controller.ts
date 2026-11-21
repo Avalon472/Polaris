@@ -1,10 +1,5 @@
 import { Request, Response } from "express";
 import ProjectItem from "../models/projectItem.model";
-// projectRoutes.get("/projectHeaders", middleware, getProjectHeaders)
-// projectRoutes.get("/id/:id", middleware, getProjectById)
-// projectRoutes.post("/create", middleware, createProjectItem)
-// projectRoutes.post("/edit/:id", middleware, editProjectItem)
-// projectRoutes.delete("/:id", middleware, deleteProjectItem)
 
 export const getProjectHeaders = async (req: Request, res: Response) => {
   try {
@@ -150,26 +145,3 @@ export const deleteItemOnly = async (req: Request, res: Response) => {
 export const deleteItemAndChildren = async (req: Request, res: Response) => {
   //STUB
 };
-
-//   try {
-//     const notes = await Note.find({
-//       archivedAt: null,
-//       author: req.userId,
-//       type: { $ne: "project-item" },
-//     })
-//       .select(
-//         "-body -bodyText -archivedAt -author -createdAt -references -referencedBy",
-//       )
-//       .sort({ updatedAt: -1 });
-
-//     if (notes.length === 0) {
-//       return res.status(200).json([]);
-//     }
-
-//     return res.status(200).json(notes);
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.log("Error in getAllNotes controller", error.message);
-//     }
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
