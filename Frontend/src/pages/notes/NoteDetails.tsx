@@ -191,7 +191,7 @@ const NoteDetails = () => {
 
               <button
                 onClick={handleSave}
-                disabled={checkForChanges()}
+                disabled={!checkForChanges()}
                 className={`buttonCore ${checkForChanges() ? "text-success hover:text-success border-subtle hover:border-success" : "text-subtle"}`}
               >
                 Save Changes

@@ -6,7 +6,7 @@ import {
   findLayerParent,
   sortNodeLayer,
 } from "@/lib/utils";
-import { type NoteFileNode, type UpdateNotePayload } from "@/types/notes";
+import { type NoteFileNode, type UpdateNoteHeaderPayload } from "@/types/notes";
 import { FilePlus, FolderPlus, Move, MoveUp, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -77,7 +77,7 @@ const NotesFileExplorer = ({ minWidth = 100 }) => {
                       (note) => note.slug === selectedNode,
                     );
                     updateNote.mutate({
-                      ...(movedNote as UpdateNotePayload),
+                      ...(movedNote as UpdateNoteHeaderPayload),
                       path: `/`,
                     });
                     setMoveNode(false);
@@ -176,7 +176,7 @@ const NotesFileExplorer = ({ minWidth = 100 }) => {
                           (note) => note.slug === selectedNode,
                         );
                         updateNote.mutate({
-                          ...(movedNote as UpdateNotePayload),
+                          ...(movedNote as UpdateNoteHeaderPayload),
                           path: `${node.path}${node.name}/`,
                         });
                         setSelectedNode("");

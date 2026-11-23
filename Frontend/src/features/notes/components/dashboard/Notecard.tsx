@@ -1,4 +1,4 @@
-import type { NoteListItem, UpdateNotePayload } from "@/types/notes";
+import type { NoteListItem, UpdateNoteHeaderPayload } from "@/types/notes";
 import { PinIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUpdateNote } from "../../api/NotesMutations";
@@ -71,7 +71,7 @@ const Notecard = ({ noteContent, filterTags }: NotecardProps) => {
               onClick={(e) => {
                 e.preventDefault();
                 updateNote.mutate({
-                  ...(noteContent as UpdateNotePayload),
+                  ...(noteContent as UpdateNoteHeaderPayload),
                   pinned: !noteContent.pinned,
                 });
               }}

@@ -1,5 +1,9 @@
 import api, { getErrorMessage } from "@/lib/axios";
-import type { NotePayload, UpdateNotePayload } from "@/types/notes";
+import type {
+  NotePayload,
+  UpdateNoteHeaderPayload,
+  UpdateNotePayload,
+} from "@/types/notes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,8 +22,8 @@ export const useCreateNote = () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Your note: ${data.title} was created successfully!`);
-      if (location.pathname !== "/notes/") {
-        navigate(`/notes/`, { replace: true });
+      if (location.pathname !== "/notes") {
+        navigate(`/notes`, { replace: true });
       }
     },
     onError: (error: any) => toast.error(getErrorMessage(error)),
@@ -40,8 +44,8 @@ export const useDeleteNote = () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Note deleted successfully!`);
-      if (location.pathname !== "/notes/") {
-        navigate(`/notes/`);
+      if (location.pathname !== "/notes") {
+        navigate(`/notes`);
       }
     },
     onError: (error) => toast.error(getErrorMessage(error)),
@@ -54,7 +58,10 @@ export const useUpdateNote = () => {
   const location = useLocation();
 
   return useMutation({
-    mutationFn: async ({ _id, ...payload }: UpdateNotePayload) => {
+    mutationFn: async ({
+      _id,
+      ...payload
+    }: UpdateNotePayload | UpdateNoteHeaderPayload) => {
       const { data } = await api.post(`/notes/edit/${_id}`, payload);
       return data;
     },
@@ -62,8 +69,8 @@ export const useUpdateNote = () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       queryClient.invalidateQueries({ queryKey: ["tags"] });
       toast.success(`Your note: ${data.title} was updated successfully!`);
-      if (location.pathname !== "/notes/") {
-        navigate(`/notes/`);
+      if (location.pathname !== "/notes") {
+        navigate(`/notes`);
       }
     },
     onError: (error) => toast.error(getErrorMessage(error)),

@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { NoteListItem, UpdateNotePayload } from "@/types/notes";
+import type { NoteListItem, UpdateNoteHeaderPayload } from "@/types/notes";
 import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +44,7 @@ const NoteOptionMenu = ({ noteContent }: NoteOptionMenuProps) => {
             onClick={(e) => {
               e.preventDefault();
               updateNote.mutate({
-                ...(noteContent as UpdateNotePayload),
+                ...(noteContent as UpdateNoteHeaderPayload),
                 pinned: !noteContent.pinned,
               });
             }}

@@ -42,6 +42,20 @@ export interface NoteReference {
   slug: string;
 }
 
+// Shape of fields for dashboard views and updates
+export interface NoteHeaderPayload {
+  title: string;
+  path: string;
+  tags?: string[];
+  type?: NoteType;
+  description?: string;
+}
+
+export interface UpdateNoteHeaderPayload extends NoteHeaderPayload {
+  _id: string;
+  pinned?: boolean;
+}
+
 // Shape of Fields for Create and Update
 export interface NotePayload {
   title: string;
@@ -55,7 +69,6 @@ export interface NotePayload {
 
 export interface UpdateNotePayload extends NotePayload {
   _id: string;
-  pinned?: boolean;
 }
 
 export type NoteQueryType = "id" | "tag" | "slug";
