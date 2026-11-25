@@ -7,6 +7,7 @@ import SignupPage from "./pages/auth/SignupPage";
 import HomePage from "./pages/home/HomePage";
 import NoteDetails from "./pages/notes/NoteDetails";
 import NotesOverview from "./pages/notes/NotesOverview";
+import NotFoundPage from "./pages/NotFoundPage";
 import ProjectsOverview from "./pages/projects/ProjectsOverview";
 
 // Utilizes modern browser router, which allows for blocker
@@ -33,7 +34,8 @@ export const router = createBrowserRouter([
           { path: "/projects", element: <ProjectsOverview /> },
         ],
       },
-      //   { path: "*", element: <NotFound /> },
+      { path: "/404", element: <NotFoundPage /> },
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);

@@ -32,8 +32,6 @@ const NoteDetails = () => {
   const [editing, setEditing] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  if (!slug) return <div>404, no route param provided</div>;
-
   const isNew = slug === "new" || !slug;
 
   const {
@@ -42,9 +40,12 @@ const NoteDetails = () => {
     isRefetching,
   } = useGetNotesByParam("slug", isNew ? "" : slug);
 
-  const [draftData, setDraftData] = useState<NotePayload | undefined>(
-    undefined,
-  );
+  const [draftData, setDraftData] = useState<NotePayload>({
+    title: "",
+    body: "",
+    path: "/",
+    references: [],
+  });
 
   const [prevSlug, setPrevSlug] = useState<string | null>(null);
 
@@ -54,9 +55,7 @@ const NoteDetails = () => {
     setDeleteOpen(false);
     // Set draftData synchronously for new notes, otherwise clear it and let
     // the useEffect define it once the note query has resolved
-    setDraftData(
-      isNew ? { title: "", body: "", path: "/", references: [] } : undefined,
-    );
+    setDraftData({ title: "", body: "", path: "/", references: [] });
   }
 
   useEffect(() => {
@@ -68,7 +67,11 @@ const NoteDetails = () => {
         references: note[0].references?.map((ref) => ref._id),
       });
     }
-  }, [note, isNew, slug]);
+
+    if ((note == undefined || !slug) && !isLoading) {
+      navigate("/404", { replace: true });
+    }
+  }, [note, isNew, slug, isLoading]);
 
   const checkForChanges = () =>
     !compareObjects(
@@ -102,12 +105,6 @@ const NoteDetails = () => {
   if (!note?.[0] && !isNew) return <div>Note not found</div>;
 
   const noteData = isNew ? null : note![0];
-
-  // useUnsavedChanges(
-  //   () => checkForChanges(),
-  //   `You have unsaved changes. Are you sure you want to leave this page?${noteData?.body !== draftData.body ? "\n\n If you have not made any active changes, your wikilinks may have updated to reflect changes in other notes." : ""}`,
-  //   // "You have unsaved changes. Are you sure you want to leave this page? \n\n If you have not made any active changes, your wikilinks may have updated to reflect changes in other notes.",
-  // );
 
   const handleSave = () => {
     if (!draftData.body || !draftData.title) {
