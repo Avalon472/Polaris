@@ -7,6 +7,7 @@ import SignupPage from "./pages/auth/SignupPage";
 import HomePage from "./pages/home/HomePage";
 import NoteDetails from "./pages/notes/NoteDetails";
 import NotesOverview from "./pages/notes/NotesOverview";
+import ProjectsOverview from "./pages/projects/ProjectsOverview";
 
 // Utilizes modern browser router, which allows for blocker
 // and uncouples routes from the rendering tree
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
           { path: "/", element: <HomePage /> },
           { path: "/notes", element: <NotesOverview /> },
           { path: "/notes/:slug", element: <NoteDetails /> },
+          { path: "/projects", element: <ProjectsOverview /> },
         ],
       },
       //   { path: "*", element: <NotFound /> },

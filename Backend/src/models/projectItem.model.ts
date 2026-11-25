@@ -9,7 +9,7 @@ const ProjectItemSchema = new Schema(
       required: false, // Has to be set to false to allow null as a value
       default: null,
     }, // Item with parent ID of null is the root item/epic for the project
-    title: { type: String, required: true, unique: true, trim: true }, // Serves same purpose as note title, at higher level for easier access and searching
+    title: { type: String, required: true, trim: true }, // Serves same purpose as note title, at higher level for easier access and searching
 
     itemDescription: {
       type: Schema.Types.ObjectId,
@@ -50,6 +50,7 @@ const ProjectItemSchema = new Schema(
   { timestamps: true },
 );
 
+ProjectItemSchema.index({ author: 1, title: 1 }, { unique: true });
 // TODO: Add indexes if necessary
 
 const ProjectItem = mongoose.model("ProjectItem", ProjectItemSchema);

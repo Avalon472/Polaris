@@ -1,6 +1,7 @@
 import { useLogout } from "@/features/auth/api/AuthMutations";
 import { useAuthUser } from "@/features/auth/api/AuthQueries";
 import {
+  DiagramFlowHorizontal,
   FileText,
   LayoutDashboard,
   LogOut,
@@ -33,7 +34,12 @@ const Navbar = () => {
       path: "/notes",
       activeFor: ["/notes", "/notes/:id"],
     },
-    // { label: "Projects", icon: <FolderKanban size={16} />, path: "/projects" },
+    {
+      label: "Projects",
+      icon: <DiagramFlowHorizontal />,
+      path: "/projects",
+      activeFor: ["/projects"], // TODO: add project details path once decided on
+    },
     // { label: "Calendar", icon: <Calendar size={16} />, path: "/calendar" },
     // { label: "AI Assistant", icon: <Bot size={16} />, path: "/ai" },
   ];
