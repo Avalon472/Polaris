@@ -1,6 +1,6 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import Editor from "@/features/notes/components/editor/TextEditor";
-import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import useUnsavedChanges from "@/hooks/useUnsavedChanges";
 import { compareObjects, createDescription } from "@/lib/utils";
 import type { NotePayload } from "@/types/notes";
 import React, { useState } from "react";

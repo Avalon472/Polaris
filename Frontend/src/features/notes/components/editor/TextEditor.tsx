@@ -25,7 +25,9 @@ function Editor({
   const navigate = useNavigate();
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: false,
+      }),
       Markdown,
       Placeholder.configure({ placeholder: "Start writing…" }),
       CustomLink.configure({
@@ -45,6 +47,25 @@ function Editor({
     if (!editor) return;
     editor.setEditable(isEditing);
   }, [isEditing, editor]);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const currentContent = editor.getMarkdown();
+
+    if (currentContent === initialContent) return;
+
+    // Moves update outside of React lifecycle
+    // to avoid flushSync errors
+    const frame = requestAnimationFrame(() => {
+      editor.commands.setContent(initialContent, {
+        contentType: "markdown",
+        emitUpdate: false,
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [initialContent, editor]);
 
   return (
     <div

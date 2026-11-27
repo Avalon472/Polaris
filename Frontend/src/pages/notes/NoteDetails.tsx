@@ -11,7 +11,7 @@ import PreviewEditor from "@/features/notes/components/editor/PreviewEditor";
 import TagEditor from "@/features/notes/components/editor/TagsEditor";
 import Editor from "@/features/notes/components/editor/TextEditor";
 import TypeDropdown from "@/features/notes/components/editor/TypeDropdown";
-import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import useUnsavedChanges from "@/hooks/useUnsavedChanges";
 import { compareObjects, createDescription } from "@/lib/utils";
 import type { NotePayload } from "@/types/notes";
 import {
@@ -69,6 +69,7 @@ const NoteDetails = () => {
     }
 
     if ((note == undefined || !slug) && !isLoading) {
+      sessionStorage.setItem("lastValidRoute", "/notes");
       navigate("/404", { replace: true });
     }
   }, [note, isNew, slug, isLoading]);

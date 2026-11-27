@@ -16,7 +16,12 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    loginMutation(formData);
+    // Destructure the formData object to allow for trim
+    // and avoid needing a state update
+    loginMutation({
+      usernameOrEmail: formData.usernameOrEmail.trim(),
+      password: formData.password,
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

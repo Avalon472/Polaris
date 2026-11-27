@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type FilterInstance, type NoteFilter } from "@/types/notes";
-import { ChevronDown, Edit, Plus, X } from "lucide-react";
+import { ChevronDown, Filter, Plus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useGetAllNotes } from "../../api/NotesQueries";
 import EditFilterTabMenu from "../tabViewer/EditFilterTabMenu";
@@ -31,7 +31,7 @@ const NotesTabViewer = () => {
         filterName: "Recents",
         filterCriteria: {
           newestFirst: true,
-          pinned: false,
+          pinned: true,
           unpinned: true,
           types: [],
           tags: [],
@@ -153,6 +153,9 @@ const NotesTabViewer = () => {
             ${filter.id === selectedFilter.id ? "-mt-2 bg-accent min-w-fit" : "border bg-bg2 hover:bg-surface min-w-0"}`}
               key={filter.id}
               onClick={() => {
+                if (openFilterOptions) {
+                  setOpenFilterOptions(false);
+                }
                 setSelectedFilterId(filter.id);
 
                 const newCriteria = preferences.filters.find(
@@ -161,7 +164,7 @@ const NotesTabViewer = () => {
                 applyFilter(newCriteria);
               }}
             >
-              <div className={`flex gap-0.5 items-center w-full`}>
+              <div className={`flex gap-1 items-center w-full`}>
                 {openFilterOptions && filter.id === selectedFilterId ? (
                   <input
                     className={`field-sizing-content text-lg px-1 rounded-md bg-bg3 border border-border outline-none placeholder:text-subtle`}
@@ -192,7 +195,7 @@ const NotesTabViewer = () => {
                     {filter.filterName}
                   </p>
                 )}
-                <Edit
+                <Filter
                   className={`size-5 text-text cursor-pointer transition-all duration-200 shrink-0
                   ${openFilterOptions ? "hover:opacity-60" : "opacity-50 hover:opacity-100"}
                   ${filter.id === selectedFilter.id ? "visible" : "hidden"}`}
@@ -233,18 +236,25 @@ const NotesTabViewer = () => {
          hover:text-accent hover:bg-surface transition-all duration-200 flex items-center justify-center`}
           >
             <Plus
-              onClick={() =>
+              onClick={() => {
+                const newFilterID = Math.random().toString(36).substring(2, 11);
+
                 setPreferences((prev) => ({
                   ...prev,
                   filters: [
                     ...prev.filters,
                     {
                       ...basicFilter,
-                      id: Math.random().toString(36).substring(2, 11),
+                      id: newFilterID,
                     },
                   ],
-                }))
-              }
+                }));
+
+                // Set new filter as selected and open options menu
+                setOpenFilterOptions(true);
+                setSelectedFilterId(newFilterID);
+                setEditerFilterName(basicFilter.filterName);
+              }}
             />
           </button>
         </div>

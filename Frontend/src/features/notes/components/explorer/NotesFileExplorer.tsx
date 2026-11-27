@@ -1,5 +1,5 @@
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
-import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import useUnsavedChanges from "@/hooks/useUnsavedChanges";
 import {
   createFileTree,
   findLayerByPath,

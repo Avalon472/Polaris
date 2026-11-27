@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "./App";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -14,7 +14,7 @@ import ProjectsOverview from "./pages/projects/ProjectsOverview";
 // and uncouples routes from the rendering tree
 export const router = createBrowserRouter([
   {
-    //TODO: Add router error page and 404 page
+    //TODO: Add router error page
     element: <App />,
     // errorElement: <RouteError />,
     children: [
@@ -34,8 +34,14 @@ export const router = createBrowserRouter([
           { path: "/projects", element: <ProjectsOverview /> },
         ],
       },
-      { path: "/404", element: <NotFoundPage /> },
-      { path: "*", element: <NotFoundPage /> },
+
+      // Tag paths with a handle for route tracking hook to identify
+      {
+        path: "*",
+        element: <Navigate to="/404" replace />,
+        handle: { is404: true },
+      },
+      { path: "/404", element: <NotFoundPage />, handle: { is404: true } },
     ],
   },
 ]);

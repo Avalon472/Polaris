@@ -3,10 +3,12 @@ import LoadingSpinner from "./components/layout/LoadingSpinner";
 import Navbar from "./components/layout/Navbar";
 import { UnsavedChangesProvider } from "./contexts/UnsavedChangesContext";
 import { useAuthUser } from "./features/auth/api/AuthQueries";
+import useRouteTracking from "./hooks/useRouteTracking";
 import splash from "./res/Splash.jpg";
 
 function App() {
   const { data: authUser, isLoading } = useAuthUser();
+  useRouteTracking();
 
   return (
     <div className="flex w-screen h-screen bg-bgTransparent relative">

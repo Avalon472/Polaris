@@ -1,7 +1,7 @@
 import { useContext, useEffect, useId, useRef } from "react";
 import { UnsavedChangesContext } from "../contexts/UnsavedChangesContext";
 
-export function useUnsavedChanges(check, message) {
+const useUnsavedChanges = (check, message) => {
   const registry = useContext(UnsavedChangesContext);
   if (!registry)
     throw new Error(
@@ -28,4 +28,6 @@ export function useUnsavedChanges(check, message) {
       registry.current.delete(id);
     };
   }, [registry, id]);
-}
+};
+
+export default useUnsavedChanges;
