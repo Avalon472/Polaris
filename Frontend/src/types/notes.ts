@@ -27,7 +27,6 @@ export interface NoteListItem {
 
 // Full shape
 export interface Note extends NoteListItem {
-  author: string; // User ID
   body: string;
   references?: NoteReference[];
   referencedBy?: NoteReference[];

@@ -49,12 +49,19 @@ const SignupPage = () => {
   const displayError = validationError ?? (isError ? error?.message : null);
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center">
+    <div className="h-full w-full flex flex-col items-center pt-8">
       <form
         onSubmit={handleSubmit}
-        className="h-3/5 w-xl flex flex-col gap-4 items-center justify-center bg-bg3 rounded-2xl p-8 [box-shadow:0_0_40px_8px_var(--success-border)]"
+        className="min-h-3/5 md:w-xl w-3/4 flex flex-col gap-4 items-center justify-center bg-bg3 rounded-2xl p-8 [box-shadow:0_0_40px_8px_var(--success-border)]"
       >
-        <h1 className="text-text text-2xl tracking-tight mb-2">Polaris</h1>
+        <img
+          src="/favicon.svg"
+          className="w-30 md:w-50 aspect-square rounded-xl"
+          alt="Polaris Logo"
+        />
+        <h1 className="text-text text-4xl md:text-6xl tracking-tight mb-2">
+          {import.meta.env.VITE_APP_TITLE}
+        </h1>
         <p className="text-subtle text-sm -mt-4">Create your account</p>
         <label className="flex gap-2 w-full border border-border hover:border-border-hover focus-within:border-ring text-text p-2 rounded-xl transition-colors">
           <UserIcon className="text-subtle shrink-0" />

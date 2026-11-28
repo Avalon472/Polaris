@@ -6,10 +6,10 @@ const NotFoundPage = () => {
   const navigate = useNavigate();
   return (
     <div className="flex size-full justify-center items-center">
-      <div className="flex flex-col size-1/2 justify-center items-center gap-8 bg-bg2 border border-bg3 rounded-2xl">
+      <div className="flex flex-col size-80 md:size-120 justify-center items-center gap-4 md:gap-8 bg-bg2 border border-bg3 rounded-2xl">
         <img
-          src="/public/favicon.svg"
-          className="size-1/3 rounded-xl"
+          src="/favicon.svg"
+          className="w-1/2 aspect-square rounded-xl"
           alt="Polaris Logo"
         />
         <p className="text-2xl">404: Content Not Found</p>
